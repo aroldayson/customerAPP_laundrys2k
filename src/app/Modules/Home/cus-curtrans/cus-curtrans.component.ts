@@ -105,7 +105,7 @@ export class CusCurtransComponent implements OnInit{
     this.post.display(this.id.cuid).subscribe((data:any)=>{
       this.trans = data.transaction;
       if(this.trans && this.trans.length > 0){
-        const pendingTransactions = this.trans.filter((transs: any) => transs.trans_stat === 'handWash' || transs.trans_stat === 'press' || transs.trans_stat === 'rush' || transs.trans_stat === 'pick' || transs.trans_stat === 'deliver' || transs.trans_stat === 'paid');
+        const pendingTransactions = this.trans.filter((transs: any) => transs.trans_stat === 'Shipped' || transs.trans_stat === 'Ordered' || transs.trans_stat === 'rush' || transs.trans_stat === 'pick' || transs.trans_stat === 'delivered' || transs.trans_stat === 'On the way' || transs.trans_stat === 'pending');
 
         if(pendingTransactions.length > 0){
           console.log('Pending Trans', pendingTransactions);

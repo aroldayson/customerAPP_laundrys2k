@@ -26,7 +26,7 @@ export class NewCurtransComponent implements OnInit {
   newtransac = new FormGroup({
     Tracking_number: new FormControl(null),
     Cust_ID: new FormControl(this.id.cuid),
-    Transac_status: new FormControl('Pending'),
+    Transac_status: new FormControl('pending'),
     laundry: new FormControl(this.laundrylist),
   });
 

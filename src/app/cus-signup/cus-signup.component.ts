@@ -44,6 +44,8 @@ export class CusSignupComponent implements OnInit {
 
   // Save method
   save() {
+
+    console.log(this.signup.value);
     if (this.signup.invalid) {
       Swal.fire({
         icon: 'error',

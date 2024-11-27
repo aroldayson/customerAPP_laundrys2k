@@ -9,16 +9,21 @@
               <div class="container mt-4">
                 <!-- Progress Bar -->
                 <ul id="progressbar" class="progress-bar-container">
-                  <li
-                    *ngFor="let step of steps; let i = index"
-                    [ngClass]="{ 'active': i <= currentStep }"
-                    class="step0 fs-6"
-                    (click)="tracking(i)"
-                  >
-                    {{ step }}
-                  </li>
+                  <ul>
+                    <li
+                      *ngFor="let step of steps; let i = index"
+                      [ngClass]="{ 'active': i <= currentStep, 'completed': i < currentStep }"
+                      class="step7 fs-6 text-center"
+                    >
+                      {{ step }}
+                      <p *ngIf="i < transacDates.length">
+                        {{ transacDates[i] || 'Date not available' }}
+                      </p>
+                    </li>
+                  </ul>
                 </ul>
               </div>
+              <br><br>
               <div *ngFor="let det of getDet">
                 <div class="info">
                   <div class="row">

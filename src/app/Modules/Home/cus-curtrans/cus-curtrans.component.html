@@ -32,14 +32,14 @@
           <td (click)="viewItem(item.trans_ID)">{{item.totalQty}}</td>
           <td (click)="viewItem(item.trans_ID)">{{item.totalWeight}}</td>
           <td (click)="viewItem(item.trans_ID)">{{item.trans_date}}</td>
-          <td><span class="status pending">{{item.service}}</span></td>
+          <td><span class="status pending">{{ item.trans_stat.split(',')[0] }}</span></td>
           <td>{{item.totalprice}}</td>
-          <td>{{item.trans_stat}}</td>
+          <td>{{item.service}}</td>
           <td>
             <button class="btn custom-action-btn custom-update-btn" (click)="showDetails(item.track_num, item)">
               <i class="fa fa-pencil" aria-hidden="true"></i>
             </button>
-            <button class="btn custom-action-btn custom-cancel-btn" (click)="cancelItem(item.track_num)">
+            <button class="btn custom-action-btn custom-cancel-btn" (click)="cancelItem(item.trans_ID)">
               <i class="fa fa-trash-o" aria-hidden="true"></i>
             </button>
           </td>
