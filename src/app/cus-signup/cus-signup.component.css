@@ -1,142 +1,208 @@
-section {
-    background-image: url('/assets/bg.png');
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 10px;
-    /* background: linear-gradient(135deg, #71b7e6, #9b59b6); */
-  }
-  
+.hero {
+  height: 100vh;
+  background: #5988e2;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before,
+.hero::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  z-index: 1;
+  animation: float 6s infinite ease-in-out;
+}
+
+.hero::before {
+  width: 300px;
+  height: 300px;
+  top: -50px;
+  left: -50px;
+}
+
+.hero::after {
+  width: 400px;
+  height: 400px;
+  bottom: -100px;
+  right: -100px;
+  animation-duration: 8s;
+}
+
+/* Laundry Baskets */
+.laundry-basket {
+  position: absolute;
+  z-index: 0;
+  opacity: 0.8;
+  animation: float 6s infinite ease-in-out;
+}
+
+.basket-left {
+  width: 100px; /* Adjusted size for better fit */
+  bottom: 5%;
+  left: 5%;
+  animation-delay: 0.5s;
+}
+
+.basket-right {
+  width: 100px;
+  bottom: 5%;
+  right: 5%;
+  animation-delay: 1s;
+}
+
+/* Form and Content */
+.container {
+  max-width: 700px;
+  width: 100%;
+  background-color: #fff;
+  padding: 25px 30px;
+  border-radius: 8px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+  position: relative; /* Keeps form above baskets */
+  z-index: 2;
+}
+
+.container .title {
+  color: #0d0d0d;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Input Fields */
+.content form .user-details {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+form .user-details .input-box {
+  margin-bottom: 15px;
+  color: #0d0d0d;
+  width: calc(50% - 10px); /* Adjust for spacing */
+}
+
+form .user-details .input-box input {
+  height: 45px;
+  width: 100%;
+  font-size: 16px;
+  border-radius: 5px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  transition: all 0.3s ease;
+}
+
+form .user-details .input-box input:focus {
+  border-color: #5988e2;
+  outline: none;
+}
+
+form .button input {
+  height: 45px;
+  width: 100%;
+  border-radius: 5px;
+  border: none;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 500;
+  background: #5988e2;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+form .button input:hover {
+  background: #4570bf;
+}
+
+/* Already Have an Account Link */
+.already-account {
+  margin-top: 15px;
+  font-size: 14px;
+  text-align: center;
+  color: #555;
+}
+
+.already-account a {
+  color: #5988e2;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.already-account a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive Media Queries */
+@media (max-width: 768px) {
   .container {
-    max-width: 700px;
-    width: 100%;
-    background-color: #fff;
-    padding: 25px 30px;
-    border-radius: 5px;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+    padding: 20px;
   }
+
+  .user-details .input-box {
+    width: 100%; /* Stack input boxes vertically */
+  }
+
+  .basket-left {
+    width: 80px; /* Reduce size */
+    bottom: 10%;
+    left: 10%;
+  }
+
+  .basket-right {
+    width: 80px;
+    bottom: 10%;
+    right: 10%;
+  }
+}
+
+@media (max-width: 576px) {
+  .container {
+    max-width: 100%;
+    padding: 15px;
+  }
+
   .container .title {
-    font-size: 25px;
-    font-weight: 500;
-    position: relative;
+    font-size: 1.25rem;
   }
-  .container .title::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    height: 3px;
-    width: 30px;
-    border-radius: 5px;
-    background: linear-gradient(135deg, #11e0e2, #5988e2);
+
+  .user-details .input-box {
+    margin-bottom: 10px;
   }
-  .content form .user-details {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    margin: 20px 0 12px 0;
+
+  .basket-left,
+  .basket-right {
+    width: 60px; /* Further reduce basket size */
+    bottom: 15%;
   }
-  form .user-details .input-box {
-    margin-bottom: 15px;
-    width: calc(100% / 2 - 20px);
+
+  .basket-left {
+    left: 5%;
   }
-  form .input-box span.details {
-    display: block;
-    font-weight: 500;
-    margin-bottom: 5px;
+
+  .basket-right {
+    right: 5%;
   }
-  .user-details .input-box input {
-    height: 45px;
-    width: 100%;
-    outline: none;
-    font-size: 16px;
-    border-radius: 5px;
-    padding-left: 15px;
-    border: 1px solid #ccc;
-    border-bottom-width: 2px;
-    transition: all 0.3s ease;
+}
+
+.is-invalid{
+  border-color: red !important;
+  box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.25)
+}
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
   }
-  .user-details .input-box input:focus,
-  .user-details .input-box input:valid {
-    border-color: #5988e2;
+  50% {
+    transform: translateY(20px);
   }
-  form .gender-details .gender-title {
-    font-size: 20px;
-    font-weight: 500;
-  }
-  form .category {
-    display: flex;
-    width: 80%;
-    margin: 14px 0;
-    justify-content: space-between;
-  }
-  form .category label {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-  }
-  form .category label .dot {
-    height: 18px;
-    width: 18px;
-    border-radius: 50%;
-    margin-right: 10px;
-    background: #d9d9d9;
-    border: 5px solid transparent;
-    transition: all 0.3s ease;
-  }
-  #dot-1:checked~.category label .one,
-  #dot-2:checked~.category label .two,
-  #dot-3:checked~.category label .three {
-    background: #5988e2;
-    border-color: #d9d9d9;
-  }
-  /* form input[type="radio"] {
-    display: none;
-  } */
-  form .button {
-    height: 45px;
-    margin: 35px 0
-  }
-  form .button input {
-    height: 100%;
-    width: 100%;
-    border-radius: 5px;
-    border: none;
-    color: #fff;
-    font-size: 18px;
-    font-weight: 500;
-    letter-spacing: 1px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    background:  #5988e2;
-  }
-  form .button input:hover {
-    background: #4570bf;
-  }
-  /* Responsive media query code for mobile devices */
-  @media(max-width: 584px) {
-    .container {
-      max-width: 100%;
-    }
-    form .user-details .input-box {
-      margin-bottom: 15px;
-      width: 100%;
-    }
-    form .category {
-      width: 100%;
-    }
-    .content form .user-details {
-      max-height: 300px;
-      overflow-y: scroll;
-    }
-    .user-details::-webkit-scrollbar {
-      width: 5px;
-    }
-  }
-  /* Responsive media query code for mobile devices */
-  @media(max-width: 459px) {
-    .container .content .category {
-      flex-direction: column;
-    }
-  }
+}

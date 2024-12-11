@@ -17,7 +17,8 @@
   <div class="btn-group mb-3 d-flex flex-wrap justify-content-start">
     <button class="btn btn-custom btn-sm m-1" (click)="filterStatus('All')">All</button>
     <button class="btn btn-custom btn-sm m-1" (click)="filterStatus('Pending')">Pending</button>
-    <button class="btn btn-custom btn-sm m-1" (click)="filterStatus('for Release')">On Process</button>
+    <button class="btn btn-custom btn-sm m-1" (click)="filterStatus('Washing')">Washing</button>
+    <button class="btn btn-custom btn-sm m-1" (click)="filterStatus('Folding')">Folding</button>
     <button class="btn btn-custom btn-sm m-1" (click)="filterStatus('Completed')">Completed</button>
     <button class="btn btn-custom btn-sm m-1" (click)="filterStatus('Cancelled')">Cancelled</button>
   </div>
@@ -34,21 +35,21 @@
                   <th>Service</th>
                   <th>Payment</th>
                   <th>Amount</th>
-                  <th>Action</th>
+                  <!-- <th>Action</th> -->
               </tr>
           </thead>     
           <tbody>
               @for(h of filteredHist; track h){
               <tr>
                 <td>{{h.trans_tracking_number}}</td>
-                <td>{{h.Transac_date }}</td>
-                <td>{{h.Transac_status }}</td>
-                <td>{{h.service }}</td>
+                <td>{{h.Transac_datetime }}</td>
+                <td>{{h.latest_transac_status }}</td>
+                <td>{{h.Addservice_name }}</td>
                 <td>{{h.Mode_of_Payment }}</td>
                 <td>{{h.payment_amount }}</td>
-                <td>
+                <!-- <td>
                   <button class="btn btn-primary btn-sm" (click)="viewItem(h.Transac_ID)">View</button>
-                </td>
+                </td> -->
               </tr>
             }
           </tbody>

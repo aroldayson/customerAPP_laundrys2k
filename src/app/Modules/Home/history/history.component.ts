@@ -15,98 +15,123 @@ export class HistoryComponent implements OnInit {
   selectedFile: File | null = null;
   imagePreview: string | null = null;
   cust_id = { id: localStorage.getItem('Cust_ID') };
-  steps = ['Ordered', 'Shipped', 'On the way', 'Delivered'];
-  currentStep = 0;
-  // stepDates = ['2024-11-21', '2024-11-22', '2024-11-23', '2024-11-24'];
+  steps:string[] =['pending','received','washing','folding','forRelease','released'];
+  // currentStep = 0;
   transacDates: string[] = [];
-
   currentDate: string | null = null;
   getDet: any[] = [];
   Transac_ID: string | null = null;
-  transactionDate: string | null = null;
-  transactionDates: string | null = null;
-
-  statuses: any;
+  statuses: string[] = [];
+  details: any;
+  customer = localStorage.getItem('Cust_ID');
+  price:any;
+  totalprice:any;
+  totalweight:any;
+  totalqty:any;
+  servicename:any;
+  serviceprice:any;
+  servicearray: string[] = [];
+  currentStep: number = 0;  // Update this dynamically based on user progress (e.g., using a value from your logic)
+  progressPercent: number = (this.currentStep / (this.steps.length - 1)) * 100; // Calculate progress percentage
 
   constructor(private http: HttpClient, private service: MyServiceService) {}
 
   ngOnInit(): void {
     this.Transac_ID = localStorage.getItem('trans_ID');
+
+    this.service.getcustomer(this.customer).subscribe((result:any)=>{
+      console.log(result)
+      this.customer = result.customerFirst.Cust_fname;
+      console.log(this.customer)
+    })
+
+    // Format current date
     this.currentDate = this.formatDate(new Date());
 
     if (this.Transac_ID) {
       this.service.getDetails(this.Transac_ID).subscribe(
-        (result: any) => {
+        (result: any) => {  
+          const price = result[0].total;
+          const serviceprice = result[0].totalserviceprice
+          this.serviceprice = serviceprice
+          this.price = price;
+          this.totalprice = price + serviceprice
+          this.totalqty = result[0].totalqty;
+          this.servicearray = result[0].services;   
           this.getDet = result || [];
-    
+          this.totalweight = result[0].totalweight
+          console.log(this.totalweight)
+          console.log(this.servicearray)
+          console.log(result) 
+
           if (this.getDet.length > 0) {
-            // Initialize arrays to store the statuses and dates
             const statuses: string[] = [];
             const transacDates: string[] = [];
-    
-            // Loop through all transaction statuses to capture each one and its corresponding date
+
+            // Process transaction status and date
             this.getDet[0].Transac_status.forEach((transac: any) => {
-              const status = transac.Transac_status;
+              console.log(transac);
+              const status = transac.TransacStatus_name;
               const transacDate = transac.TransacStatus_datetime;
-    
-              // Store the status and date in arrays
+
               if (status) {
-                statuses.push(status.toLowerCase());
-                this.updateCurrentStep(status.toLowerCase()); // Update the current step based on the status
+                statuses.push(status.toLowerCase()); // Ensure the status is in lowercase
+                this.updateCurrentStep(status.toLowerCase()); // Update the current step automatically
+                console.log(status);
               }
-    
+
               if (transacDate) {
                 transacDates.push(this.formatDateString(transacDate));
               } else {
                 transacDates.push('No transaction date available');
               }
             });
-    
-            // Now statuses and transacDates hold the arrays of status and transaction dates
+
             this.statuses = statuses;
             this.transacDates = transacDates;
-    
-            // Log the status and dates
+            console.log(this.transacDates);
+
+            // Log the statuses and dates for debugging
             console.log('Statuses:', this.statuses);
             console.log('Transaction Dates:', this.transacDates);
+
+            // Access the details array if it exists
+            if (this.getDet[0].details && this.getDet[0].details.length > 0) {
+              this.details = this.getDet[0].details;
+              console.log('Transaction Details:', this.details);
+            } else {
+              console.log('No details available.');
+            }
           }
-    
-          console.log('Transaction Details:', this.getDet);
         },
         (error) => {
           console.error('Error fetching transaction details:', error);
         }
       );
     }
-    
-    
-
-    // if (this.Transac_ID) {
-    //   this.service.getDetails(this.Transac_ID).subscribe(
-    //     (result: any) => {
-    //       this.getDet = result || [];
-    //       if (this.getDet.length > 0 && this.getDet[0].Transac_status) {
-    //         const status = this.getDet[0].Transac_status.toLowerCase();
-    //         this.updateCurrentStep(status);
-    
-    //         // Process and format the Transac_date
-    //         const transacDate = this.getDet[0].Transac_date;
-    //         if (transacDate) {
-    //           this.transactionDate = this.formatDateString(transacDate);
-    //         } else {
-    //           this.transactionDate = 'No transaction date available';
-    //         }
-    //       }
-    //       console.log('Transaction Details:', this.getDet);
-    //     },
-    //     (error) => {
-    //       console.error('Error fetching transaction details:', error);
-    //     }
-    //   );
-    // }
   }
 
-  // Format transaction date string to a readable format
+  // Update the current step based on status
+  updateCurrentStep(status: string): void {
+    const stepIndex = this.steps.findIndex(step => step.toLowerCase() === status.toLowerCase());
+    if (stepIndex >= 0) {
+      this.currentStep = stepIndex;
+      this.progressPercent = (this.currentStep / (this.steps.length - 1)) * 100;
+      this.currentStep = stepIndex; // Update the current step when status matches
+      this.checkAndShowDateForCurrentStep(stepIndex); // Ensure the current step date is updated
+    }
+    console.log('Updated current step:', this.currentStep); // Optional: Debugging log
+  }
+
+  // Ensure current step's transaction date is available
+  checkAndShowDateForCurrentStep(stepIndex: number): void {
+    // Check if the transaction date for the current step is available
+    if (this.transacDates[stepIndex]) {
+      console.log('Date for current step:', this.transacDates[stepIndex]); // Debugging log
+    }
+  }
+
+  // Format the transaction date string to a readable format
   formatDateString(dateString: string): string {
     const options: Intl.DateTimeFormatOptions = {
       year: 'numeric',
@@ -130,17 +155,14 @@ export class HistoryComponent implements OnInit {
     return date.toLocaleDateString('en-US', options);
   }
 
+  // Handle click on a specific step
   tracking(stepIndex: number): void {
     if (stepIndex >= 0 && stepIndex < this.steps.length) {
-      this.currentStep = stepIndex;
+      this.currentStep = stepIndex; // Update the current step
     }
   }
 
-  updateCurrentStep(status: string): void {
-    const stepIndex = this.steps.findIndex(step => step.toLowerCase() === status);
-    this.tracking(stepIndex >= 0 ? stepIndex : 0);
-  }
-
+  // Handle file selection and image preview
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
@@ -149,6 +171,7 @@ export class HistoryComponent implements OnInit {
     }
   }
 
+  // Preview selected image
   previewImage(): void {
     if (this.selectedFile) {
       const reader = new FileReader();
@@ -159,6 +182,7 @@ export class HistoryComponent implements OnInit {
     }
   }
 
+  // Upload the selected file
   upload(): void {
     if (this.selectedFile && this.cust_id.id) {
       const formData = new FormData();
@@ -166,7 +190,7 @@ export class HistoryComponent implements OnInit {
 
       this.http
         .post(
-          `http://localhost:8000/api/upload-payment-image/${this.cust_id.id}`,
+          `http://10.0.118.62:8000/api/upload/${this.cust_id.id}`,
           formData
         )
         .subscribe(

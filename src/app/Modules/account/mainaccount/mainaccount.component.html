@@ -1,89 +1,238 @@
-<form [formGroup]="profileform" (ngSubmit)="save()">
-<div class="container rounded bg-white my-4">
-    <div class="row">
-        <!-- Profile Picture Section -->
-        <div class="col-lg-4 col-md-5 col-sm-12 border-right profile-picture-section">
-            <div class="d-flex flex-column align-items-center text-center p-3 py-5">
-                <div class="d-flex flex-column align-items-center">
-                    <img [src]="previewUrl || ('http://localhost:8000/images/' + customerData?.Cust_image)"  alt="Customer" class="rounded-circle mb-2 img-fluid profile-image" 
-                         style="width: 100px; height: 100px; object-fit: cover; border: 2px solid #ddd;">
-                    <input type="file" id="fileInput" (change)="onFileSelected($event)" accept="image/*" 
-                        formControlName="Cust_image" style="display: none;">
-                    <label for="fileInput" class="cursor-pointer mt-2 upload-photo-btn">
-                        <i class="fas fa-camera" style="color: #929292; font-size: 1.5rem;"></i>
-                    </label>
-                </div>
-                <div class="mt-3">
-                    <span class="font-weight-bold">Name</span><br>
-                    <span class="text-black-50">{{customerData?.Cust_fname}}</span><br>
-                    <span class="font-weight-bold">Home Address</span><br>
-                    <span>{{customerData?.Cust_address}}</span>
+<!-- <form [formGroup]="profileform" (ngSubmit)="save()">
+    <div class="container rounded bg-white my-4">
+        <div class="row">
+     
+            <div class="col-lg-4 col-md-5 col-sm-12 border-right profile-picture-section">
+                <div class="d-flex flex-column align-items-center text-center p-3 py-5">
+                    <div class="d-flex flex-column align-items-center">
+                        <img [src]="previewUrl || ('http://10.0.118.71:8000/images/' + customerData?.Cust_image)"  alt="Customer" class="rounded-circle mb-2 img-fluid profile-image" 
+                             style="width: 100px; height: 100px; object-fit: cover; border: 2px solid #ddd;">
+                        <input type="file" id="fileInput" (change)="onFileSelected($event)" accept="image/*" 
+                            formControlName="Cust_image" style="display: none;">
+                        <label for="fileInput" class="cursor-pointer mt-2 upload-photo-btn">
+                            <i class="fas fa-camera" style="color: #929292; font-size: 1.5rem;"></i>
+                        </label>
+                    </div>
+                    <div class="mt-3">
+                        <span class="font-weight-bold">Name</span><br>
+                        <span class="text-black-50">{{customerData?.Cust_fname}}</span><br>
+                        <span class="font-weight-bold">Home Address</span><br>
+                        <span>{{customerData?.Cust_address}}</span>
+                    </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Form Section -->
-        <div class="col-lg-8 col-md-7 col-sm-12">
-            <div class="p-3 py-5">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <div class="d-flex flex-row align-items-center">
-                        <i class="fa fa-long-arrow-left mr-1 mb-1"></i>
-                        <h6>Back to home</h6>
+    
+            <div class="col-lg-8 col-md-7 col-sm-12">
+                <div class="p-3 py-5">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="text-right">Edit Profile</h6>
                     </div>
-                    <h6 class="text-right">Edit Profile</h6>
+                    
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="lname" class="form-label">Last Name</label>
+                                <input type="text" class="form-control" id="lname" formControlName="Cust_lname" readonly>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="fname" class="form-label">First Name</label>
+                                <input type="text" class="form-control" id="fname" formControlName="Cust_fname" readonly>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="mname" class="form-label">Middle Name</label>
+                                <input type="text" class="form-control" id="mname" formControlName="Cust_mname" readonly>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="phone" class="form-label">Phone</label>
+                                <input type="text" class="form-control" id="phone" formControlName="Cust_phoneno">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" formControlName="Cust_email" readonly>
+                            </div>
+                            <div class="col-md-6 mb-3 position-relative">
+                                <label for="password" class="form-label">Password</label>
+                                <input 
+                                    type="{{ showPassword ? 'text' : 'password' }}" 
+                                    class="form-control password-input" 
+                                    id="password" 
+                                    formControlName="Cust_password">
+                            
+                                <i 
+                                    (click)="togglePasswordVisibility()" 
+                                    class="fa {{ showPassword ? 'fa-eye-slash' : 'fa-eye' }} password-toggle-icon">
+                                </i>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label for="address" class="form-label">Address</label>
+                                <input type="text" class="form-control" id="address" formControlName="Cust_address" >
+                            </div>
+                        </div>
+                        <div class="text-right mt-4">
+                            <button type="submit" class="btn btn-primary profile-button">Update Profile</button>
+                        </div>
+                    
                 </div>
-                
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="lname" class="form-label">Last Name</label>
-                            <input type="text" class="form-control" id="lname" formControlName="Cust_lname" >
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="fname" class="form-label">First Name</label>
-                            <input type="text" class="form-control" id="fname" formControlName="Cust_fname">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="mname" class="form-label">Middle Name</label>
-                            <input type="text" class="form-control" id="mname" formControlName="Cust_mname">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="phone" class="form-label">Phone</label>
-                            <input type="text" class="form-control" id="phone" formControlName="Cust_phoneno">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" formControlName="Cust_email">
-                        </div>
-                        <div class="col-md-6 mb-3 position-relative">
-                            <label for="password" class="form-label">Password</label>
-                            <input 
-                                type="{{ showPassword ? 'text' : 'password' }}" 
-                                class="form-control password-input" 
-                                id="password" 
-                                formControlName="Cust_password">
-                        
-                            <i 
-                                (click)="togglePasswordVisibility()" 
-                                class="fa {{ showPassword ? 'fa-eye-slash' : 'fa-eye' }} password-toggle-icon">
-                            </i>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12 mb-3">
-                            <label for="address" class="form-label">Address</label>
-                            <input type="text" class="form-control" id="address" formControlName="Cust_address" >
-                        </div>
-                    </div>
-                    <div class="text-right mt-4">
-                        <button type="submit" class="btn btn-primary profile-button">Update Profile</button>
-                    </div>
-                
             </div>
         </div>
     </div>
-</div>
-</form>
+    </form> -->
+
+    <form [formGroup]="profileform" (ngSubmit)="save()">
+        <div class="container-xl px-4 mt-4">
+      
+          <!-- Profile Section -->
+          <div class="row">
+            <!-- Profile Picture Section -->
+            <div class="col-xl-4 col-lg-5 col-md-12 mb-4">
+              <div class="card shadow">
+                <div class="card-header">Profile Picture</div>
+                <div class="card-body text-center">
+                  <!-- Profile Image -->
+                  <img 
+                    class="img-account-profile rounded-circle mb-2" 
+                    [src]="previewUrl || ('http://192.168.3.85:8000/images/' + customerData?.Cust_image)"
+                    alt="Customer image">
+                 
+
+                      <div>
+                       <p> {{fname}} {{lname}}</p>
+                       <p>{{email}}</p>
+                       <p>{{address}}</p>
+                      </div>
+                    
+      
+                  <!-- Hidden File Input -->
+                  <input 
+                    type="file" 
+                    id="fileInput" 
+                    (change)="onFileSelected($event)" 
+                    accept="image/*" 
+                    formControlName="Cust_image" 
+                    style="display: none;">
+      
+                    <!-- Instructions -->
+                    <div class="small font-italic text-muted mt-2">JPG or PNG no larger than 5 MB</div>
+      
+                  <!-- Upload Button -->
+                  <button 
+                    class="btn btn-primary profile-button mt-3 mx-auto" 
+                    type="button" 
+                    (click)="triggerFileInput()">
+                    <i class="fas fa-camera"></i> Upload New Image
+                  </button>
+      
+                </div>
+              </div>
+            </div>
+      
+            <!-- Account Details Section -->
+            <div class="col-xl-8 col-lg-7 col-md-12">
+              <div class="card mb-4">
+                <div class="card-header">Account Details</div>
+                <div class="card-body">
+                  <!-- Name Fields -->
+                  <div class="row gx-3 mb-3">
+                    <div class="col-md-6">
+                      <label class="small mb-1" for="lname">Last Name</label>
+                      <input 
+                        type="text" 
+                        class="form-control" 
+                        id="lname" 
+                        formControlName="Cust_lname" 
+                        readonly>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="small mb-1" for="fname">First Name</label>
+                      <input 
+                        type="text" 
+                        class="form-control" 
+                        id="fname" 
+                        formControlName="Cust_fname" 
+                        readonly>
+                    </div>
+                  </div>
+      
+                  <!-- Middle Name and Phone Number -->
+                  <div class="row gx-3 mb-3">
+                    <div class="col-md-6">
+                      <label class="small mb-1" for="mname">Middle Name</label>
+                      <input 
+                        type="text" 
+                        class="form-control" 
+                        id="mname" 
+                        formControlName="Cust_mname" 
+                        readonly>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="small mb-1" for="phone">Phone Number</label>
+                        <input 
+                          type="text" 
+                          class="form-control" 
+                          id="phone" 
+                          formControlName="Cust_phoneno"
+                          [pattern]="'^[0-9]{11}$'" 
+                          placeholder="Enter a valid Phone Number" />
+                        <div *ngIf="profileform.get('Cust_phoneno')?.hasError('pattern') && profileform.get('Cust_phoneno')?.touched" class="text-danger">
+                          Phone number must be exactly 11 digits.
+                        </div>
+                      </div>
+                  </div>
+      
+                  <!-- Email Field -->
+                  <div class="mb-3">
+                    <label class="small mb-1" for="email">Email Address</label>
+                    <input 
+                      type="email" 
+                      class="form-control" 
+                      id="email" 
+                      formControlName="Cust_email" 
+                      readonly>
+                  </div>
+      
+                  <!-- Password Field -->
+                  <div class="row gx-3 mb-3">
+                    <div class="col-md-6">
+                      <label class="small mb-1" for="password">Password</label>
+                      <div class="position-relative">
+                        <input 
+                          type="{{ showPassword ? 'text' : 'password' }}" 
+                          class="form-control password-input" 
+                          id="password" 
+                          formControlName="Cust_password">
+                        <i 
+                          (click)="togglePasswordVisibility()" 
+                          class="fa {{ showPassword ? 'fa-eye-slash' : 'fa-eye' }} password-toggle-icon">
+                        </i>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="small mb-1" for="password">Address</label>
+                      <div class="position-relative">
+                        <input 
+                          type="address" 
+                          class="form-control" 
+                          id="adress" 
+                          formControlName="Cust_address">
+                      </div>
+                    </div>
+                  </div>
+                  
+      
+                  <!-- Update Button -->
+                  <button 
+                    type="submit" 
+                    class="btn btn-primary update-button mt-3">
+                    Update Profile
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>

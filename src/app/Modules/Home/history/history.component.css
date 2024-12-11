@@ -1,117 +1,182 @@
-  /* Card Styling */
-  .card {
-    box-shadow: 0 20px 27px 0 rgb(0 0 0 / 5%);
-    border: 0;
-    border-radius: 1rem;
-    background-color: #fff;
+/* Styling for the progress bar */
+.progress {
+  position: relative;
+  height: 20px;
+  background-color: #e0e0e0;
+  margin-bottom: 20px; /* Space between progress bar and steps */
+}
+
+.progress-bar {
+  height: 100%;
+  background-color: rgb(109, 150, 238); /* Color of the progress bar */
+  transition: width 0.3s ease-in-out;
+}
+
+/* Styling for steps */
+.steps-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.step-item {
+  text-align: center;
+  flex: 1; /* Ensures steps are evenly spaced */
+  margin-bottom: 15px;
+  padding: 0 10px; /* Adds space between each step */
+  font-size: 16px;
+}
+
+.step-item .step-number {
+  font-weight: bold;
+  margin-bottom: 5px;
+  background-color: rgb(109, 150, 238);
+  color: white;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: inline-block;
+  line-height: 30px;
+  text-align: center;
+}
+
+.step-item .step-title {
+  font-size: 14px;
+}
+
+.step-item .step-date {
+  font-size: 12px;
+  color: #666;
+}
+
+/* Active step styles */
+.step-item.active .step-title {
+  font-weight: bold;
+  color: rgb(109, 150, 238); /* Green for active step */
+}
+
+/* Completed step styles */
+.step-item.completed .step-title {
+  color: #888; /* Gray for completed steps */
+}
+
+/* Styling for active and completed steps */
+.step-item.active .step-number {
+  background-color: rgb(109, 150, 238);
+}
+
+.step-item.completed .step-number {
+  background-color: #888;
+}
+
+/* Make the steps list responsive (tablet/phone view) */
+@media (max-width: 1024px) {
+  /* Tablets */
+  .step-item {
+    flex: 0 0 48%;  /* Two steps per row */
   }
-  
+}
+
+@media (max-width: 768px) {
+  /* Small tablets and smaller screens */
+  .step-item {
+    flex: 0 0 48%;  /* Two steps per row */
+  }
+}
+
+@media (max-width: 480px) {
+  /* Phones */
+  .step-item {
+    flex: 0 0 100%;  /* One step per row */
+  }
+}
+
+/* Add some margin between progress bar and steps list */
+@media (max-width: 768px) {
+  .progress {
+    margin-bottom: 10px; /* Reduces margin on smaller screens */
+  }
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+  .progress-bar-container {
+    padding: 0 2%;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  #progressbar {
+    flex-direction: column;
+    padding: 0;
+  }
+
+  #progressbar li {
+    font-size: 12px;
+    margin-bottom: 1rem;
+    text-align: left;
+  }
+
+  .laundry-details {
+    padding: 10px;
+    margin-top: 10px;
+  }
+
+  .laundry-details .fw-bold {
+    font-size: 1.1rem;
+  }
+
+  .laundry-details .text-end {
+    text-align: left;
+  }
+
   .card-body {
     padding: 1.5rem;
   }
-  
-  .image-preview img {
-    border-radius: 0.5rem;
+
+  .card-footer {
+    padding: 1rem;
   }
-  
-  /* Form Elements */
-  .form-label {
-    font-weight: 500;
+
+  .h5 {
+    font-size: 1.25rem;
   }
-  
-  /* Progress Bar */
-  #progressbar {
-    margin-bottom: 3vh;
-    color: rgb(109, 150, 238);
+
+  .col-md-6 {
+    margin-bottom: 1rem;
+  }
+
+  .col-12 {
     padding-left: 0;
-    margin-top: 3vh;
+    padding-right: 0;
   }
-  
-  #progressbar li {
-    list-style-type: none;
-    font-size: x-small;
-    width: 25%;
-    float: left;
-    position: relative;
-    font-weight: 400;
-    color: rgb(160, 159, 159);
+
+  .d-none.d-lg-block {
+    display: none;
   }
-  
-  #progressbar li:before {
-    content: "";
+}
+
+/* Tablet and Larger Screens */
+@media (min-width: 769px) {
+  .col-lg-9 {
+    margin-bottom: 1.5rem;
+  }
+
+  .d-none.d-lg-block {
     display: block;
-    background: #ddd;
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    margin: auto;
-    margin-bottom: 1vh;
   }
-  
-  #progressbar li:after {
-    content: '';
-    height: 2px;
-    background: #ddd;
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 1px;
-    z-index: 1;
+
+  .progress-bar-container {
+    flex-direction: row;
+    justify-content: space-between;
   }
-  
-  #progressbar li.active {
-    color: black;
+
+  .row.d-flex.justify-content-center.align-items-start {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
   }
-  
-  #progressbar li.active:before,
-  #progressbar li.active:after {
-    background: rgb(109, 150, 238);
-  }
-  .info{
-    padding: 5% 8%;
 }
-.info .col-5{
-    padding: 0;
-}
-#heading{
-    color: grey;
-    line-height: 6vh;
-}
-.pricing{
-    background-color: #ddd3;
-    padding: 2vh 8%;
-    font-weight: 400;
-    line-height: 2.5;
-}
-.pricing .col-3{
-    padding: 0;
-}
-.total{
-    padding: 2vh 8%;
-    color: #5988e2;
-    font-weight: bold;
-}
-.total .col-3{
-    padding: 0;
-}
-  /* Media Queries for Responsive Design */
-  @media (max-width: 768px) {
-    .accordion-body {
-      padding: 1rem;
-    }
-  
-    .col-lg-9,
-    .col-lg-3 {
-      margin-bottom: 2rem;
-    }
-  
-    .card-body {
-      padding: 1rem;
-    }
-  
-    .btn {
-      width: 100%;
-      margin-bottom: 0.5rem;
-    }
-  }
-  

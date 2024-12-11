@@ -1,110 +1,174 @@
-/* General Reset */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-/* Hero Section */
-.hero-section {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: url('/assets/bg.png') no-repeat center center/cover;
+/* Landing Page Section */
+.hero {
   height: 100vh;
-  color: #fff;
-  text-align: center;
-  position: relative;
-  padding: 1rem;
-}
-.hero-section::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-}
-.hero-content {
-  position: relative;
-  z-index: 1;
-  max-width: 600px;
-  width: 100%;
-}
-
-/* Title and Text Styling */
-.hero-title {
-  font-size: 2.5rem;
-  font-weight: bold;
-}
-.hero-text {
-  font-size: 1rem;
-  margin: 1rem 0;
-}
-
-/* Button Styling */
-.hero-btn {
-  background-color: #5988e2;
-  border: none;
-  padding: 0.8rem 1.5rem;
-  font-size: 1rem;
-  border-radius: 5px;
-  transition: background-color 0.3s;
+  background: #5988e2;
   color: white;
-  text-decoration: none;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-logo {
+  width: 150px;
+  height: auto;
+  margin-bottom: 2rem;
+  animation: fadeIn 1.5s ease;
+}
+
+.hero h1 {
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+  animation: slideIn 1.5s ease;
+}
+
+.hero .highlight {
+  color: #ffc15d;
+  text-shadow: 0 3px 10px rgba(255, 255, 255, 0.3);
+}
+
+.hero p {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+  line-height: 1.5;
+  animation: fadeIn 2s ease;
+}
+
+.btn-get-started {
+  background-color: #ffc15d;
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: bold;
+  padding: 0.75rem 2.5rem;
+  border: none;
+  border-radius: 30px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
   cursor: pointer;
 }
-.hero-btn:hover {
-  background-color: #476bb3;
+
+.btn-get-started:hover {
+  background-color: #ffc15d;
+  color: #ffffff;
+  transform: scale(1.1);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
 }
 
-/* About Us Section */
-.about-section {
-  padding: 3rem 1rem;
-  text-align: center;
-  background-color: #f8f9fa;
-}
-.about-content {
-  max-width: 700px;
-  margin: 0 auto;
-}
-.about-title {
-  font-size: 2rem;
-  color: #333;
-  margin-bottom: 1rem;
-}
-.about-text {
-  font-size: 1rem;
-  color: #555;
-  line-height: 1.6;
+/* Background Design - Animated Circles */
+.hero::before, .hero::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  z-index: 1;
+  animation: float 6s infinite ease-in-out;
 }
 
-/* Footer */
-.footer {
-  text-align: center;
-  padding: 1rem 0;
-  background: #5988e2;
-  color: #fff;
-  font-size: 0.9rem;
+.hero::before {
+  width: 300px;
+  height: 300px;
+  top: -50px;
+  left: -50px;
 }
 
-/* Responsive Styling */
+.hero::after {
+  width: 400px;
+  height: 400px;
+  bottom: -100px;
+  right: -100px;
+  animation-duration: 8s;
+}
+/* Laundry Baskets */
+.laundry-basket {
+  position: absolute;
+  z-index: 1;
+  opacity: 0.9;
+  animation: float 6s infinite ease-in-out;
+}
+
+.basket-left {
+  width: 120px;
+  bottom: 20px;
+  left: 10%;
+  animation-delay: 0.5s;
+}
+
+.basket-right {
+  width: 140px;
+  bottom: 15px;
+  right: 10%;
+  animation-delay: 1s;
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
-  .hero-title {
+  .hero h1 {
+    font-size: 2.5rem;
+  }
+
+  .hero p {
+    font-size: 1rem;
+  }
+
+  .btn-get-started {
+    font-size: 1rem;
+    padding: 0.6rem 2rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .hero h1 {
     font-size: 2rem;
   }
-  .hero-text {
+
+  .hero p {
     font-size: 0.9rem;
   }
-  .hero-btn {
-    font-size: 0.9rem;
-    padding: 0.7rem 1.2rem;
+
+  .hero-logo {
+    width: 120px;
   }
-  .about-title {
-    font-size: 1.8rem;
+}
+@media (max-width: 576px) {
+  .basket-left, .basket-right {
+    width: 80px;
   }
-  .about-text {
-    font-size: 0.9rem;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(20px);
   }
 }

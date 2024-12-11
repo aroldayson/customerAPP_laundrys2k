@@ -1,30 +1,54 @@
+<!-- <div class="welcome-banner">
+  <h1>WELCOME CUSTOMER</h1>
+  <p>Thank you for choosing S2K Laundry Shop!</p>
+</div> -->
+
+
+
+<!-- <div class="hero-wrap vh-100 d-flex align-items-center" style="background-image: url('assets/bg.png'); background-size: cover; background-position: center;">
+  <div class="w-100 h-100 position-absolute bg-dark opacity-50"></div>
+  <div class="container position-relative">
+    <div class="row align-items-center h-100">
+      <div class="col-md-6">
+        <h2 class="text-light">Leave the house cleaning chores to us</h2>
+        <h1 class="mb-4 text-white">Let us do the dirty work, so you don't have to.</h1>
+        <a href="#" class="btn btn-primary py-2 px-4">Learn more <span class="ms-2">&rarr;</span></a>
+      </div>
+    </div>
+  </div>
+</div> -->
 <div class="container-fluid">
   <div class="d-flex flex-wrap justify-content-between align-items-center my-3">
-    <button class="btn btn-primary mb-2" (click)="gentrack()" style="cursor: pointer; background-color: #5988e2;">
+    <button class="btn btn-primary mb-2" (click)="gentrack()">
       New Transaction <i class="fa fa-plus-circle"></i>
     </button>
-    <input type="text" id="searchInput" class="form-control search-input" placeholder="Search" onkeyup="searchTable()">
+      <!-- HTML Structure -->
+      <div class="search-container">
+        <input type="text" id="searchInput" [(ngModel)]="keyword" autocomplete="off" placeholder="Search" class="search-input">
+      </div>
   </div>
-  
 
+  <!-- Responsive Table -->
   <div class="table-responsive">
-    <table class="table table-borderless table-hover table-striped">
-      <thead class="table-header">
+    <table class="table table-hover d-none d-md-table">
+      <thead class="table-primary">
         <tr>
           <th scope="col"></th>
           <th scope="col">Tracking #</th>
           <th scope="col">Laundry Item</th>
           <th scope="col">Qty</th>
           <th scope="col">Weight</th>
-          <th scope="col">Date</th>
+          <th scope="col">Transaction Date</th>
+          <th scope="col">Estimated Date</th>
           <th scope="col">Status</th>
           <th scope="col">Price</th>
+          <th scope="col">Estimated Price</th>
           <th scope="col">Service</th>
           <th scope="col">Action</th>
         </tr>
       </thead>
       <tbody>
-        @for (item of trans; track item.trans_ID) {
+        @for (item of trans | searchFilter: keyword ; track item.trans_ID) {
         <tr>
           <td></td>
           <td (click)="viewItem(item.trans_ID)">{{item.track_num}}</td>
@@ -32,87 +56,212 @@
           <td (click)="viewItem(item.trans_ID)">{{item.totalQty}}</td>
           <td (click)="viewItem(item.trans_ID)">{{item.totalWeight}}</td>
           <td (click)="viewItem(item.trans_ID)">{{item.trans_date}}</td>
-          <td><span class="status pending">{{ item.trans_stat.split(',')[0] }}</span></td>
-          <td>{{item.totalprice}}</td>
-          <td>{{item.service}}</td>
+          <td (click)="viewItem(item.trans_ID)">{{item.estimated_date}}</td>
+          <td><span class="status pending">{{item.trans_stat}}</span></td>
+          <td >{{item.totalprice}}</td>
+          <td >{{item.calculatedTotalPrice}}
+            <i class="fa fa-info-circle" 
+              aria-hidden="true" 
+              data-bs-toggle="tooltip" 
+              data-bs-placement="left" 
+              title="Total Price might change base on additional services and laundry weight">
+            </i>
+          </td>
+          <td>{{item.Addservice_name}}</td>
           <td>
-            <button class="btn custom-action-btn custom-update-btn" (click)="showDetails(item.track_num, item)">
-              <i class="fa fa-pencil" aria-hidden="true"></i>
+            <button class="btn btn-sm btn-primary me-2" 
+            [disabled]="item.trans_stat.toLowerCase() !== 'pending'"
+            (click)="showDetails(item.track_num, item, item.trans_ID)">
+              <i class="fa fa-pencil"></i>
             </button>
-            <button class="btn custom-action-btn custom-cancel-btn" (click)="cancelItem(item.trans_ID)">
-              <i class="fa fa-trash-o" aria-hidden="true"></i>
-            </button>
+            <button 
+            class="btn btn-sm btn-danger" 
+            [disabled]="item.trans_stat.toLowerCase()!== 'pending'"
+            (click)="updateStatus(item.trans_ID)">
+            <i class="fa fa-trash"></i>
+          </button>
           </td>
         </tr>
         }
       </tbody>
     </table>
+
+    
+
+    <!-- Card View for Mobile -->
+    <div class="mobile-table d-md-none">
+      @for (item of trans | searchFilter: keyword ; track item.trans_ID) {
+      <div class="card mb-3 shadow-sm">
+        <div class="card-body" (click)="viewItem(item.trans_ID)">
+          <h5 class="card-title">
+            Tracking #: {{item.track_num}}
+          </h5>
+          <p class="card-text">
+            <strong>Item:</strong> {{item.Category}}<br>
+            <strong>Qty:</strong> {{item.totalQty}}<br>
+            <strong>Weight:</strong> {{item.totalWeight}}<br>
+            <strong>Date:</strong> {{item.trans_date}}<br>
+            <strong>Estimated Date:</strong> {{item.estimated_date}}<br>
+            <strong>Status:</strong> <span class="status pending">{{item.trans_stat}}</span><br>
+            <strong>Price:</strong> {{item.totalprice}}<br>
+            <strong>Estimated Price:</strong> {{item.calculatedTotalPrice}} 
+            <i class="fa fa-info-circle" 
+            aria-hidden="true" 
+            data-bs-toggle="tooltip" 
+            data-bs-placement="right" 
+            title="Total Price might change base on additional services and laundry weight">
+          </i><br>
+            <strong>Service:</strong> {{item.Addservice_name}}
+          </p>
+          <div class="d-flex">
+            <button class="btn btn-primary btn-sm me-2"
+            [disabled]="item.trans_stat.toLowerCase() !== 'pending'"
+             (click)="showDetails(item.track_num, item, item.trans_ID); $event.stopPropagation()">
+              <i class="fa fa-pencil"></i> Edit
+            </button>
+            <button class="btn btn-danger btn-sm"
+            [disabled]="item.trans_stat.toLowerCase() !== 'pending'"
+             (click)="updateStatus(item.trans_ID); $event.stopPropagation()">
+             <i class="fa fa-trash"></i> Delete
+            </button>
+          </div>
+        </div>
+      </div>
+      }
+    </div>
   </div>
 </div>
 
-<!-- UPDATED UPDATE MODAL -->
+
 <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" #updateModal>
   <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Update Transaction</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal-content shadow-lg border-0 rounded-3">
+      
+      <!-- Modal Header -->
+      <div class="modal-header text-white" style="background-color: #5988e2;">
+        <h5 class="modal-title fw-bold">Update Transaction</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
-        <div class="mb-3">
-          <label>Tracking Number: <strong>{{ selectedTransaction?.track_num }}</strong></label>
-        </div>
 
-        <div class="mb-3">
-          <label for="services" class="service-label">Service Type: <strong>{{ selectedTransaction?.trans_stat }}</strong></label>
-          <div class="d-flex flex-wrap">
-            <label class="service-label">Selected Service: <strong>{{ selectedTransaction?.Transac_status }}</strong></label>
-            <div class="form-check me-3">
-              <input class="form-check-input" type="radio" formControlName="Transac_status" id="rush" value="rush">
-              <label class="form-check-label" for="rush">Rush Jobs</label>
+      <!-- Modal Body -->
+      <div class="modal-body">
+        
+        <!-- Transaction Info -->
+        <div class="alert alert-dismissible border-0 shadow-sm p-4 mb-4 rounded-3" style="background: #f8f9fa;">
+          <!-- Transaction Tracking Info -->
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+              <p class="mb-0">
+                <span class="fw-medium fs-4 text-muted">Tracking Number:</span>
+                <span class="fs-4 fw-bold text-primary">{{ selectedTransaction?.track_num }}</span>
+              </p>
             </div>
-            <div class="form-check me-3">
-              <input class="form-check-input" type="radio" formControlName="Transac_status" id="pick" value="pick">
-              <label class="form-check-label" for="pick">Pick-up</label>
+            <div>
+              <!-- Optionally add a copy button for the tracking number -->
+              <button class="btn btn-sm btn-outline-primary" (click)="copyToClipboard(selectedTransaction?.track_num)">
+                <i class="fa fa-copy" aria-hidden="true"></i> Copy
+              </button>
             </div>
-            <div class="form-check me-3">
-              <input class="form-check-input" type="radio" formControlName="Transac_status" id="deliver" value="deliver">
-              <label class="form-check-label" for="deliver">Delivery</label>
+          </div>
+        
+          <!-- Transaction Status Info -->
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <p class="mb-0">
+                <span class="fw-medium fs-4 text-muted">Status:</span>
+                <span class="fs-4 fw-bold text-primary">{{ selectedTransaction?.trans_stat }}</span>
+              </p>
             </div>
           </div>
         </div>
         
 
-        <table class="table table-responsive table-bordered">
-          <tbody>
-            <tr *ngFor="let detail of selectedTransaction?.details; let i = index">
-              <td>
-                <select class="form-select" [(ngModel)]="detail.Categ_ID">
-                  <option value="" disabled>Select Category</option>
-                  <ng-container *ngFor="let category of categ">
-                    <option [value]="category.Categ_ID">{{ category.Category }}</option>
-                  </ng-container>
-                </select>
-              </td>
-              <td>
-                <input type="number" class="form-control" [(ngModel)]="detail.Qty" placeholder="Enter quantity" min="1">
-              </td>
-              <td>
-                <button class="btn btn-danger btn-sm" (click)="removeDetail(i)">Remove</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <!-- Selected Service Checkboxes -->
+        <form #form="ngForm">
+          <div class="mb-3">
+            <div class="d-flex flex-wrap align-items-center">
+              <!-- Selected Service Label -->
+              <label class="fw-medium fs-2 text-muted mb-3 w-100">Selected Service: {{ selectedTransaction?.Transac_status }}</label>
+        
+              <!-- Rush Jobs Checkbox -->
+              <div class="form-check form-switch me-3">
+                <input class="form-check-input" type="checkbox" id="rush" [checked]="selectedservices.rush" (change)="onCheckboxChange('Rush Job', $event)">
+                <label class="form-check-label" for="rush">Rush Jobs</label>
+              </div>
+        
+              <!-- Pick-Up Checkbox -->
+              <div class="form-check form-switch me-3">
+                <input class="form-check-input" type="checkbox" id="pick" [checked]="selectedservices.pick" (change)="onCheckboxChange('Pick-Up Service', $event)">
+                <label class="form-check-label" for="pick">Pick-up</label>
+              </div>
+        
+              <!-- Delivery Checkbox -->
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="deliver" [checked]="selectedservices.deliver" (change)="onCheckboxChange('Delivery-Service', $event)">
+                <label class="form-check-label" for="deliver">Delivery</label>
+              </div>
+            </div>
+          </div>
+        </form>        
 
-        <div class="text-end mt-2">
-          <button class="btn btn-success btn-sm" (click)="addDetail()">Add Item</button>
+        <!-- Error Message Display -->
+        <div *ngIf="errormessage" class="alert alert-danger">
+          {{ errormessage }}
         </div>
+
+        <!-- Item Details Table -->
+        <div class="table-responsive shadow-sm rounded border mb-4">
+          <table class="table table-hover table-bordered align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>Category</th>
+                <th>Quantity</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let detail of selectedTransaction?.details; let i = index">
+                <td>
+                  <select class="form-select" [(ngModel)]="detail.Categ_ID">
+                    <option value="" disabled>Select Category</option>
+                    <ng-container *ngFor="let category of categ">
+                      <option [value]="category.Categ_ID">{{ category.Category }}</option>
+                    </ng-container>
+                  </select>
+                </td>
+                <td>
+                  <input type="number" class="form-control" [(ngModel)]="detail.Qty" placeholder="Enter quantity" min="1">
+                </td>
+                <td>
+                  <button class="btn btn-danger btn-sm" (click)="removeDetail(i)">
+                    <i class="fa fa-trash" aria-hidden="true"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Add Item Button -->
+        <div class="text-end mt-3">
+          <button class="btn btn-success btn-sm" (click)="addDetail()">
+            <i class="fa fa-plus" aria-hidden="true"></i> Add Item
+          </button>
+        </div>
+        
       </div>
 
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" (click)="updateTransaction()">Save changes</button>
+      <!-- Modal Footer -->
+      <div class="modal-footer bg-light border-0">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          <i class="fa fa-times" aria-hidden="true"></i> Close
+        </button>
+        <button type="button" class="btn btn-primary" (click)="updateTransaction()">
+          <i class="fa fa-floppy-o" aria-hidden="true"></i> Save Changes
+        </button>
       </div>
+
     </div>
   </div>
 </div>
+

@@ -8,7 +8,7 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-cus-login',
   standalone: true,
-  imports: [RouterModule,RouterOutlet,ReactiveFormsModule,FormsModule,CommonModule,RouterLink],
+  imports: [RouterModule,ReactiveFormsModule,FormsModule,CommonModule,RouterLink],
   templateUrl: './cus-login.component.html',
   styleUrl: './cus-login.component.css'
 })
@@ -57,7 +57,7 @@ export class CusLoginComponent implements OnInit{
             localStorage.setItem('token', result.token);
             localStorage.setItem('Cust_ID', result.user.Cust_ID); 
             // Navigate to the main page
-            this.route.navigate(['/main/mainaccount/main']);
+            this.route.navigate(['/main/cusmainhome/homemain/cuscurtrans']);
           } else {
             // Handle case where the result doesn't contain the token
             Swal.fire({

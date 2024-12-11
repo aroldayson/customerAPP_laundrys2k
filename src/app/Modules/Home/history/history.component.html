@@ -1,99 +1,104 @@
-<div class="container mt-4">
-  <div class="row">
-    <!-- Payment History Section -->
-    <div class="col-lg-9 mb-4">
-      <div class="accordion" id="accordionPayment">
-        <div class="accordion-item mb-3">
-          <div id="collapseCC" class="accordion-collapse collapse show" data-bs-parent="#accordionPayment">
-            <div class="accordion-body">
-              <div class="container mt-4">
-                <!-- Progress Bar -->
-                <ul id="progressbar" class="progress-bar-container">
-                  <ul>
-                    <li
-                      *ngFor="let step of steps; let i = index"
-                      [ngClass]="{ 'active': i <= currentStep, 'completed': i < currentStep }"
-                      class="step7 fs-6 text-center"
-                    >
-                      {{ step }}
-                      <p *ngIf="i < transacDates.length">
-                        {{ transacDates[i] || 'Date not available' }}
-                      </p>
-                    </li>
-                  </ul>
-                </ul>
+<div class="row d-flex justify-content-center align-items-start h-100">
+  <!-- Main Content Column -->
+  <div class="col-lg-9 col-md-12">
+    <div class="card" style="border-radius: 10px;">
+      <div class="card-header px-4 py-4">
+        <h5 class="text-muted mb-0">Thanks for your order, <span style="color: #5988e2;"><strong>{{customer}}</strong></span>!</h5>
+      </div>
+
+      <!-- Card Body Section -->
+      <div class="card-body p-4">
+        <!-- Tracking Number Section -->
+        <div *ngFor="let t of getDet; track t">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <p class="lead fw-normal mb-0" style="color: #5988e2;"><strong>Tracking Number</strong></p>
+            <p class="lead fw-bold text-muted mb-0">{{ t.Tracking_number }}</p>
+          </div>
+        </div>
+
+                <div class="card shadow-0 border mb-4">
+                  <div class="card-body">
+                    <div class="row d-flex align-items-center">
+                      <div class="col-md-12">
+                        <!-- Progress Bar -->
+                        <div class="progress" role="progressbar" aria-label="Progress Example" [attr.aria-valuenow]="progressPercent" aria-valuemin="0" aria-valuemax="100">
+                          <div class="progress-bar" [ngClass]="{'w-100': progressPercent === 80, 'w-80': progressPercent === 64, 'w-64': progressPercent === 48, 'w-48': progressPercent === 32, 'w-32': progressPercent === 16}" [style.width]="progressPercent + '%'">
+                          </div>
+                        </div>           
+                        <!-- Steps List -->
+                        <ul class="steps-list">
+                          <li *ngFor="let step of steps; let i = index" 
+                              [ngClass]="{
+                                'active': i <= currentStep, 
+                                'completed': i < currentStep
+                              }" 
+                              class="step-item text-center">
+                            <div class="step-number">{{ i + 1 }}</div>  <!-- Step number -->
+                            <div class="step-title">{{ step }}</div>  <!-- Step name -->
+                            <p *ngIf="i <= currentStep" class="step-date">
+                              {{ transacDates[i] || 'Date not available' }}
+                            </p>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+
+        
+        <!-- Laundry Details Section -->
+        <div class="laundry-details">
+          <div class="row mb-3">
+            <div class="col-12">
+              <p class="fw-bold text-dark">Laundry Details</p>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-12">
+              <ul class="list-unstyled">
+                <div *ngFor="let d of details; track t">
+                  <li class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                    <div class="d-flex flex-column">
+                      <span class="fw-bold">{{ d.Category || 'N/A' }}</span>
+                      <small class="text-muted">Qty: {{ d.Qty }} | Weight: {{ d.Weight }} kg</small>
+                    </div>
+                    <div class="text-end">
+                      <span class="text-primary fw-bold">{{ d.price | currency:'PHP':'symbol' }}</span>
+                    </div>
+                  </li>
+                </div>
+              </ul>
+              <div class="col-12 col-md-3">
+                <p class="fw-bold text-dark">Total Quantity:</p>
+                <p class="h5 text-primary">{{ totalqty }}</p>
               </div>
-              <br><br>
-              <div *ngFor="let det of getDet">
-                <div class="info">
-                  <div class="row">
-                    <div class="col-7">
-                      <span id="heading">Date</span><br />
-                      <span id="details">{{ currentDate }}</span>
-                    </div>
-                    <div class="col-5 text-end">
-                      <span id="heading">Order No.</span><br />
-                      <span id="details">{{ det.Tracking_number || 'N/A' }}</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="pricing">
-                  <div class="row">
-                    <div class="col-9">
-                      <span id="name">Laundry</span>
-                    </div>
-                    <div class="col-3">
-                      <span id="price">&#8369;{{ det.price || '0.00' }}</span>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-9">
-                      <span id="name">Shipping</span>
-                    </div>
-                    <div class="col-3">
-                      <span id="price">&#8369;{{ det.shipping || '0.00' }}</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="total">
-                  <div class="row">
-                    <div class="col-9">TOTAL</div>
-                    <div class="col-3"><strong>&#8369;{{ det.total || '0.00' }}</strong></div>
-                  </div>
-                </div>
-              </div>
+              <span><strong>Services:</strong> {{servicearray}} {{serviceprice | currency:'PHP':'symbol'}} </span>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-12 col-md-3">
+              <p class="fw-bold text-dark">Total Price:</p>
+              <p class="h5 text-primary">{{ totalprice | currency:'PHP':'symbol' }}</p>
+            </div>
+            <div class="col-12 col-md-3">
+              <p class="fw-bold text-dark">Total Weight:</p>
+              <p class="h5 text-primary">{{ totalweight }} kg</p>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Upload Section -->
-    <div class="col-lg-3">
-      <!-- <div>
-        <label for="fileInput" class="form-label">Upload Proof</label>
-        <input
-          id="fileInput"
-          type="file"
-          class="form-control"
-          (change)="onFileSelected($event)"
-        />
-        <img
-          *ngIf="imagePreview"
-          [src]="imagePreview"
-          class="img-thumbnail mt-3"
-          alt="Preview"
-        />
-        <button
-          class="btn btn-primary mt-3"
-          [disabled]="!selectedFile"
-          (click)="upload()"
-        >
-          Upload
-        </button>
-      </div> -->
-      <router-outlet></router-outlet>
-      
+      <div class="card-footer border-0 px-3 py-3"
+        style="border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
+      </div>
     </div>
   </div>
+
+  <div class="col-lg-3">
+    <router-outlet></router-outlet>
+  </div>
 </div>
+

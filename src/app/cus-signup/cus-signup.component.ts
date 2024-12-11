@@ -8,7 +8,7 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-cus-signup',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, RouterOutlet],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink],
   templateUrl: './cus-signup.component.html',
   styleUrls: ['./cus-signup.component.css']  // Corrected from 'styleUrl' to 'styleUrls'
 })
@@ -24,12 +24,12 @@ export class CusSignupComponent implements OnInit {
     Cust_fname: new FormControl(null, [Validators.required, Validators.maxLength(255)]),
     Cust_lname: new FormControl(null, [Validators.required, Validators.maxLength(255)]),
     Cust_mname: new FormControl(null),
-    Cust_address: new FormControl(null),
-    Cust_phoneno: new FormControl(null, [Validators.required, Validators.maxLength(15)]),
+    Cust_address: new FormControl(null,[Validators.required]),
+    Cust_phoneno: new FormControl(null,[Validators.required,Validators.pattern('^[0-9]{11}$')]),
     Cust_email: new FormControl(null, [Validators.required, Validators.email, Validators.maxLength(255)]),
-    Cust_password: new FormControl(null, [Validators.required, Validators.minLength(6)]),
+    Cust_password: new FormControl(null, [Validators.required, Validators.minLength(8)]),
     Cust_password_confirmation: new FormControl(null, [Validators.required])
-  }, { validators: this.passwordMatchValidator });
+  }, { validators: this.passwordMatchValidator});
   
   // Custom validator to ensure password and confirmation match
   passwordMatchValidator(formGroup: any) {
@@ -44,8 +44,8 @@ export class CusSignupComponent implements OnInit {
 
   // Save method
   save() {
-
-    console.log(this.signup.value);
+    console.log(this.signup)
+    this.signup.markAllAsTouched()
     if (this.signup.invalid) {
       Swal.fire({
         icon: 'error',
@@ -58,6 +58,7 @@ export class CusSignupComponent implements OnInit {
 
     // Call service to add customer
     this.myserv.addcustomer(this.signup.value).subscribe(
+      
       (result: any) => {
         Swal.fire({
           icon: 'success',

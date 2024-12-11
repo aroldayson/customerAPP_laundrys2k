@@ -1,71 +1,105 @@
-.nav-item {
-  font-size: 18px;
-  text-transform: uppercase;
-  height: 82px;
-  line-height: 64px;
-  margin: 0 10px; /* Adjust spacing between nav items */
+/* General Navbar Styles */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  background-color: #5988e2;
+  color: #fff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
-.flare {
-  background: #5988e2;
+.navbar-logo img {
+  width: 50px;
+  height: auto;
+  border-radius: 10px;
 }
 
-.flare a.nav-link {
-  color: #fff !important;
+/* Navbar Links */
+.navbar-links {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
 }
 
-.topbarElements > div:nth-of-type(1) {
-  font-size: 1.5rem; /* Adjusted font size */
-  color: #ccc;
+.navbar-links a {
+  text-decoration: none;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: color 0.3s ease, transform 0.3s ease;
 }
 
-@media screen and (min-width: 1040px) {
-  .flare {
-    margin-right: -15px;
+.navbar-links a:hover {
+  color: #f0f0f0;
+  transform: translateY(-2px); /* Adds a small lift effect on hover */
+}
+
+/* Mobile/Tablet Navbar */
+.desktop-nav {
+  margin-top: 15px;
+  display: flex;
+}
+
+.bottom-nav {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .desktop-nav {
+    display: none;
   }
-}
 
-@media screen and (max-width: 1029px) {
-  .navbar-nav {
-    margin-bottom: 15px;
+  /* Bottom Navbar */
+  .bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    margin-bottom: -5px;
+    background-color: #5988e2;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0.5rem 0;
+    box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.2);
+  }
+
+  .bottom-nav li {
+    flex: 1;
     text-align: center;
   }
 
-  .nav-item {
-    background: rgba(255, 255, 255, 0.1);
-    margin: 2px;
-    line-height: 1.5rem; /* Adjust line height for better readability */
+  .bottom-nav a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 400;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+
+  .bottom-nav a:hover {
+    color: #f0f0f0;
+    transform: translateY(-2px); /* Adds a lift effect to bottom navbar links */
+  }
+
+  .bottom-nav i {
+    font-size: 1.4rem;
   }
 }
 
-.navbar-nav .nav-link {
-  position: relative;
-  text-decoration: none;
-  transition: color 0.2s ease-in-out;
-}
-
-.navbar-nav .nav-link::after {
-  content: '';
-  position: absolute;
-  width: 0;
-  height: 2px;
-  display: block;
-  margin: auto;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: #eec718; /* Line color */
-  transition: width 0.2s ease-in-out;
-}
-
-.navbar-nav .nav-link:hover::after {
-  width: 100%; /* Full width on hover */
-}
-.collapse {
-  transition: max-height 0.3s ease-in-out;
-}
-
-.collapse.show {
-  /* display: block !important; */
-  max-height: 500px; /* Adjust as needed */
+/* Logo Adjustments for Smaller Screens */
+@media (max-width: 576px) {
+  .navbar-logo img {
+    width: 80px;
+  }
 }

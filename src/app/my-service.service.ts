@@ -8,6 +8,9 @@ import { Observable } from 'rxjs';
 export class MyServiceService {
   url = "http://localhost/CustomerS2K/";
   Apiurl="http://localhost:8000/api/";
+  // Apiurl="http://10.0.118.62:8000/api/";
+  // Apiurl="http://192.168.3.85:8000/api/";
+  
 
   public post: any[] = [];
   trans: any;
@@ -31,27 +34,30 @@ export class MyServiceService {
   updatetrans(data: any){
     return this.http.get(`${this.Apiurl}cancelTrans/${data}`)
   }
-
-  insertorder(idata:any,trackingNumber:any,qty:any){
-    const data = {
-      laundry: this.post,
-      id:idata,
-      qty: qty,
-      trackingNumber:trackingNumber
-    }
-    console.log(data);
-    return this.http.post(this.url + 'insertorder.php', JSON.stringify(data));
+  updateStatus(data: any){
+    return this.http.get(`${this.Apiurl}updateStatus/${data}`)
   }
+
+  // insertorder(idata:any,Tracking_number:any,qty:any){
+  //   const data = {
+  //     laundry: this.post,
+  //     id:idata,
+  //     qty: qty,
+  //     Tracking_number:Tracking_number
+  //   }
+  //   console.log(data);
+  //   return this.http.post(this.url + 'insertorder.php', JSON.stringify(data));
+  // }
   
   // checklogin(log: any){
   //   return this.http.post(this.url + 's2klogin.php',JSON.stringify(log));
   // }
   login(data: any){
-    return this.http.post(this.Apiurl + 'logins',data);
+    return this.http.post(this.Apiurl + 'login',data);
   }
 
   logout(headers: any){
-    const token = localStorage.getItem('token');
+    localStorage.removeItem('token');
     // const headers = new HttpHeaders().set('Authorization',`Bearer $(token)`);
     return this.http.post(this.Apiurl + 'logout', {}, {headers});
   }
@@ -76,13 +82,13 @@ export class MyServiceService {
   //   return this.http.get(this.url + 'getcustomer.php?id=' + data);
   // }
 
-  updateuser(udata:any){
+  updatecus(udata:any){
     return this.http.post(`${this.Apiurl}updateCus`,udata);
   }
 
-  gentracknum(){
-    return this.http.get(this.url + 'tracknum.php');
-  }
+  // gentracknum(){
+  //   return this.http.get(this.url + 'tracknum.php');
+  // }
 
   insertNewDetails(newEntries: { Categ_ID: number, Qty: number, Tracking_number: string }[]): Observable<any> {
     return this.http.post(`${this.Apiurl}insertDetails`, newEntries);
@@ -94,6 +100,7 @@ export class MyServiceService {
       body: { deletedEntries } 
     });
   }
+  
 
   updateTransactionStatus(trackingNumber: string, transacStatus: string): Observable<any> {
     return this.http.post(`${this.Apiurl}insertDetails`,{ Tracking_number: trackingNumber, Transac_status: transacStatus });
@@ -122,10 +129,6 @@ export class MyServiceService {
     return this.http.get(`${this.Apiurl}getTransId/${id}`);
   }
 
-  uploadPayment(data: any, trackingNumber: string) {
-    return this.http.post(`http://localhost:8000/api/upload/${trackingNumber}`, data);
-  }
-
   getDetails(id:any){
     return this.http.get(`${this.Apiurl}getDetails/${id}`);
   }
@@ -133,7 +136,26 @@ export class MyServiceService {
     return this.http.get(`${this.Apiurl}gethis/${id}`)
   }
 
+  getTrackingNo(){
+    return this.http.get(this.Apiurl + 'getTrackingNo');
+  }
 
-  
- 
+  checkPaymentExists(transactionId: any): Observable<any> {
+    return this.http.get(`${this.Apiurl}checkPaymentExists/${transactionId}`);
+  }
+
+  checkPriceExists(transactionId:any):Observable<any>{
+    return this.http.get(`${this.Apiurl}checkPriceExists/${transactionId}`);
+  }
+
+  removeServices(Transac_ID: number, removedServices: string[]): Observable<any> {
+    const data = {
+      Transac_ID: Transac_ID,
+      removed_services: removedServices,
+    };
+
+    // Make the HTTP POST request to the Laravel API
+    return this.http.post(this.Apiurl + 'removeServices', data);
+  }
 }
+

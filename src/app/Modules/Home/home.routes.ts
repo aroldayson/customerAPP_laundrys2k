@@ -5,10 +5,12 @@ import { CusCurtransComponent } from './cus-curtrans/cus-curtrans.component';
 import { HistoryComponent } from './history/history.component';
 import { CusPaymentComponent } from "./cus-payment/cus-payment.component";
 import { NewCurtransComponent } from "./new-curtrans/new-curtrans.component";
+import { CusHomeComponent } from "./cus-home/cus-home.component";
 
 export const homeRoute: Routes = [
     {path: 'homemain',component: CusMainhomeComponent,
         children: [
+            {path:"cushome",component:CusHomeComponent},
             {path:"cuscurtrans",component:CusCurtransComponent},
             {path:"newcurtrans",component:NewCurtransComponent},
             {path:"history",component:HistoryComponent,
@@ -17,7 +19,7 @@ export const homeRoute: Routes = [
                     {path:"",redirectTo:"payment",pathMatch:"full"}
                 ]
             },
-            {path:"",redirectTo:"cuscurtrans",pathMatch:"full"}
+            {path:"",redirectTo:"cushome",pathMatch:"full"}
     ]
 
     },

@@ -31,16 +31,29 @@ throw new Error('Method not implemented.');
           this.filteredHist = this.histf; // Initialize filtered data
           this.updatePagination();
       });
+      console.log()
   }
 
   filterStatus(status: string): void {
-      if (status === 'All') {
-          this.filteredHist = this.histf;
-      } else {
-          this.filteredHist = this.histf.filter(h => h.Transac_status === status);
-      }
-      this.currentPage = 1; // Reset to the first page
-      this.updatePagination();
+    if (status === 'All') {
+        this.filteredHist = this.histf;
+    } else if (status === 'Pending') {
+        this.filteredHist = this.histf.filter(item => item.latest_transac_status === "pending");
+    }else if (status === 'Washing') {
+        this.filteredHist = this.histf.filter(item => item.latest_transac_status === "washing");
+    }else if (status === 'Folding') {
+        this.filteredHist = this.histf.filter(item => item.latest_transac_status === "folding");
+    }else if (status === 'Completed') {
+        this.filteredHist = this.histf.filter(item => item.latest_transac_status === "completed");
+    }
+    else if (status === 'Cancelled') {
+        this.filteredHist = this.histf.filter(item => item.latest_transac_status === "cancelled");
+    }
+    else {
+        this.filteredHist = this.histf.filter(h => h.Transac_status === status);
+    }
+    this.currentPage = 1; // Reset to the first page
+    this.updatePagination();
   }
 
   updatePagination(): void {

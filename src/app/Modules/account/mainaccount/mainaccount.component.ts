@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { MyServiceService } from '../../../my-service.service';
 import Swal from 'sweetalert2';
@@ -23,6 +23,10 @@ export class MainaccountComponent implements OnInit {
   custid = { id: localStorage.getItem('Cust_ID') };
   customerData: any;
   temp: any;
+  fname:any;
+  lname:any;
+  email:any;
+  address:any;
 
   profileform = new FormGroup({
     Cust_ID: new FormControl(this.custid.id),
@@ -30,18 +34,24 @@ export class MainaccountComponent implements OnInit {
     Cust_lname: new FormControl(null),
     Cust_mname: new FormControl(null),
     Cust_email: new FormControl(null),
-    Cust_phoneno: new FormControl(null),
+    Cust_phoneno: new FormControl(null,[Validators.required,Validators.pattern('^[0-9]{11}$')]),
     Cust_address: new FormControl(null),
     Cust_password: new FormControl(null),
     Cust_image: new FormControl(null) // Changed binding
   });
 
   ngOnInit(): void {
+    console.log(this.previewUrl)
     console.log(this.custid.id);
     this.cusid = { id: localStorage.getItem('Cust_ID') };
     this.myserv.getcustomer(this.cusid.id).subscribe((data: any) => {
       console.log(data);
       this.customerData = data.customerFirst;
+      this.fname = this.customerData.Cust_fname
+      this.lname = this.customerData.Cust_lname
+      this.email = this.customerData.Cust_email
+      this.address = this.customerData.Cust_address
+      console.log(this.customerData)
       this.profileform.patchValue({
         Cust_ID: this.customerData.Cust_ID,
         Cust_fname: this.customerData.Cust_fname,
@@ -55,6 +65,7 @@ export class MainaccountComponent implements OnInit {
       });
       this.loadExistingImage();
       console.log(this.customerData);
+      console.log(this.customerData.Cust_image)
     });
   }
 
@@ -100,9 +111,19 @@ export class MainaccountComponent implements OnInit {
   }
 
   save(): void {
+
+    if(this.profileform.invalid){
+      Swal.fire({
+        title:"Error",
+        text:"Please Enter a valid Phone Number",
+        icon:"error",
+        confirmButtonText:"OK"
+      })
+    }else{
     const formData = new FormData();
     Object.keys(this.profileform.controls).forEach((key) => {
       formData.append(key, this.profileform.get(key)?.value as string);
+      console.log(formData)
     });
 
     if (this.selectedFile) {
@@ -111,7 +132,7 @@ export class MainaccountComponent implements OnInit {
 
     console.log('Form Data:', this.profileform.value);
 
-    this.myserv.updateuser(formData).subscribe(
+    this.myserv.updatecus(formData).subscribe(
       (result: any) => {
         this.temp = result;
 
@@ -133,8 +154,18 @@ export class MainaccountComponent implements OnInit {
         });
         console.error('Error updating profile:', error);
       }
+      
     );
   }
+  }
+
+  triggerFileInput(): void {
+    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+    if (fileInput) {
+        fileInput.click();
+    }
+  }
+
 }
 
 

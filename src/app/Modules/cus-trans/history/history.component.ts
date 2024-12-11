@@ -8,7 +8,7 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-history',
   standalone: true,
-  imports: [CommonModule,RouterLink,FormsModule,ReactiveFormsModule,],
+  imports: [CommonModule,FormsModule,ReactiveFormsModule,],
   templateUrl: './history.component.html',
   styleUrl: './history.component.css'
 })
@@ -62,7 +62,7 @@ export class HistoryComponent {
       formData.append('Proof_filename', this.selectedFile, this.selectedFile.name);
       formData.append('Cust_ID',this.cust_id.id);
     
-      this.http.post(`http://localhost:8000/api/upload/${this.trackingNumber.id}`, formData)
+      this.http.post(`http://10.0.118.71:8000/api/upload/${this.trackingNumber.id}`, formData)
         .subscribe(
           (response: any) => {
             Swal.fire({
@@ -96,6 +96,7 @@ export class HistoryComponent {
   }
   
   ngOnInit(): void {
+    
     
   }
 

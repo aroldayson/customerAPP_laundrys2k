@@ -1,0 +1,39 @@
+/* Ensure full-width for file input */
+input[type="file"] {
+    width: 100%;
+  }
+  
+  /* Ensure the image preview is responsive */
+  .image-preview img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+  
+  /* Flex settings for buttons */
+  .d-flex.flex-column {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .d-flex.flex-sm-row {
+    display: flex;
+    flex-direction: row;
+  }
+  
+  .d-flex.flex-column .btn {
+    width: 100%; /* Make buttons full width on smaller screens */
+  }
+
+  .disabled-card {
+    pointer-events: none; /* Disables interactions */
+    opacity: 0.5; /* Optional: visually show it's disabled */
+  }
+  
+  /* Add margin for the buttons on mobile */
+  @media (max-width: 576px) {
+    .btn-outline-secondary {
+      margin-bottom: 10px; /* Ensure buttons don't stick together */
+    }
+  }
+  
