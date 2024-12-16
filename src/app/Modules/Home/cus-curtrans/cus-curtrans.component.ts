@@ -31,6 +31,7 @@ export class CusCurtransComponent implements OnInit{
   servicearray: string[] = [];
   removedServices: string[] = [];
   servicesUpd: string[] = [];
+  address:any;
   selectedservices = {
     rush: false,
     pick: false,
@@ -55,6 +56,10 @@ export class CusCurtransComponent implements OnInit{
   qty:any;
   searchText:any;
   keyword:any;
+  
+  rush:boolean = false;
+  pick:boolean = false;
+  delivery:boolean = false;
 
   laundrylist = this.post.post; 
 
@@ -65,6 +70,37 @@ export class CusCurtransComponent implements OnInit{
     Services: new FormControl(null),
     Categ_ID: new FormControl(this.laundrylist)
   })
+
+  townAddresses: any;
+  selectedTownID: any;
+  townAddress: any;
+  sison: boolean = false;
+  poz: boolean = false;
+  rosario: boolean = false;
+  pugo: boolean = false;
+  selectBar: boolean = false;
+  selectAddPick: boolean = false;
+  selectAddDel: boolean = false;
+  selectedPrice:any;
+
+  deliveryTown: string = '';
+  deliveryBarangay: string = '';
+  deliveryStreet: string = '';
+
+  pickupTown: string = '';
+  pickupBarangay: string = '';
+  pickupStreet: string = '';
+
+  
+  barangaysInSison: any[] = ["Amagbagan", "Artacho", "Asan Norte", "Asan Sur", "Bantay Insik", "Bila", "Binmeckeg", "Bulaoen East", "Bulaoen West", "Cabaritan", "Calunetan", "Camangaan", "Cauringan", "Dungon", "Esperanza", "Inmalog", "Killo", "Labayug", "Paldit", "Pindangan", "Pinmilapil", "Poblacion Central", "Poblacion Norte"]
+
+  barangaysInRosario = ["Agutaya", "Alipangpang", "Anonang", "Banaybanay", "Banug Norte", "Catubig", "Cato", "Dalumpinas", "Dicaloyungan", "Labney", "Salasa"];
+  
+  barangaysInPugo = ["Maoasoas Norte", "Maoasoas Sur", "Tavora East", "Tavora Proper"];
+
+  barangaysInPoz = ["Batakil", "Poblacion I"];
+
+
 
   copyToClipboard(trackNum: string): void {
     navigator.clipboard.writeText(trackNum).then(() => {
@@ -177,6 +213,8 @@ export class CusCurtransComponent implements OnInit{
       this.trans = data.transaction; 
     })
     this.fetchtransactions();
+
+    this.getShippingAddress();
   }
 
   gentrack() {
@@ -534,6 +572,11 @@ export class CusCurtransComponent implements OnInit{
         console.log('No details returned or data format invalid');
       }
     });
+
+    this.post.showaddress(this.id.cuid).subscribe((res:any)=>{
+      this.address = res;
+      console.log(res)
+    })
   
     this.updateSelectedService();
   }
@@ -551,45 +594,103 @@ export class CusCurtransComponent implements OnInit{
     }
     if (this.servicesUpd.includes('Pick-Up Service')) {
       this.selectedservices.pick = true;
+      this.selectAddPick = true;
     }
     if (this.servicesUpd.includes('Delivery-Service')) {
       this.selectedservices.deliver = true;
+      this.selectAddDel = true;
     }
 
     console.log(this.selectedservices)
   }
 
-  onCheckboxChange(service: string, event: any): void {
-    // If the checkbox is unchecked, add the service to the removedServices array
-    if (!event.target.checked) {
-      if (!this.removedServices.includes(service)) {
-        this.removedServices.push(service);  // Add service name to removedServices if it's unchecked
-      }
-    } else {
-      // If the checkbox is checked again, remove the service from removedServices
-      const index = this.removedServices.indexOf(service);
-      if (index !== -1) {
-        this.removedServices.splice(index, 1);  // Remove the service from the array
-      }
-    }
+  // onCheckboxChange(service: string, event: any): void {
+  //   // If the checkbox is unchecked, add the service to the removedServices array
+  //   if (!event.target.checked) {
+  //     if (!this.removedServices.includes(service)) {
+  //       this.removedServices.push(service);  // Add service name to removedServices if it's unchecked
+  //     }
+  //   } else {
+  //     // If the checkbox is checked again, remove the service from removedServices
+  //     const index = this.removedServices.indexOf(service);
+  //     if (index !== -1) {
+  //       this.removedServices.splice(index, 1);  // Remove the service from the array
+  //     }
+  //   }
 
-    if (event.target.checked) {
-      // If the checkbox is checked, add the service to servicesUpd if it's not already there
-      if (!this.servicesUpd.includes(service)) {
-        this.servicesUpd.push(service);  // Add service to servicesUpd if it's checked
-      }
-    } else {
-      // If the checkbox is unchecked, remove the service from servicesUpd
-      const index = this.servicesUpd.indexOf(service);
-      if (index !== -1) {
-        this.servicesUpd.splice(index, 1);  // Remove the service from servicesUpd
-      }
-    }
+  //   if (event.target.checked) {
+  //     // If the checkbox is checked, add the service to servicesUpd if it's not already there
+  //     if (!this.servicesUpd.includes(service)) {
+  //       this.servicesUpd.push(service);  // Add service to servicesUpd if it's checked
+  //     }
+  //   } else {
+  //     // If the checkbox is unchecked, remove the service from servicesUpd
+  //     const index = this.servicesUpd.indexOf(service);
+  //     if (index !== -1) {
+  //       this.servicesUpd.splice(index, 1);  // Remove the service from servicesUpd
+  //     }
+  //   }
 
     
-    console.log('Added Services:', this.servicesUpd);
-    console.log('Removed services:', this.removedServices);
+  //   console.log('Added Services:', this.servicesUpd);
+  //   console.log('Removed services:', this.removedServices);
+  // }
+
+  getShippingAddress(){
+    this.post.getShippingAddress().subscribe((result: any) => {
+      this.townAddresses = result.shippings;
+      console.log(this.townAddresses);
+    });
   }
+
+  onCheckboxChange(service: string, event: any): void {
+    const isChecked = event.target.checked;
+    const selServ = service;
+  
+    // Update the selected services
+    if (isChecked) {
+      // Add the service to `servicesUpd` if it's checked
+      if (!this.servicesUpd.includes(service)) {
+        this.servicesUpd.push(service);
+      }
+  
+      // Display the additional form inputs based on the service
+      if (selServ === 'PickUp-Service') {
+        this.selectAddPick = true;
+      } else if (selServ === 'Delivery-Service') {
+        this.selectAddDel = true;
+      }
+    } else {
+      // Remove the service from `servicesUpd` if it's unchecked
+      const index = this.servicesUpd.indexOf(service);
+      if (index !== -1) {
+        this.servicesUpd.splice(index, 1);
+      }
+  
+      // Hide the additional form inputs if the service is unchecked
+      if (selServ === 'PickUp-Service') {
+        this.selectAddPick = false;
+      } else if (selServ === 'Delivery-Service') {
+        this.selectAddDel = false;
+      }
+    }
+  
+    // Update the removedServices array
+    if (!isChecked) {
+      if (!this.removedServices.includes(service)) {
+        this.removedServices.push(service);
+      }
+    } else {
+      const index = this.removedServices.indexOf(service);
+      if (index !== -1) {
+        this.removedServices.splice(index, 1);
+      }
+    }
+  
+    console.log('Updated Services:', this.servicesUpd);
+    console.log('Removed Services:', this.removedServices);
+  }
+  
 
   // Method to remove a detail
   removeDetail(index: number) {
@@ -784,6 +885,27 @@ export class CusCurtransComponent implements OnInit{
       }
     );
     
+  }
+
+  getTownValue(selectedValue: any): void{
+    this.townAddress = selectedValue.target.value;
+    console.log(this.townAddress);
+    this.selectBar = true;
+    this.sison = false;
+    this.poz = false;
+    this.rosario = false;
+    this.pugo = false;
+
+    if(this.townAddress.toLowerCase() === 'sison'){
+      this.sison = true;
+    }else if(this.townAddress.toLowerCase() === 'pozorrubio'){
+      this.poz = true;
+    }else if(this.townAddress.toLowerCase() === 'rosario'){
+      this.rosario = true;
+    }else if(this.townAddress.toLowerCase() === 'pugo'){
+      this.pugo = true;
+    }
+
   }
   
   

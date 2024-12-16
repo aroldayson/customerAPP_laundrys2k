@@ -1,98 +1,364 @@
-<div class="modal-content">
-  <div class="modal-header">
-    <h5 class="modal-title"><strong>New Transaction</strong></h5>
-    <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
-  </div>
-  <div class="modal-body">
-    <div class="container-fluid">
-      <form [formGroup]="newtransac" id="manage-laundry">
-        <!-- Tracking Number Section -->
-        <div class="row mb-4">
-          <div class="col-md-6">
-            <div class="form-group">
-              <label for="trackingNumber" class="control-label">Tracking Number</label>
-              <h4 class="text-primary fw-bold">{{ trackingNumber }}</h4>
+<div class="container pt-3">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title"><strong>New Transaction</strong></h5>
+    </div>
+    <div class="modal-body">
+      <div class="container-fluid">
+        <form [formGroup]="newtransac" id="manage-laundry">
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="trackingNumber" class="control-label">Tracking Number</label>
+                <h4 class="text-primary fw-bold">{{ trackingNumber }}</h4>
+              </div>
             </div>
           </div>
-        </div>
-        <hr>
-        <!-- Input Section -->
-        <div class="row">
-          <div class="col-md-4 mb-3">
-            <label for="laundryType" class="form-label">Laundry Type</label>
-            <select class="form-select" id="laundryType" formControlName="Category">
-              <option value="" disabled selected>Select Laundry Type</option>
-              @for (c of categ; track c.Categ_ID) {
-                <option [value]="c.Categ_ID">{{ c.Category }}</option>
-              }
-            </select>
-          </div>
-          <div class="col-md-4 mb-3">
-            <label for="weight" class="form-label">Count</label>
-            <input type="number" step="1" min="1" class="form-control" id="weight" formControlName="Qty" placeholder="Enter count">
-          </div>
-          <div class="col-md-4 mb-3 d-flex align-items-end">
-            <button class="btn btn-primary w-100" type="button" id="add_to_list" (click)="addToList()">
-              <i class="fa fa-plus me-1"></i>Add to List
-            </button>
-          </div>
-        </div>
+          <hr>
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label for="laundryType" class="form-label">Laundry Type</label>
+              <select class="form-select" id="laundryType" formControlName="Category" (change)="getLaundryPrice($event)">
+                <option value="" disabled selected>Select Laundry Type</option>
+                <option *ngFor="let c of categ" [value]="c.Categ_ID">
+                  {{ c.Category }}
+                </option>
+              </select>
+            </div>
 
-<!-- Services Section -->
-<div class="row mb-4">
-  <div class="col-md-6">
-    <label for="services" class="form-label">Services</label>
-    <div class="d-flex gap-3">
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="Rush Job" (change)="onCheckboxChange($event)">
-        <label class="form-check-label" for="rush">Rush Jobs</label>
+            <div class="col-md-2 mb-3">
+              <label for="weight" class="form-label">Count</label>
+              <input type="number" step="1" min="1" class="form-control" id="weight" formControlName="Qty" placeholder="Enter count">
+            </div>
+            
+            <div class="col-md-2 mb-3" *ngIf="selectedPrice !== undefined">
+              <label for="price">Laundry Price /</label>
+              <p id="price">{{ selectedPrice | currency:'PHP':'symbol':'1.2-2' }}</p>
+            </div>
+
+            <div class="col-md-4 mb-3 d-flex align-items-end">
+              <button class="btn btn-primary w-100" type="button" id="add_to_list" (click)="addToList()">
+                <i class="fa fa-plus me-1"></i>Add to List
+              </button>
+            </div>
+          </div>
+
+          <!-- Services Section -->
+          <div class="row mb-4" *ngIf="showservices !== false">
+            <div class="col-md-6">
+              <label for="services" class="form-label h3">Additional Services</label>
+              <p>Pick your choice/s of services here.</p>
+              <div class="d-flex gap-3">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="Rush-Job" (change)="onCheckboxChange($event)">
+                  <label class="form-check-label" for="rush">Rush Jobs</label>  
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="PickUp-Service" (change)="onCheckboxChange($event)">
+                  <label class="form-check-label" for="pick">Pick-up</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="Delivery-Service" (click)="showaddress(id.cuid)"  (change)="onCheckboxChange($event)">
+                  <label class="form-check-label" for="deliver" >Delivery</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row" [hidden]="selectAddDel==false">
+            <p>Select your Delivery Address.</p>
+            <div class="col-md-12 mb-3">
+              <!-- <label for="town" class="form-label">Town</label> -->
+              <!-- <select class="form-select" id="town" [(ngModel)]="deliveryTown" (change)="getTownValue($event)">
+                <option value="" disabled selected>Select Town</option>
+                <option *ngFor="let town of townAddresses" [value]="town.City_Address">
+                  {{ town.City_Address }}
+                </option>
+              </select> -->
+              <div class="col-md-12 mb-3">
+                <div class="container my-4">
+                  <div class="d-flex align-items-center mb-3">
+                    <h5 class="mb-0">My Address</h5>
+                    <button class="btn btn-outline-secondary ms-3">
+                      <strong data-bs-toggle="modal" data-bs-target="#editADDRESS">+ Add New Address</strong>
+                    </button>
+                  </div>
+              
+                  <div class="d-flex flex-wrap">
+                    <div *ngFor="let c of address" class="address-container px-3 py-2 highlighted me-3 mb-3" style="flex-basis: 30%; min-width: 250px;">
+                      <input type="hidden" [value]="c.ShipServ_price">
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="ShipServ_price" id="ShipServ_price{{c.ShipServ_price}}" [value]="c.ShipServ_price" (change)="onCityAddressChange($event)" checked>
+                        <label class="form-check-label" for="City_Address_{{c.Town_City}}">
+                          <strong>{{c.Cust_fname}} {{c.Cust_mname}} {{c.Cust_lname}}</strong> 
+                          <span class="text-secondary">{{c.Phenono}}</span>
+                        </label>
+                      </div>
+                      <p class="mb-1 text-secondary" id="barangay">
+                        {{c.BuildingNo_Street}}, {{c.Barangay}} {{c.Town_City}} {{c.Province}}<br>
+                        North Luzon, 2434
+                      </p>
+                      <span class="default-label">Default</span>
+                      <a class="text-danger float-end" (click)="deleteaddress(c.AddLaundryServ_ID)">Delete</a>
+                    </div>
+                  </div>
+              
+                </div>
+              </div>
+              
+            </div>
+
+            
+            <!-- <div class="col-md-4 mb-3" [hidden]="selectBar==false">
+              <label for="barangay" class="form-label">Barangay</label>
+              <select class="form-select" id="barangay" [(ngModel)]="deliveryBarangay">
+                <option value="" disabled selected>Select Barangay</option>
+                
+                
+                <option [hidden]="sison == false" *ngFor="let barangay of barangaysInSison" [value]="barangay">
+                  {{ barangay }}
+                </option>
+
+                
+                <option [hidden]="rosario == false" *ngFor="let barangay of barangaysInRosario" [value]="barangay">
+                  {{ barangay }}
+                </option>
+
+                
+                <option [hidden]="poz == false" *ngFor="let barangay of barangaysInPoz" [value]="barangay">
+                  {{ barangay }}
+                </option>
+
+                
+                <option [hidden]="pugo == false" *ngFor="let barangay of barangaysInPugo" [value]="barangay">
+                  {{ barangay }}
+                </option>
+              </select>
+            </div> -->
+
+            <!-- <div class="col-md-4 mb-3" *ngIf="sison == true || rosario == true || poz == true || pugo == true">
+              <label for="barangayInput" class="form-label">Building# and street</label>
+              <input type="text" class="form-control" id="barangayInput" [(ngModel)]="deliveryStreet" placeholder="Enter details">
+            </div> -->
+          </div>
+
+          <div class="row" [hidden]="selectAddPick==false">
+            <p>Select your Pick-Up Address.</p>
+            <div class="col-md-12 mb-3">
+              <!-- <label for="barangay" class="form-label">Town</label> -->
+              <!-- <select class="form-select" id="picktown" [(ngModel)]="selectedTownID" (change)="getTownValue($event)">
+                <option value="" disabled selected>Select Town</option>
+                <option *ngFor="let town of townAddresses" [value]="town.City_Address">
+                  {{ town.City_Address }}
+                </option>
+              </select> -->
+                <div class="col-md-12 mb-3">
+                  <div class="container my-4">
+                    <!-- <div class="d-flex align-items-center mb-3">
+                      <h5 class="mb-0">My Address</h5>
+                      <button class="btn btn-outline-secondary ms-3">
+                        <strong data-bs-toggle="modal" data-bs-target="#editADDRESS">+ Add New Address</strong>
+                      </button>
+                    </div> -->
+                    <div class="d-flex flex-wrap">
+                      <div *ngFor="let c of address" class="address-container px-3 py-2 highlighted me-3 mb-3" style="flex-basis: 30%; min-width: 250px;">
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="ShipServ_price" id="ShipServ_price{{c.ShipServ_price}}" [value]="c.ShipServ_price" (change)="onCityAddressChange($event)" checked>
+                          <label class="form-check-label" for="City_Address_{{c.Town_City}}">
+                            <strong>{{c.Cust_fname}} {{c.Cust_mname}} {{c.Cust_fname}}</strong> 
+                            <span class="text-secondary"> {{c.Phenono}}</span>
+                          </label>
+                        </div>
+                        <p class="mb-1 text-secondary" id="barangay">
+                          {{c.BuildingNo_Street}}, {{c.Barangay}} {{c.Town_City}} {{c.Province}}<br>
+                          North Luzon, 2434
+                        </p>
+                        <span class="default-label">Default</span>
+                        <a class="text-danger float-end" (click)="deleteaddress(c.AddLaundryServ_ID)">Delete</a>
+                      </div>
+                    </div>
+                </div>              
+              </div>
+            </div>
+
+            <!-- <div class="col-md-4 mb-3" [hidden]="selectBar==false">
+              <label for="barangay" class="form-label">Barangay</label>
+              <select class="form-select" id="pickbarangay" formControlName="barangay">
+                <option value="" disabled selected>Select Barangay</option>
+                <option [hidden]="sison == false" *ngFor="let barangay of barangaysInSison" [value]="barangay">
+                  {{ barangay }}
+                </option>
+                <option [hidden]="rosario == false" *ngFor="let barangay of barangaysInRosario" [value]="barangay">
+                  {{ barangay }}
+                </option>
+                <option [hidden]="poz == false" *ngFor="let barangay of barangaysInPoz" [value]="barangay">
+                  {{ barangay }}
+                </option>
+                <option [hidden]="pugo == false" *ngFor="let barangay of barangaysInPugo" [value]="barangay">
+                  {{ barangay }}
+                </option>
+              </select>
+            </div> -->
+            <!-- <div class="col-md-4 mb-3" *ngIf="sison == true || rosario == true || poz == true || pugo == true">
+              <label for="barangayInput" class="form-label">Building# and street</label>
+              <input type="text" class="form-control" id="pickbarangayInput" placeholder="Enter details">
+            </div> -->
+          </div>
+          <hr>
+          <div class="table-responsive">
+            <table class="table table-striped table-hover text-center">
+              <thead class="table-light">
+                <tr>
+                  <th>Category</th>
+                  <th>Qty</th>
+                  <th>Estimated Laundry Price</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (l of laundrylist; track l.category) {
+                  <tr>
+                    <td>{{ l.Category }}</td>
+                    <td>{{ l.Qty }}</td>
+                    <td>{{l.Price}}</td>
+                    <td>
+                      <button class="btn btn-sm btn-outline-danger" (click)="removeFromList(l)">
+                        <i class="fa fa-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </form>
       </div>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="Pick-Up Service" (change)="onCheckboxChange($event)">
-        <label class="form-check-label" for="pick">Pick-up</label>
-      </div>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="Delivery-Service" (change)="onCheckboxChange($event)">
-        <label class="form-check-label" for="deliver">Delivery</label>
-      </div>
+    </div>
+    <p>Total Estimated Price: {{total_estimated_price}}</p>
+    <div class="modal-footer gap-2 mb-2">
+      <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+      <button type="button" class="btn btn-primary" (click)="insert()">Save</button>
     </div>
   </div>
 </div>
 
-        
-        
-        
-        <hr>
-        <!-- Items List Table -->
-        <div class="table-responsive">
-          <table class="table table-striped table-hover text-center">
-            <thead class="table-light">
-              <tr>
-                <th>Category</th>
-                <th>Qty</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (l of laundrylist; track l.category) {
-                <tr>
-                  <td>{{ l.Category }}</td>
-                  <td>{{ l.Qty }}</td>
-                  <td>
-                    <button class="btn btn-sm btn-outline-danger" (click)="removeFromList(l)">
-                      <i class="fa fa-trash"></i>
-                    </button>
-                  </td>
-                </tr>
-              }
-            </tbody>
-          </table>
+
+<!-- Modal -->
+<div class="modal fade" id="editADDRESS" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Add New Address</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="card" style="max-width: 600px;">
+          <div class="card-body">
+            <form [formGroup]="addaddress" (ngSubmit)="newaddress()">
+              <!-- Phone Number -->
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label for="phoneNumber" class="form-label">Phone Number</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="phoneNumber"
+                    formControlName="Phoneno"
+                    placeholder="Phone Number"
+                  />
+                  <small *ngIf="addaddress.get('Phoneno')?.touched && addaddress.get('Phoneno')?.invalid" class="text-danger">
+                    Please enter a valid phone number (10-12 digits).
+                  </small>
+                </div>
+
+                <div class="col-md-6">
+                  <label for="barangay" class="form-label">Barangay</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="barangay"
+                    formControlName="Barangay"
+                    placeholder="Barangay"
+                  />
+                  <small *ngIf="addaddress.get('Barangay')?.touched && addaddress.get('Barangay')?.invalid" class="text-danger">
+                    This field is required.
+                  </small>
+                </div>
+              </div>
+
+              <!-- Barangay -->
+              <!-- <div class="row mb-3">
+                <div class="col-md-6">
+                  <label for="barangay" class="form-label">Barangay</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="barangay"
+                    formControlName="Barangay"
+                    placeholder="Barangay"
+                  />
+                  <small *ngIf="addaddress.get('Barangay')?.touched && addaddress.get('Barangay')?.invalid" class="text-danger">
+                    This field is required.
+                  </small>
+                </div>
+              </div> -->
+
+              <!-- Town City -->
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label for="townCity" class="form-label">Town/City</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="townCity"
+                    formControlName="Town_City"
+                    placeholder="Town/City"
+                  />
+                  <small *ngIf="addaddress.get('Town_City')?.touched && addaddress.get('Town_City')?.invalid" class="text-danger">
+                    This field is required.
+                  </small>
+                </div>
+       
+                <div class="col-md-6">
+                  <label for="province" class="form-label">Province</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="province"
+                    formControlName="Province"
+                    placeholder="Province"
+                  />
+                  <small *ngIf="addaddress.get('Province')?.touched && addaddress.get('Province')?.invalid" class="text-danger">
+                    This field is required.
+                  </small>
+                </div>
+              </div>
+
+              <!-- Street/Building No. -->
+              <div class="row mb-3">
+                <div class="col-md">
+                  <label for="buildingNoStreet" class="form-label">Street/Building No.</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="buildingNoStreet"
+                    formControlName="BuildingNo_Street"
+                    placeholder="Street/Building No."
+                  />
+                  <small *ngIf="addaddress.get('BuildingNo_Street')?.touched && addaddress.get('BuildingNo_Street')?.invalid" class="text-danger">
+                    This field is required.
+                  </small>
+                </div>
+              </div>
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Save Address</button>
+              </div>
+            </form>
+          </div>
         </div>
-      </form>
+      </div>
     </div>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-    <button type="button" class="btn btn-primary" (click)="insert()">Save</button>
   </div>
 </div>

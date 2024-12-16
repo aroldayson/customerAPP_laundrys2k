@@ -1,9 +1,9 @@
-<div class="row d-flex justify-content-center align-items-start h-100">
+<div class="row d-flex justify-content-center align-items-start h-100 mt-3">
   <!-- Main Content Column -->
   <div class="col-lg-9 col-md-12">
-    <div class="card" style="border-radius: 10px;">
-      <div class="card-header px-4 py-4">
-        <h5 class="text-muted mb-0">Thanks for your order, <span style="color: #5988e2;"><strong>{{customer}}</strong></span>!</h5>
+    <div class="card shadow-lg" style="border-radius: 15px; background-color: #f9f9f9;">
+      <div class="card-header px-4 py-4" style="background-color: #4e73df; color: white; border-radius: 15px 15px 0 0;">
+        <h5 class="mb-0">Thanks for your order, <span style="color: #f1c40f;"><strong>{{customer}}</strong></span>!</h5>
       </div>
 
       <!-- Card Body Section -->
@@ -11,47 +11,40 @@
         <!-- Tracking Number Section -->
         <div *ngFor="let t of getDet; track t">
           <div class="d-flex justify-content-between align-items-center mb-4">
-            <p class="lead fw-normal mb-0" style="color: #5988e2;"><strong>Tracking Number</strong></p>
+            <p class="lead fw-normal mb-0" style="color: #4e73df;"><strong>Tracking Number</strong></p>
             <p class="lead fw-bold text-muted mb-0">{{ t.Tracking_number }}</p>
           </div>
         </div>
 
-                <div class="card shadow-0 border mb-4">
-                  <div class="card-body">
-                    <div class="row d-flex align-items-center">
-                      <div class="col-md-12">
-                        <!-- Progress Bar -->
-                        <div class="progress" role="progressbar" aria-label="Progress Example" [attr.aria-valuenow]="progressPercent" aria-valuemin="0" aria-valuemax="100">
-                          <div class="progress-bar" [ngClass]="{'w-100': progressPercent === 80, 'w-80': progressPercent === 64, 'w-64': progressPercent === 48, 'w-48': progressPercent === 32, 'w-32': progressPercent === 16}" [style.width]="progressPercent + '%'">
-                          </div>
-                        </div>           
-                        <!-- Steps List -->
-                        <ul class="steps-list">
-                          <li *ngFor="let step of steps; let i = index" 
-                              [ngClass]="{
-                                'active': i <= currentStep, 
-                                'completed': i < currentStep
-                              }" 
-                              class="step-item text-center">
-                            <div class="step-number">{{ i + 1 }}</div>  <!-- Step number -->
-                            <div class="step-title">{{ step }}</div>  <!-- Step name -->
-                            <p *ngIf="i <= currentStep" class="step-date">
-                              {{ transacDates[i] || 'Date not available' }}
-                            </p>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
+        <!-- Steps List with Icons -->
+        <ul class="steps-list" style="list-style-type: none; padding-left: 0;">
+          <li *ngFor="let step of steps; let i = index" 
+              [ngClass]="{
+                'active': i <= currentStep, 
+                'completed': i < currentStep
+              }" 
+              class="step-item text-center" style="margin-bottom: 20px;">
+            <div class="step-icon" style="font-size: 24px; color: #4e73df;">
+              <i [ngClass]="{
+                'fa-check-circle': i < currentStep,
+                'fa-circle': i === currentStep,
+                'fa-circle-o': i > currentStep
+              }" class="fa"></i>
+            </div>
+            <div class="step-title" style="font-size: 16px; font-weight: 500; color: #555;">
+              {{ step }}
+            </div>  <!-- Step name -->
+            <p *ngIf="i <= currentStep" class="step-date" style="font-size: 14px; color: #888;">
+              {{ transacDates[i] || 'Date not available' }}
+            </p>
+          </li>
+        </ul>
 
-        
         <!-- Laundry Details Section -->
         <div class="laundry-details">
           <div class="row mb-3">
             <div class="col-12">
-              <p class="fw-bold text-dark">Laundry Details</p>
+              <p class="fw-bold text-dark" style="font-size: 18px; color: #333;">Laundry Details</p>
             </div>
           </div>
 
@@ -59,40 +52,41 @@
             <div class="col-12">
               <ul class="list-unstyled">
                 <div *ngFor="let d of details; track t">
-                  <li class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                  <li class="d-flex justify-content-between align-items-center py-2 border-bottom"
+                      style="border-color: #e1e1e1;">
                     <div class="d-flex flex-column">
-                      <span class="fw-bold">{{ d.Category || 'N/A' }}</span>
-                      <small class="text-muted">Qty: {{ d.Qty }} | Weight: {{ d.Weight }} kg</small>
+                      <span class="fw-bold" style="color: #333;">{{ d.Category || 'N/A' }}</span>
+                      <small class="text-muted" style="font-size: 14px;">Qty: {{ d.Qty }} | Weight: {{ d.Weight }} kg</small>
                     </div>
                     <div class="text-end">
-                      <span class="text-primary fw-bold">{{ d.price | currency:'PHP':'symbol' }}</span>
+                      <span class="text-primary fw-bold" style="font-size: 16px;">{{ d.price | currency:'PHP':'symbol' }}</span>
                     </div>
                   </li>
                 </div>
               </ul>
               <div class="col-12 col-md-3">
-                <p class="fw-bold text-dark">Total Quantity:</p>
-                <p class="h5 text-primary">{{ totalqty }}</p>
+                <p class="fw-bold text-dark" style="font-size: 16px; color: #333;">Total Quantity:</p>
+                <p class="h5 text-primary" style="font-size: 18px;">{{ totalqty }}</p>
               </div>
-              <span><strong>Services:</strong> {{servicearray}} {{serviceprice | currency:'PHP':'symbol'}} </span>
+              <span style="font-size: 16px;"><strong>Services:</strong> {{servicearray}} {{serviceprice | currency:'PHP':'symbol'}} </span>
             </div>
           </div>
 
           <div class="row mb-3">
             <div class="col-12 col-md-3">
-              <p class="fw-bold text-dark">Total Price:</p>
-              <p class="h5 text-primary">{{ totalprice | currency:'PHP':'symbol' }}</p>
+              <p class="fw-bold text-dark" style="font-size: 16px; color: #333;">Total Price:</p>
+              <p class="h5 text-primary" style="font-size: 18px;">{{ totalprice | currency:'PHP':'symbol' }}</p>
             </div>
             <div class="col-12 col-md-3">
-              <p class="fw-bold text-dark">Total Weight:</p>
-              <p class="h5 text-primary">{{ totalweight }} kg</p>
+              <p class="fw-bold text-dark" style="font-size: 16px; color: #333;">Total Weight:</p>
+              <p class="h5 text-primary" style="font-size: 18px;">{{ totalweight }} kg</p>
             </div>
           </div>
         </div>
       </div>
 
       <div class="card-footer border-0 px-3 py-3"
-        style="border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
+        style="border-bottom-left-radius: 15px; border-bottom-right-radius: 15px; background-color: #4e73df; color: white;">
       </div>
     </div>
   </div>
@@ -101,4 +95,3 @@
     <router-outlet></router-outlet>
   </div>
 </div>
-

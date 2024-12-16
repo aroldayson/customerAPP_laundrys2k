@@ -28,7 +28,7 @@
 .navbar-links a {
   text-decoration: none;
   color: #fff;
-  font-size: 0.9rem;
+  font-size: 1rem; /* Adjusted font size for better readability */
   font-weight: 500;
   display: flex;
   align-items: center;
@@ -51,6 +51,17 @@
   display: none;
 }
 
+@media (max-width: 1024px) {
+  /* Adjusting desktop navbar for slightly smaller screens */
+  .navbar-logo img {
+    width: 60px; /* Slightly larger logo for better visibility */
+  }
+
+  .navbar-links a {
+    font-size: 1.1rem; /* Slightly larger font size on tablets */
+  }
+}
+
 @media (max-width: 768px) {
   .desktop-nav {
     display: none;
@@ -67,7 +78,7 @@
     background-color: #5988e2;
     justify-content: space-around;
     align-items: center;
-    padding: 0.5rem 0;
+    padding: 0.7rem 0; /* Increased padding for better touch target */
     box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.2);
   }
 
@@ -82,8 +93,8 @@
     align-items: center;
     gap: 0.2rem;
     color: #fff;
-    font-size: 0.8rem;
-    font-weight: 400;
+    font-size: 1rem; /* Increased font size for better readability */
+    font-weight: 500;
     transition: color 0.3s ease, transform 0.3s ease;
   }
 
@@ -93,13 +104,25 @@
   }
 
   .bottom-nav i {
-    font-size: 1.4rem;
+    font-size: 1.5rem; /* Increased icon size for better visibility */
   }
 }
 
 /* Logo Adjustments for Smaller Screens */
 @media (max-width: 576px) {
   .navbar-logo img {
-    width: 80px;
+    width: 80px; /* Larger logo for very small screens */
+  }
+
+  .navbar-links a {
+    font-size: 1.2rem; /* Slightly larger font size on very small screens */
+  }
+
+  .bottom-nav a {
+    font-size: 1rem; /* Uniform font size for small screens */
+  }
+
+  .bottom-nav i {
+    font-size: 1.7rem; /* Slightly larger icons for touch screens */
   }
 }

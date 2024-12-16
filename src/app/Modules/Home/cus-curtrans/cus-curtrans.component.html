@@ -17,18 +17,17 @@
     </div>
   </div>
 </div> -->
-<div class="container-fluid">
+
+
+<!-- <div class="container-fluid">
   <div class="d-flex flex-wrap justify-content-between align-items-center my-3">
     <button class="btn btn-primary mb-2" (click)="gentrack()">
       New Transaction <i class="fa fa-plus-circle"></i>
     </button>
-      <!-- HTML Structure -->
       <div class="search-container">
         <input type="text" id="searchInput" [(ngModel)]="keyword" autocomplete="off" placeholder="Search" class="search-input">
       </div>
-  </div>
-
-  <!-- Responsive Table -->
+    </div>
   <div class="table-responsive">
     <table class="table table-hover d-none d-md-table">
       <thead class="table-primary">
@@ -87,8 +86,6 @@
     </table>
 
     
-
-    <!-- Card View for Mobile -->
     <div class="mobile-table d-md-none">
       @for (item of trans | searchFilter: keyword ; track item.trans_ID) {
       <div class="card mb-3 shadow-sm">
@@ -130,88 +127,275 @@
       }
     </div>
   </div>
+</div> -->
+
+
+
+
+<div class="header">
+  <h1>S2K Laundry</h1>
+  <p><span style="color: #15304f;">Welcome back </span><span style="color: #87bfff;">Customer Eleizer</span></p>
+  <button class="btn btn-new mb-2" (click)="gentrack()">NEW TRANSACTION</button>
 </div>
 
+<!-- Container for Search and Card Layout -->
+<div class="container my-4">
 
+  <!-- Search Container -->
+  <div class="search-container mb-4">
+    <input
+      type="text"
+      id="searchInput"
+      [(ngModel)]="keyword"
+      autocomplete="off"
+      placeholder="Search Transactions..."
+      class="search-input form-control shadow-lg rounded-pill py-2 px-4"
+    />
+  </div>
+
+  <!-- Card Container -->
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    @for (item of trans | searchFilter: keyword; track item.trans_ID) {
+      <div class="col">
+        <div class="card shadow-lg border-0 rounded-3 h-100">
+          
+          <!-- Card Header with Tracking Number -->
+          <div class="card-header text-center">
+            <h5 class="card-title text-primary">
+              <strong>Tracking #:</strong> {{ item.track_num }}
+            </h5>
+          </div>
+          
+          <!-- Card Body with Transaction Details -->
+          <div class="card-body" (click)="viewItem(item.trans_ID)">
+            <p class="card-text">
+              <strong>Laundry Item:</strong> {{ item.Category }}<br />
+              <strong>Quantity:</strong> {{ item.totalQty }}<br />
+              <strong>Weight:</strong> {{ item.totalWeight }}<br />
+              <strong>Transaction Date:</strong> {{ item.trans_date }}<br />
+              <strong>Estimated Date:</strong> {{ item.estimated_date }}<br />
+              <strong>Status:</strong>
+              <span
+                [ngClass]="{
+                  'text-warning': item.trans_stat === 'Pending',
+                  'text-success': item.trans_stat === 'Completed'
+                }"
+              >
+                {{ item.trans_stat }}
+              </span>
+              <br />
+              <strong>Price:</strong> {{ item.totalprice | currency:'PHP':'symbol':'1.2-2'}}<br />
+              <strong>Estimated Price:</strong> {{ item.calculatedTotalPrice | currency:'PHP':'symbol':'1.2-2' }}
+
+              <i
+                class="fa fa-info-circle text-info"
+                aria-hidden="true"
+                data-bs-toggle="tooltip"
+                data-bs-placement="left"
+                title="Total Price might change based on additional services and laundry weight"
+              ></i>
+              <br />
+              <strong>Service:</strong> {{ item.Addservice_name }}
+            </p>
+          </div>
+          
+          <!-- Card Footer with Action Buttons -->
+          <div class="card-footer d-flex justify-content-between align-items-center">
+            <button
+              class="btn btn-edit btn-sm"
+              [disabled]="item.trans_stat.toLowerCase() !== 'pending'"
+              (click)="showDetails(item.track_num, item, item.trans_ID)"
+            >
+              <i class="fa fa-pencil"></i> Edit
+            </button>
+            <button
+              class="btn btn-delete btn-sm"
+              [disabled]="item.trans_stat.toLowerCase() !== 'pending'"
+              (click)="updateStatus(item.trans_ID)"
+            >
+              <i class="fa fa-trash"></i> Delete
+            </button>
+          </div>
+
+        </div>
+      </div>
+    }
+  </div>
+
+</div>
+
+<!-- Modal -->
 <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" #updateModal>
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content shadow-lg border-0 rounded-3">
-      
-      <!-- Modal Header -->
-      <div class="modal-header text-white" style="background-color: #5988e2;">
+      <div class="modal-header text-white" style="background-color: #5998e2;">
         <h5 class="modal-title fw-bold">Update Transaction</h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
 
-      <!-- Modal Body -->
       <div class="modal-body">
-        
-        <!-- Transaction Info -->
-        <div class="alert alert-dismissible border-0 shadow-sm p-4 mb-4 rounded-3" style="background: #f8f9fa;">
-          <!-- Transaction Tracking Info -->
+        <div class="alert alert-light shadow-sm rounded mb-4 p-3">
           <div class="d-flex justify-content-between align-items-center mb-3">
             <div>
               <p class="mb-0">
-                <span class="fw-medium fs-4 text-muted">Tracking Number:</span>
-                <span class="fs-4 fw-bold text-primary">{{ selectedTransaction?.track_num }}</span>
+                <span class="text-muted fw-medium">Tracking Number:</span>
+                <span class="text-primary fw-bold">{{ selectedTransaction?.track_num }}</span>
               </p>
             </div>
-            <div>
-              <!-- Optionally add a copy button for the tracking number -->
-              <button class="btn btn-sm btn-outline-primary" (click)="copyToClipboard(selectedTransaction?.track_num)">
-                <i class="fa fa-copy" aria-hidden="true"></i> Copy
-              </button>
-            </div>
+            <button class="btn btn-outline-primary btn-sm" (click)="copyToClipboard(selectedTransaction?.track_num)">
+              <i class="fa fa-copy"></i> Copy
+            </button>
           </div>
-        
-          <!-- Transaction Status Info -->
-          <div class="d-flex justify-content-between align-items-center">
-            <div>
-              <p class="mb-0">
-                <span class="fw-medium fs-4 text-muted">Status:</span>
-                <span class="fs-4 fw-bold text-primary">{{ selectedTransaction?.trans_stat }}</span>
-              </p>
-            </div>
-          </div>
+          <p class="mb-0">
+            <span class="text-muted fw-medium">Status:</span>
+            <span class="fw-bold">{{ selectedTransaction?.trans_stat }}</span>
+          </p>
+          <!-- <p class="mb-0">
+            <span class="text-muted fw-medium">Address:</span>
+            @for(a of address ; track a){
+            <span class="fw-bold">{{a.Province}} {{a.Town_City}} {{ a.Barangay }} </span>
+            }
+          </p> -->
         </div>
-        
 
-        <!-- Selected Service Checkboxes -->
+        <!-- Service Selection Form -->
         <form #form="ngForm">
-          <div class="mb-3">
-            <div class="d-flex flex-wrap align-items-center">
-              <!-- Selected Service Label -->
-              <label class="fw-medium fs-2 text-muted mb-3 w-100">Selected Service: {{ selectedTransaction?.Transac_status }}</label>
-        
-              <!-- Rush Jobs Checkbox -->
-              <div class="form-check form-switch me-3">
-                <input class="form-check-input" type="checkbox" id="rush" [checked]="selectedservices.rush" (change)="onCheckboxChange('Rush Job', $event)">
+          <div class="mb-4">
+            <label class="fw-medium text-muted mb-2">Selected Service</label>
+            <div class="d-flex flex-wrap gap-3">
+              <div class="form-check form-switch">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  id="rush"
+                  [checked]="selectedservices.rush"
+                  (change)="onCheckboxChange('Rush Job', $event)"
+                />
                 <label class="form-check-label" for="rush">Rush Jobs</label>
               </div>
-        
-              <!-- Pick-Up Checkbox -->
-              <div class="form-check form-switch me-3">
-                <input class="form-check-input" type="checkbox" id="pick" [checked]="selectedservices.pick" (change)="onCheckboxChange('Pick-Up Service', $event)">
+              <div class="form-check form-switch">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  id="pick"
+                  [checked]="selectedservices.pick"
+                  (change)="onCheckboxChange('PickUp-Service', $event)"
+                />
                 <label class="form-check-label" for="pick">Pick-up</label>
               </div>
-        
-              <!-- Delivery Checkbox -->
               <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" id="deliver" [checked]="selectedservices.deliver" (change)="onCheckboxChange('Delivery-Service', $event)">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  id="deliver"
+                  [checked]="selectedservices.deliver"
+                  (change)="onCheckboxChange('Delivery-Service', $event)"
+                />
                 <label class="form-check-label" for="deliver">Delivery</label>
               </div>
             </div>
           </div>
-        </form>        
+        </form>
 
-        <!-- Error Message Display -->
-        <div *ngIf="errormessage" class="alert alert-danger">
-          {{ errormessage }}
+          <div class="row" [hidden]="selectAddDel==false">
+          <p>Select your Delivery Address.</p>
+          <div class="col-md-4 mb-3">
+            <label for="town" class="form-label">Town</label>
+            <select class="form-select" id="town" [(ngModel)]="deliveryTown" (change)="getTownValue($event)">
+              <option value="" disabled selected>Select Town</option>
+              <option *ngFor="let town of townAddresses" [value]="town.City_Address">
+                {{ town.City_Address }}
+              </option>
+            </select>
+          </div>
+        
+          <!-- Barangay Dropdown -->
+          <div class="col-md-4 mb-3" [hidden]="selectBar==false">
+            <label for="barangay" class="form-label">Barangay</label>
+            <select class="form-select" id="barangay" [(ngModel)]="deliveryBarangay">
+              <option value="" disabled selected>Select Barangay</option>
+              
+              <!-- Sison Barangays -->
+              <option [hidden]="sison == false" *ngFor="let barangay of barangaysInSison" [value]="barangay">
+                {{ barangay }}
+              </option>
+        
+              <!-- Rosario Barangays -->
+              <option [hidden]="rosario == false" *ngFor="let barangay of barangaysInRosario" [value]="barangay">
+                {{ barangay }}
+              </option>
+        
+              <!-- Nearby Barangays -->
+              <option [hidden]="poz == false" *ngFor="let barangay of barangaysInPoz" [value]="barangay">
+                {{ barangay }}
+              </option>
+        
+              <!-- Barangays Near Rosario -->
+              <option [hidden]="pugo == false" *ngFor="let barangay of barangaysInPugo" [value]="barangay">
+                {{ barangay }}
+              </option>
+            </select>
+          </div>
+        
+          <div class="col-md-4 mb-3" *ngIf="sison == true || rosario == true || poz == true || pugo == true">
+            <label for="barangayInput" class="form-label">Building# and street</label>
+            <input type="text" class="form-control" id="barangayInput" [(ngModel)]="deliveryStreet" placeholder="Enter details">
+          </div>
         </div>
+        
+        
+        
+        <div class="row" [hidden]="selectAddPick==false">
+          <p>Select your Pick-Up Address.</p>
+          <div class="col-md-4 mb-3">
+            <label for="picktown" class="form-label">Town</label>
+            <select class="form-select" id="picktown" [(ngModel)]="selectedTownID" (change)="getTownValue($event)">
+              <option value="" disabled selected>Select Town</option>
+              <option *ngFor="let town of townAddresses" [value]="town.City_Address">
+                {{ town.City_Address }}
+              </option>
+            </select>
+          </div>
+        
+        
+            <!-- Barangay Dropdown -->
+            <div class="col-md-4 mb-3" [hidden]="selectBar==false">
+              <label for="pickbarangay" class="form-label">Barangay</label>
+              <select class="form-select" id="pickbarangay" formControlName="barangay">
+                <option value="" disabled selected>Select Barangay</option>
+                
+                <!-- Sison Barangays -->
+                <option [hidden]="sison == false" *ngFor="let barangay of barangaysInSison" [value]="barangay">
+                  {{ barangay }}
+                </option>
+          
+                <!-- Rosario Barangays -->
+                <option [hidden]="rosario == false" *ngFor="let barangay of barangaysInRosario" [value]="barangay">
+                  {{ barangay }}
+                </option>
+          
+                <!-- Nearby Barangays -->
+                <option [hidden]="poz == false" *ngFor="let barangay of barangaysInPoz" [value]="barangay">
+                  {{ barangay }}
+                </option>
+          
+                <!-- Barangays Near Rosario -->
+                <option [hidden]="pugo == false" *ngFor="let barangay of barangaysInPugo" [value]="barangay">
+                  {{ barangay }}
+                </option>
+                
+              </select>
+                 <!-- Input Field beside Barangay Dropdown -->
+                </div>
+                <div class="col-md-4 mb-3" *ngIf="sison == true || rosario == true || poz == true || pugo == true">
+                 <label for="pickbarangayInput" class="form-label">Building# and street</label>
+                 <input type="text" class="form-control" id="pickbarangayInput" placeholder="Enter details">
+               </div>
+              </div>
 
-        <!-- Item Details Table -->
-        <div class="table-responsive shadow-sm rounded border mb-4">
-          <table class="table table-hover table-bordered align-middle mb-0">
+        <!-- Transaction Details Table -->
+        <div class="table-responsive">
+          <table class="table table-hover">
             <thead class="table-light">
               <tr>
                 <th>Category</th>
@@ -230,11 +414,17 @@
                   </select>
                 </td>
                 <td>
-                  <input type="number" class="form-control" [(ngModel)]="detail.Qty" placeholder="Enter quantity" min="1">
+                  <input
+                    type="number"
+                    class="form-control"
+                    [(ngModel)]="detail.Qty"
+                    placeholder="Enter quantity"
+                    min="1"
+                  />
                 </td>
                 <td>
-                  <button class="btn btn-danger btn-sm" (click)="removeDetail(i)">
-                    <i class="fa fa-trash" aria-hidden="true"></i>
+                  <button class="btn btn-delete btn-sm" (click)="removeDetail(i)">
+                    <i class="fa fa-trash"></i> Remove
                   </button>
                 </td>
               </tr>
@@ -244,24 +434,38 @@
 
         <!-- Add Item Button -->
         <div class="text-end mt-3">
-          <button class="btn btn-success btn-sm" (click)="addDetail()">
-            <i class="fa fa-plus" aria-hidden="true"></i> Add Item
+          <button class="btn btn-additem btn-sm" (click)="addDetail()">
+            <i class="fa fa-plus"></i> Add Item
           </button>
         </div>
-        
       </div>
 
-      <!-- Modal Footer -->
-      <div class="modal-footer bg-light border-0">
+      <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-          <i class="fa fa-times" aria-hidden="true"></i> Close
+          <i class="fa fa-times"></i> Close
         </button>
         <button type="button" class="btn btn-primary" (click)="updateTransaction()">
-          <i class="fa fa-floppy-o" aria-hidden="true"></i> Save Changes
+          <i class="fa fa-save"></i> Save Changes
         </button>
       </div>
-
     </div>
   </div>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

@@ -64,15 +64,15 @@
               <div *ngIf="signup.get('Cust_password')?.hasError('minlength') && signup.get('Cust_password')?.touched"  style="color: red; font-size: 14px; margin-top: 5px;">
                 Password length should be 8
               </div>
-              <div *ngIf="signup.get('Cust_password')?.value != signup.get('Cust_password_confirmation')?.value && signup.get('Cust_password')?.touched"  style="color: red; font-size: 14px; margin-top: 5px;">
-                Password Does not Match
-              </div>
             </div>
             <div class="input-box">
               <span class="details">Confirm password</span><span class="text-danger">*</span>
               <input type="password" id="passwordConfirm" placeholder="retype password" class="form-control form-control-lg" formControlName="Cust_password_confirmation" [ngClass]="{
                 'is-invalid':(signup.get('Cust_password_confirmation')?.invalid && signup.get('Cust_password_confirmation')?.touched)
               }"/>
+               <div *ngIf="signup.get('Cust_password')?.value != signup.get('Cust_password_confirmation')?.value && signup.get('Cust_password')?.touched"  style="color: red; font-size: 14px; margin-top: 5px;">
+                Password Does not Match
+              </div>
               <div *ngIf="signup.get('Cust_password_confirmation')?.hasError('required') && signup.get('Cust_password_confirmation')?.touched"  style="color: red; font-size: 14px; margin-top: 5px;">
                Confirm Password
               </div>

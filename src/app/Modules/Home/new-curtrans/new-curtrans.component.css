@@ -1,11 +1,12 @@
 /* General Modal Styles */
 .modal-content {
+
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
 .modal-header {
-  background-color: #4a74c6;
+  background-color: #5988e2;
   color: #fff;
   padding: 1rem;
 }
@@ -31,6 +32,7 @@
 .form-control {
   border-radius: 8px;
   padding: 10px 15px;
+  font-size: 1rem; /* Adjust font size for readability */
 }
 
 .form-control:focus {
@@ -38,26 +40,23 @@
   box-shadow: 0 0 5px rgba(74, 116, 198, 0.5);
 }
 
-.btn-primary {
-  background: #4a74c6;
-  border: none;
-  transition: all 0.3s ease;
-}
-
-.btn-primary:hover {
-  background: #3759a8;
-}
-
-.btn-outline-secondary {
-  border-color: #4a74c6;
-  color: #4a74c6;
-}
-
-.btn-outline-secondary:hover {
-  background: #4a74c6;
+/* Button Styles */
+.btn-addtolist {
+  text-decoration: none;
+  padding: 12px 25px;
+  margin: 10px;
+  border-radius: 25px;
+  font-weight: bold;
   color: white;
+  transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
+  background-color: #5998e2;
 }
 
+.btn-addtolist:hover {
+  background-color: #307ed8;
+}
+
+/* Table Styles */
 .table {
   border-radius: 8px;
   overflow: hidden;
@@ -72,21 +71,277 @@
   background-color: #f4f4f9;
 }
 
-/* Responsive Adjustments */
-@media (max-width: 576px) {
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+  /* Tablet View Adjustments */
   .modal-dialog {
-    width: 90%;
+    width: 95%;
+    margin: auto;
+  }
+
+  .modal-content {
+    padding: 15px;
+  }
+
+  .modal-header {
+    padding: 10px;
+    text-align: center;
+  }
+
+  .modal-title {
+    font-size: 1.25rem;
   }
 
   .btn {
-    font-size: 0.875rem;
+    font-size: 0.9rem;
+    padding: 10px 20px;
   }
 
   .form-control {
-    font-size: 0.875rem;
+    font-size: 0.9rem;
+  }
+
+  .form-label {
+    font-size: 0.9rem;
   }
 
   .table {
-    font-size: 0.875rem;
+    font-size: 0.9rem;
+  }
+
+  .table-responsive {
+    overflow-x: auto;
+  }
+
+  /* Align buttons and forms better on smaller screens */
+  .btn-addtolist {
+    width: 100%;
+    margin: 0;
+  }
+
+  .form-group,
+  .form-control {
+    margin-bottom: 10px;
   }
 }
+
+@media (max-width: 576px) {
+  /* Mobile View Adjustments */
+  .modal-dialog {
+    width: 100%;
+    margin: auto;
+  }
+
+  .modal-content {
+    padding: 10px;
+  }
+
+  .modal-header {
+    padding: 10px;
+    text-align: center;
+  }
+
+  .modal-title {
+    font-size: 1rem;
+  }
+
+  .btn {
+    font-size: 0.8rem;
+    padding: 8px 16px;
+  }
+
+  .form-control {
+    font-size: 0.8rem;
+    padding: 8px 10px;
+  }
+
+  .form-label {
+    font-size: 0.8rem;
+  }
+
+  .table {
+    font-size: 0.8rem;
+  }
+
+  /* Flex column layout for forms and buttons */
+  .row {
+    flex-direction: column;
+  }
+
+  .col-md-4,
+  .col-md-6 {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+
+  .btn-addtolist {
+    width: 100%;
+    margin: 0;
+  }
+
+  .table-responsive {
+    overflow-x: auto;
+    font-size: 0.8rem;
+  }
+
+  /* Align dropdowns and fields for small screens */
+  select.form-select {
+    font-size: 0.8rem;
+    padding: 8px 10px;
+  }
+
+  /* Additional spacing for checkboxes */
+  .form-check {
+    margin-bottom: 10px;
+  }
+}
+
+
+
+/*pick up*/
+.checkout-container {
+  max-width: 500px;
+  margin: 0 auto;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+/* Product */
+.product-section {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #ddd;
+}
+
+.product-details {
+  flex-grow: 1;
+}
+
+.product-details h3 {
+  font-size: 1rem;
+  color: #333;
+}
+
+.product-details p {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.edit-text {
+  color: #0d6efd;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-left: 10px; /* Adds space between the label and the edit text */
+}
+
+
+
+/* select new address */
+.address-container { border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 15px; }
+.address-container:last-child { border-bottom: none; }
+.default-label { color: #ff5733; font-size: 14px; }
+.highlighted { border: 2px solid #ff5733; border-radius: 10px; }
+.confirm-btn { background-color: #ff5733; color: white; }
+
+
+/*edit add*/
+.required-field { color: red; }
+        .submit-btn { background-color: #ff5733; color: white; }
+        .map-placeholder { background-color: #f8f9fa; height: 120px; border: 1px solid #e0e0e0; display: flex; align-items: center; justify-content: center; }
+        .map-placeholder span { font-size: 14px; color: #6c757d; }
+        .label-btn { width: 80px; height: 35px; }
+        .inactive-label { color: #bdbdbd; border: 1px solid #e0e0e0; background-color: #f8f9fa; }
+/* .form-container {
+  max-width: 600px;
+  margin: 20px auto;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.header i {
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.header h2 {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.required {
+  color: red;
+}
+
+.input-wrapper {
+  position: relative;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  outline: none;
+  font-size: 14px;
+}
+
+input[type="text"]:focus {
+  border-color: #007bff;
+}
+
+.input-wrapper i {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #aaa;
+}
+
+.phone-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.phone-wrapper .country-code {
+  padding: 12px;
+  background-color: #f2f2f2;
+  border: 1px solid #ddd;
+  border-right: none;
+  border-radius: 5px 0 0 5px;
+}
+
+.phone-wrapper input {
+  border-radius: 0 5px 5px 0;
+} */
+.address-container {
+  display: inline-block;
+  margin-right: 10px; /* Add spacing between inline elements */
+  vertical-align: top; /* Align them properly */
+  width: 300px; /* Set a fixed width for consistent sizing */
+}
+
+

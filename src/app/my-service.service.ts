@@ -7,9 +7,9 @@ import { Observable } from 'rxjs';
 })
 export class MyServiceService {
   url = "http://localhost/CustomerS2K/";
-  Apiurl="http://localhost:8000/api/";
-  // Apiurl="http://10.0.118.62:8000/api/";
+  // Apiurl="http://localhost:8000/api/";
   // Apiurl="http://192.168.3.85:8000/api/";
+  Apiurl="http://10.0.118.64:8000/api/";
   
 
   public post: any[] = [];
@@ -29,6 +29,7 @@ export class MyServiceService {
   }
 
   addtrans(data: any){
+    console.log(data);
     return this.http.post(this.Apiurl + 'addtrans', data);
   }
   updatetrans(data: any){
@@ -148,6 +149,14 @@ export class MyServiceService {
     return this.http.get(`${this.Apiurl}checkPriceExists/${transactionId}`);
   }
 
+  getShippingAddress():Observable<any>{
+    return this.http.get(`${this.Apiurl}getShippingAddress`);
+  }
+
+  getshippingprice(id:any):Observable<any>{
+    return this.http.get(`${this.Apiurl}getshippingprice/${id}`);
+  }
+
   removeServices(Transac_ID: number, removedServices: string[]): Observable<any> {
     const data = {
       Transac_ID: Transac_ID,
@@ -157,5 +166,24 @@ export class MyServiceService {
     // Make the HTTP POST request to the Laravel API
     return this.http.post(this.Apiurl + 'removeServices', data);
   }
+
+  insertaddress(data:any):Observable<any>{
+    console.log(data);
+    return this.http.post(this.Apiurl + 'insertaddress',data);
+  }
+
+  showaddress(id:any):Observable<any>{
+    return this.http.get(`${this.Apiurl}showaddress/${id}`);
+  }
+
+  deleteaddress(id:any):Observable<any>{
+    return this.http.delete(`${this.Apiurl}deleteaddress/${id}`);
+  }
+
+  addAddress(data: any): Observable<any> {
+    console.log(data);
+    return this.http.post(this.Apiurl + 'addddress', data);  // Fixed method name
+  }
+
 }
 

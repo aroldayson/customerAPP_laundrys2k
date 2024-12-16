@@ -1,275 +1,260 @@
-.welcome-banner {
-  text-align: center;
-  padding: 30px;
-  background: linear-gradient(135deg, #4a74c6, #6a93d8);
-  color: white;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  max-width: 100%;
-  width: 90%;
+/* General Container */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
 }
 
-.welcome-banner h1 {
-  font-size: 2.5rem;
-  margin: 0;
-}
-
-.welcome-banner p {
-  font-size: 1.2rem;
-  margin-top: 10px;
-}
-
-.steps {
-  background: white;
-  border-radius: 10px;
-  padding: 20px;
-  margin-top: 20px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  max-width: 100%;
-  width: 90%;
-}
-
-.steps h2 {
-  color: #4a4a4a;
-}
-
-.steps ol {
-  padding-left: 20px;
-}
-
-@media (max-width: 768px) {
-  .welcome-banner h1 {
-    font-size: 2rem;
-  }
-
-  .welcome-banner p {
-    font-size: 1rem;
-  }
-
-  .steps {
-    padding: 15px;
-  }
-}
-.container-fluid {
-  border-radius: 25px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.table-primary {
-  background-color: #4a74c6;
-  color: white;
-  text-align: center;
+/* Search Container */
+.search-container {
+  width: 100%;
+  margin: 0 auto;
+  padding: 10px 20px;
 }
 
 .search-input {
-  max-width: 300px;
-  width: 300px;
-  padding: 10px;
-  border-radius: 25px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.search-input:focus {
-  border-color: #4a74c6;
-  box-shadow: 0 0 8px rgba(74, 116, 198, 0.5);
-  outline: none;
-}
-
-.status.pending {
-  background-color: #ebc474;
-  color: #986500;
-  padding: 0.2rem 0.5rem;
-  border-radius: 0.25rem;
-  font-size: 0.875rem;
-}
-
-.btn-primary {
-  background-color: #4a74c6;
-  border: none;
-  box-shadow: 0 0 8px rgba(74, 116, 198, 0.5);
-}
-
-.btn-danger {
-  background-color: #dc3545;
-}
-
-.card {
-  border-radius: 8px;
-}
-
-.card-title {
-  font-weight: bold;
-  color: #4a74c6;
-}
-
-.card-text strong {
-  color: #333;
-}
-
-@media (min-width: 768px) {
-  .mobile-table {
-    display: none;
-  }
-}
-
-@media (max-width: 768px) {
-  .d-md-table {
-    display: none;
-  }
-
-  .mobile-table .card {
-    margin-bottom: 1rem;
-  }
-}
-
-
-.modal-content {
-  padding: 1rem;
-}
-
-@media (max-width: 576px) {
-  .modal-dialog {
-    max-width: 100%;
-    margin: 0;
-  }
-  .modal-content {
-    padding: 0.5rem;
-  }
-}
-
-@media (min-width: 768px) and (max-width: 992px) {
-  .modal-dialog {
-    max-width: 85%;
-  }
-}
-
-@media (min-width: 992px) {
-  .modal-dialog {
-    max-width: 70%;
-  }
-}
-
-.table td,
-.table th {
-  padding: 0.5rem;
-}
-
-.table th, .table td {
-  white-space: nowrap;
-}
-
-.control-label {
-  font-weight: bold;
-  font-size: 1rem;
-  margin-bottom: 0.5rem;
-  color: #333;
-}
-
-
-.service-label {
-  font-size: 1rem;
-  font-weight: bold;
-  /* color: #5988e2; */
-  margin-right: 1rem;
-  margin-top: 0.5rem;
-}
-
-.d-flex {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
-
-.form-check {
-  display: flex;
-  align-items: center;
-  margin-bottom: 0.5rem;
-}
-
-.form-check-input:checked {
-  background-color: #007bff;  /* Custom blue */
-  border-color: #007bff;
-}
-
-.form-check-input:focus {
-  box-shadow: none; /* Remove the focus outline */
-}
-
-.form-check-label {
-  font-size: 20px;
-  color: #5988e2;
-}
-
-
-@media (max-width: 576px) {
-  .form-check {
-    flex-direction: column;
-    margin-bottom: 1rem;
-  }
-
-  .form-check-label {
-    font-size: 1rem;
-  }
-
-  .service-label {
-    margin-top: 0.5rem;
-  }
-}
-
-@media (min-width: 576px) and (max-width: 992px) {
-  .d-flex {
-    justify-content: flex-start;
-  }
-
-  .form-check {
-    margin-right: 20px;
-    margin-bottom: 0.5rem;
-  }
-}
-
-.form-check-input:checked + .form-check-label {
-  color: #007bff; 
-  font-weight: bold;
-}
-
-
-strong {
-  color: #007bff;
-}
-.btn-primary {
-  background: #4a74c6;
-  border: none;
+  font-size: 1.1rem;
+  padding: 10px 20px;
+  border-radius: 50px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
   transition: all 0.3s ease;
 }
 
-.btn-primary:hover {
-  background: #3759a8;
+.search-input:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 5px rgba(74, 144, 226, 0.7);
 }
 
-/* Style for the info icon */
-.fa-info-circle {
-  color: gray;
-  font-size: 10px;
-  position: relative;
-  cursor: pointer;
-}
- /* Basic icon styling */
- .fa-info-circle {
-  color: gray;
-  font-size: 20px;
-  position: relative;
-  cursor: pointer;
+/* Card Styles */
+.card {
+  border-radius: 12px;
+  background: #fff;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  margin-bottom: 15px;
 }
 
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+}
 
+.card-header {
+  text-align: center;
+  padding: 10px;
+  background-color: #f1f1f1;
+  border-radius: 12px 12px 0 0;
+}
 
+.card-body {
+  padding: 20px;
+  font-size: 0.95rem;
+  color: #333;
+}
 
+.card-footer {
+  padding: 15px;
+  text-align: center;
+  background-color: #f9f9f9;
+  border-radius: 0 0 12px 12px;
+}
 
+.card-footer button {
+  font-size: 14px;
+  padding: 8px 12px;
+  margin-top: 5px;
+}
 
+/* Button Hover Effect */
+/* .btn-primary, .btn-danger, .btn-success {
+  border-radius: 30px;
+  transition: all 0.3s ease;
+} */
 
+.btn-edit{
+  background-color: #5998e2;
+  color: white;
+  border-radius: 30px;
+  transition: all 0.3s ease;
+}
+.btn-edit:hover{
+  background-color: #307ed8;
+  color: white;
+}
 
+.btn-delete{
+  background-color: #ff746c;
+  color: white;
+  border-radius: 30px;
+  transition: all 0.3s ease;
+}
+
+.btn-delete:hover{
+  background-color: #e8443b;;
+  color: white;
+}
+.btn-additem{
+  background-color: #80EF80;
+  color: white;
+  border-radius: 30px;
+  transition: all 0.3s ease;
+}
+.btn-additem:hover{
+
+}
+.btn-new{
+  background-color: #5998e2;
+  border: 2px solid white;
+  text-decoration: none;
+  padding: 12px 25px;
+  margin: 10px;
+  border-radius: 25px;
+  font-weight: bold;
+  color: white;
+  transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
+}
+
+.btn-new:hover{
+  background-color: #307ed8;
+  border: 2px solid white;
+}
+
+/* Header Styles */
+.header {
+  background: url('/assets/bglaundry.jpeg') no-repeat center center/cover;
+  text-align: center;
+  padding: 2rem;
+  color: white;
+  height: 40vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.header h1 {
+  font-size: 80px;
+  margin: 0;
+  font-weight: bold;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.header p {
+  margin: 1rem 0;
+  font-weight: bold;
+  font-size: 2rem;
+}
+
+.header .buttons a {
+  text-decoration: none;
+  padding: 12px 25px;
+  margin: 10px;
+  border-radius: 25px;
+  font-weight: bold;
+  color: white;
+  transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
+}
+
+.header .buttons a.new {
+  background-color: #5998e2;
+  border: 2px solid white;
+}
+
+.header .buttons a.more-info {
+  color: #f8ce00;
+  background-color: #5998e2;
+  border: 2px solid #f8ce00;
+}
+
+.header .buttons a:hover {
+  opacity: 0.9;
+}
+
+/* Modal Styles */
+.modal-dialog {
+  max-width: 95%;
+}
+
+@media (max-width: 768px) {
+  /* Make cards stack vertically on small screens */
+  .card-body {
+    padding: 15px;
+  }
+
+  .header h1 {
+    font-size: 50px;
+  }
+
+  .header p {
+    font-size: 1.5rem;
+  }
+
+  .search-input {
+    font-size: 1rem;
+    padding: 8px 16px;
+  }
+
+  .card-header h5 {
+    font-size: 1.1rem;
+  }
+
+  .card-body p {
+    font-size: 0.9rem;
+  }
+
+  .card-footer button {
+    font-size: 13px;
+  }
+
+  .btn-outline-primary, .btn-outline-danger, .btn-outline-success {
+    font-size: 12px;
+  }
+
+  /* Modal Adjustments */
+  .modal-dialog.modal-lg {
+    max-width: 90%;
+  }
+}
+
+@media (max-width: 576px) {
+  /* Further adjustments for smaller screens */
+  .header h1 {
+    font-size: 40px;
+  }
+
+  .header p {
+    font-size: 1.2rem;
+  }
+
+  .search-input {
+    font-size: 0.9rem;
+    padding: 6px 12px;
+  }
+
+  .card-header h5 {
+    font-size: 1rem;
+  }
+
+  .card-body p {
+    font-size: 0.85rem;
+  }
+
+  .card-footer button {
+    font-size: 12px;
+  }
+
+  .btn-outline-primary, .btn-outline-danger, .btn-outline-success {
+    font-size: 11px;
+  }
+
+  .modal-body {
+    padding: 10px;
+  }
+
+  /* Button Adjustments */
+  .header .buttons a {
+    padding: 10px 20px;
+    font-size: 1rem;
+  }
+}

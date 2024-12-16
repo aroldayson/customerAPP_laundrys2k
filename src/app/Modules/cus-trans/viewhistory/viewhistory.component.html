@@ -1,85 +1,72 @@
 <div class="container-fluid border-container" style="margin-bottom: 50px; background-color: #fff;">
-  <!-- Search Bar -->
-  <div class="input-group rounded mb-3 search-bar-container" style="width: 100%; max-width: 400px;">
-      <input
-          type="search"
-          class="form-control rounded search-input"
-          placeholder="Search"
-          aria-label="Search"
-          aria-describedby="search-addon"
-          (input)="onSearch($event)" />
-      <span class="input-group-text border-0 search-addon" id="search-addon">
-          <i class="fas fa-search search-icon"></i>
-      </span>
+    <div class="input-group rounded mb-3 search-bar-container" style="width: 100%; max-width: 400px;">
+        <input
+            type="search"
+            class="form-control rounded search-input"
+            placeholder="Search"
+            aria-label="Search"
+            aria-describedby="search-addon"
+            (input)="onSearch($event)" />
+        <span class="input-group-text border-0 search-addon" id="search-addon">
+            <i class="fas fa-search search-icon"></i>
+        </span>
+    </div>
+    <div class="btn-group mb-3 d-flex flex-wrap justify-content-start">
+      <button class="btn btn-custom btn-sm m-1" (click)="filterStatus('All')">All</button>
+      <button class="btn btn-custom btn-sm m-1" (click)="filterStatus('Pending')">Pending</button>
+      <button class="btn btn-custom btn-sm m-1" (click)="filterStatus('Washing')">Washing</button>
+      <button class="btn btn-custom btn-sm m-1" (click)="filterStatus('Folding')">Folding</button>
+      <button class="btn btn-custom btn-sm m-1" (click)="filterStatus('Completed')">Completed</button>
+      <button class="btn btn-custom btn-sm m-1" (click)="filterStatus('Cancelled')">Cancelled</button>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Tracking Number</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Service</th>
+                    <th>Payment</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>     
+            <tbody>
+                @for(h of filteredHist; track h){
+                <tr>
+                  <td>{{h.trans_tracking_number}}</td>
+                  <td>{{h.Transac_datetime }}</td>
+                  <td>{{h.latest_transac_status }}</td>
+                  <td>{{h.Addservice_name }}</td>
+                  <td>{{h.Mode_of_Payment }}</td>
+                  <td>{{h.payment_amount }}</td>
+              }
+            </tbody>
+        </table>
+    </div>
+    <div class="pagination-container mt-3">
+        <nav>
+            <ul class="pagination justify-content-center">
+                <li
+                    class="page-item"
+                    [class.disabled]="currentPage === 1"
+                    (click)="changePage(currentPage - 1)">
+                    <span class="page-link">Previous</span>
+                </li>
+                <li
+                    class="page-item"
+                    *ngFor="let page of totalPagesArray"
+                    [class.active]="page === currentPage"
+                    (click)="changePage(page)">
+                    <span class="page-link">{{ page }}</span>
+                </li>
+                <li
+                    class="page-item"
+                    [class.disabled]="currentPage === totalPages"
+                    (click)="changePage(currentPage + 1)">
+                    <span class="page-link">Next</span>
+                </li>
+            </ul>
+        </nav>
+    </div>
   </div>
-
-  <!-- Filter Buttons -->
-  <div class="btn-group mb-3 d-flex flex-wrap justify-content-start">
-    <button class="btn btn-custom btn-sm m-1" (click)="filterStatus('All')">All</button>
-    <button class="btn btn-custom btn-sm m-1" (click)="filterStatus('Pending')">Pending</button>
-    <button class="btn btn-custom btn-sm m-1" (click)="filterStatus('Washing')">Washing</button>
-    <button class="btn btn-custom btn-sm m-1" (click)="filterStatus('Folding')">Folding</button>
-    <button class="btn btn-custom btn-sm m-1" (click)="filterStatus('Completed')">Completed</button>
-    <button class="btn btn-custom btn-sm m-1" (click)="filterStatus('Cancelled')">Cancelled</button>
-  </div>
-
-
-  <!-- Table -->
-  <div class="table-responsive">
-      <table class="table table-bordered table-hover">
-          <thead>
-              <tr>
-                  <th>Tracking Number</th>
-                  <th>Date</th>
-                  <th>Status</th>
-                  <th>Service</th>
-                  <th>Payment</th>
-                  <th>Amount</th>
-                  <!-- <th>Action</th> -->
-              </tr>
-          </thead>     
-          <tbody>
-              @for(h of filteredHist; track h){
-              <tr>
-                <td>{{h.trans_tracking_number}}</td>
-                <td>{{h.Transac_datetime }}</td>
-                <td>{{h.latest_transac_status }}</td>
-                <td>{{h.Addservice_name }}</td>
-                <td>{{h.Mode_of_Payment }}</td>
-                <td>{{h.payment_amount }}</td>
-                <!-- <td>
-                  <button class="btn btn-primary btn-sm" (click)="viewItem(h.Transac_ID)">View</button>
-                </td> -->
-              </tr>
-            }
-          </tbody>
-      </table>
-  </div>
-
-  <!-- Pagination Controls -->
-  <div class="pagination-container mt-3">
-      <nav>
-          <ul class="pagination justify-content-center">
-              <li
-                  class="page-item"
-                  [class.disabled]="currentPage === 1"
-                  (click)="changePage(currentPage - 1)">
-                  <span class="page-link">Previous</span>
-              </li>
-              <li
-                  class="page-item"
-                  *ngFor="let page of totalPagesArray"
-                  [class.active]="page === currentPage"
-                  (click)="changePage(page)">
-                  <span class="page-link">{{ page }}</span>
-              </li>
-              <li
-                  class="page-item"
-                  [class.disabled]="currentPage === totalPages"
-                  (click)="changePage(currentPage + 1)">
-                  <span class="page-link">Next</span>
-              </li>
-          </ul>
-      </nav>
-  </div>
-</div>

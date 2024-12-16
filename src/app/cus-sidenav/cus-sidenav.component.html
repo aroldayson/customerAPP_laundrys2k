@@ -93,10 +93,10 @@
 
   <!-- Desktop Navigation Links -->
   <ul class="navbar-links desktop-nav">
-    <li><a [routerLink]="['/main/cusmainhome/homemain/cuscurtrans']"><i class="fa-solid fa-house"></i> Home</a></li>
-    <li><a [routerLink]="['/main/maintrans']"><i class="fa-solid fa-exchange-alt"></i> Transactions</a></li>
-    <li><a [routerLink]="['/main/mainaccount']"><i class="fa-solid fa-user"></i> Account</a></li>
-    <li><a (click)="logout()"  style="cursor: pointer;"><i class="fa-solid fa-sign-out-alt"></i> Logout</a></li>
+    <li><a [routerLink]="['/main/cusmainhome/homemain/cuscurtrans']"><i class="fa-solid fa-house"></i> <span>Home</span></a></li>
+    <li><a [routerLink]="['/main/maintrans']"><i class="fa-solid fa-exchange-alt"></i> <span>Transactions</span></a></li>
+    <li><a [routerLink]="['/main/mainaccount']"><i class="fa-solid fa-user"></i> <span>Account</span></a></li>
+    <li><a (click)="logout()" style="cursor: pointer;"><i class="fa-solid fa-sign-out-alt"></i> <span>Logout</span></a></li>
   </ul>
 
   <!-- Bottom Navbar for Mobile/Tablet -->
@@ -110,14 +110,14 @@
 
 
 
-<div class="main-content" style="margin-top: 40px;">
+<div class="main-content">
   <!-- <div class="container"> -->
     <div class="row">
       <div class="col-lg-12">
         <!-- <div class="container-fluid"> -->
-          <div class="mx-1">
+          <!-- <div class="mx-1"> -->
             <router-outlet></router-outlet>
-          </div>
+          <!-- </div> -->
         <!-- </div> -->
       </div>
     <!-- </div> -->
