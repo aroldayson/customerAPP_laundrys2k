@@ -33,13 +33,13 @@
               <div *ngIf="signup.get('Cust_phoneno')?.hasError('pattern') && signup.get('Cust_phoneno')?.touched"  style="color: red; font-size: 14px; margin-top: 5px;">Enter Valid Phone Number</div>
               <div *ngIf="signup.get('Cust_phoneno')?.hasError('required') && signup.get('Cust_phoneno')?.touched"  style="color: red; font-size: 14px; margin-top: 5px;">Enter Phone Number</div>
             </div>
-            <div class="input-box">
+            <!-- <div class="input-box">
               <span class="details">Address</span><span class="text-danger">*</span>
               <input type="text" id="address" placeholder="address" class="form-control form-control-lg" formControlName="Cust_address" [ngClass]="{
                 'is-invalid':(signup.get('Cust_address')?.invalid && signup.get('Cust_address')?.touched)
               }"/>
               <div *ngIf="signup.get('Cust_address')?.hasError('required') && signup.get('Cust_address')?.touched"  style="color: red; font-size: 14px; margin-top: 5px;">Enter Address</div>
-            </div>
+            </div> -->
             <div class="input-box">
               <span class="details">Email</span><span class="text-danger">*</span>
               <input type="email" id="emailAddress" placeholder="email" class="form-control form-control-lg" formControlName="Cust_email" [ngClass]="{

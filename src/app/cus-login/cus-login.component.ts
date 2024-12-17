@@ -57,7 +57,7 @@ export class CusLoginComponent implements OnInit{
             localStorage.setItem('token', result.token);
             localStorage.setItem('Cust_ID', result.user.Cust_ID); 
             // Navigate to the main page
-            this.route.navigate(['/main/cusmainhome/homemain/cushome']);
+            this.route.navigate(['/main/cusmainhome/homemain/cuscurtrans']);
           } else {
             // Handle case where the result doesn't contain the token
             Swal.fire({

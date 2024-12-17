@@ -115,3 +115,106 @@
 .search-icon {
   color: #5988e2;
 }
+
+.styled-heading {
+  margin: auto;
+  color: #ffbb33;
+  letter-spacing: .4em;
+  font-size: 3em;
+  text-shadow: 0 1px #5998e2, -1px 0 #307ed8, -1px 2px #5998e2, -2px 1px #307ed8,
+    -2px 3px #5998e2, -3px 2px #307ed8, -3px 4px #5998e2, -4px 3px #307ed8,
+    -4px 5px #5998e2, -5px 4px #307ed8, -5px 6px #5998e2, -6px 5px #307ed8,
+    -6px 7px #5998e2, -7px 6px #307ed8, -7px 8px #5998e2, -8px 7px #307ed8;
+  text-align: center;
+}
+
+.laundry-icon {
+  color: #ffbb33; /* Matching the heading text color */
+  font-size: 1em; /* Slightly larger icons */
+  margin: 0 0.2em; /* Space between the icons and the heading */
+}
+/* Footer Styling */
+.footer {
+  background-color: #1c1c1c; /* Dark background for a modern look */
+  color: #fff; /* White text for contrast */
+  padding: 40px 20px;
+  font-family: 'Arial', sans-serif;
+  text-align: center;
+}
+
+.footer-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: auto;
+}
+
+.footer-logo h2 {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #5988e2; /* Accent color */
+  margin-bottom: 10px;
+}
+
+.footer-logo p {
+  font-size: 1rem;
+  color: #aaa;
+  margin: 0;
+}
+
+.footer-contact, .footer-location {
+  text-align: left;
+}
+
+.footer-contact h3, .footer-location h3 {
+  font-size: 1.25rem;
+  margin-bottom: 10px;
+  color: #5988e2; /* Accent color */
+}
+
+.footer-contact p, .footer-location p {
+  font-size: 1rem;
+  margin: 5px 0;
+  color: #ccc;
+}
+
+.footer-contact p i, .footer-location a i {
+  color: #5988e2;
+  margin-right: 8px;
+}
+
+.footer-location a {
+  text-decoration: none;
+  color: #5988e2;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.footer-location a:hover {
+  color: #fff;
+}
+
+/* Footer Bottom Section */
+.footer-bottom {
+  width: 100%;
+  margin-top: 20px;
+  border-top: 1px solid #444;
+  padding-top: 10px;
+  font-size: 0.875rem;
+  color: #aaa;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .footer-container {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .footer-contact, .footer-location {
+    text-align: center;
+  }
+}

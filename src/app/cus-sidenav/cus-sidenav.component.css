@@ -41,6 +41,47 @@
   transform: translateY(-2px); /* Adds a small lift effect on hover */
 }
 
+/* Active Link Styles - Adding Border */
+.navbar-links a.active {
+  color: #f0f0f0; /* Ensures the active state matches the hover color */
+  font-weight: bold;
+  border-bottom: 3px solid #ffcc00; /* Adds a yellow border under the active link */
+  padding-bottom: 0.2rem; /* Adds a slight padding to prevent text overlap with the border */
+}
+
+/* Mobile/Tablet Navbar */
+.desktop-nav {
+  margin-top: 15px;
+  display: flex;
+}
+
+.bottom-nav {
+  display: none;
+}
+
+/* Media Query for Tablet and Mobile Screens */
+@media (max-width: 1024px) {
+  /* Adjusting for tablet screens */
+  .navbar-links a {
+    font-size: 1.1rem; /* Larger font size on tablets */
+  }
+
+  .navbar-links a:hover {
+    transform: none; /* Remove hover transform on mobile/tablet */
+  }
+}
+
+@media (max-width: 768px) {
+  .desktop-nav {
+    display: none; /* Hide desktop navigation on smaller screens */
+  }
+
+  .navbar-links a.active {
+    border-bottom: 3px solid #ffcc00; /* Add a border for active links on mobile/tablets as well */
+  }
+}
+
+
 /* Mobile/Tablet Navbar */
 .desktop-nav {
   margin-top: 15px;

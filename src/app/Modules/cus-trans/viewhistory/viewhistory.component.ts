@@ -46,8 +46,8 @@ throw new Error('Method not implemented.');
     }else if (status === 'Completed') {
         this.filteredHist = this.histf.filter(item => item.latest_transac_status === "completed");
     }
-    else if (status === 'Cancelled') {
-        this.filteredHist = this.histf.filter(item => item.latest_transac_status === "cancelled");
+    else if (status === 'Cancel') {
+        this.filteredHist = this.histf.filter(item => item.latest_transac_status === "cancel");
     }
     else {
         this.filteredHist = this.histf.filter(h => h.Transac_status === status);

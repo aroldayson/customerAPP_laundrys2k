@@ -24,7 +24,7 @@ export class CusSignupComponent implements OnInit {
     Cust_fname: new FormControl(null, [Validators.required, Validators.maxLength(255)]),
     Cust_lname: new FormControl(null, [Validators.required, Validators.maxLength(255)]),
     Cust_mname: new FormControl(null),
-    Cust_address: new FormControl(null,[Validators.required]),
+    // Cust_address: new FormControl(null,[Validators.required]),
     Cust_phoneno: new FormControl(null,[Validators.required,Validators.pattern('^[0-9]{11}$')]),
     Cust_email: new FormControl(null, [Validators.required, Validators.email, Validators.maxLength(255)]),
     Cust_password: new FormControl(null, [Validators.required, Validators.minLength(8)]),

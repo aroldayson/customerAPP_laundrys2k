@@ -8,9 +8,9 @@ import { Observable } from 'rxjs';
 export class MyServiceService {
   url = "http://localhost/CustomerS2K/";
   // Apiurl="http://localhost:8000/api/";
-  // Apiurl="http://192.168.3.85:8000/api/";
-  Apiurl="http://10.0.118.64:8000/api/";
-  
+  Apiurl="http://192.168.3.85:8000/api/";
+  // Apiurl="http://10.0.118.64:8000/api/";
+
 
   public post: any[] = [];
   trans: any;
@@ -49,7 +49,7 @@ export class MyServiceService {
   //   console.log(data);
   //   return this.http.post(this.url + 'insertorder.php', JSON.stringify(data));
   // }
-  
+
   // checklogin(log: any){
   //   return this.http.post(this.url + 's2klogin.php',JSON.stringify(log));
   // }
@@ -94,14 +94,12 @@ export class MyServiceService {
   insertNewDetails(newEntries: { Categ_ID: number, Qty: number, Tracking_number: string }[]): Observable<any> {
     return this.http.post(`${this.Apiurl}insertDetails`, newEntries);
   }
-  
+
 
   deleteDetails(deletedEntries: number[]): Observable<any> {
-    return this.http.delete(`${this.Apiurl}deleteDetails`,{
-      body: { deletedEntries } 
-    });
+    return this.http.delete(`${this.Apiurl}deleteDetails`,{body: { deletedEntries } });
   }
-  
+
 
   updateTransactionStatus(trackingNumber: string, transacStatus: string): Observable<any> {
     return this.http.post(`${this.Apiurl}insertDetails`,{ Tracking_number: trackingNumber, Transac_status: transacStatus });
@@ -185,5 +183,8 @@ export class MyServiceService {
     return this.http.post(this.Apiurl + 'addddress', data);  // Fixed method name
   }
 
-}
+  displayCustomer(id:any):Observable<any>{
+    return this.http.get(`${this.Apiurl}displayCustomer/${id}`);
+  }
 
+}

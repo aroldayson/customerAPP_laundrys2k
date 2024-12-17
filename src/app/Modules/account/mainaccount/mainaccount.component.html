@@ -85,7 +85,15 @@
 
     <form [formGroup]="profileform" (ngSubmit)="save()">
         <div class="container-xl px-4 mt-4">
-      
+          <div class="row mb-3 mt-3">
+            <div class="col-12">
+              <h3 class="text-center styled-heading">
+                <i class="fas fa-user laundry-icon"></i>
+                Customer Account
+                <i class="fas fa-washing-machine laundry-icon"></i> <!-- Washing Machine Icon -->
+              </h3>
+            </div>
+          </div>
           <!-- Profile Section -->
           <div class="row">
             <!-- Profile Picture Section -->
@@ -236,3 +244,34 @@
           </div>
         </div>
       </form>
+      <footer class="footer">
+        <div class="footer-container">
+          <!-- Company Branding -->
+          <div class="footer-logo">
+            <h2>S2K Laundry</h2>
+            <p>Experience laundry care at its finest!</p>
+          </div>
+          
+          <!-- Contact Information -->
+          <div class="footer-contact">
+            <h3>Contact Us</h3>
+            <p><i class="fas fa-phone-alt"></i> 0995 246 7588</p>
+            <p><i class="fas fa-map-marker-alt"></i> Pavia St., Poblacion East, Rosario, Philippines</p>
+            <p><i class="fas fa-envelope"></i> jeffs2k&#64;gmail.com</p>
+          </div>
+          
+          <!-- Store Location -->
+          <div class="footer-location">
+            <h3>Our Location</h3>
+            <p>Visit us at our store or use our delivery services.</p>
+            <a href="https://www.google.com/maps" target="_blank" class="location-link">
+              <i class="fas fa-map"></i> View on Google Maps
+            </a>
+          </div>
+          
+          <!-- Footer Bottom -->
+          <div class="footer-bottom">
+            <p>&copy; 2024 S2K Laundry. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>

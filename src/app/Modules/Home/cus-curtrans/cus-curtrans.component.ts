@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component,ElementRef,inject,OnInit } from '@angular/core';
 import { Router, RouteReuseStrategy, RouterLink } from '@angular/router';
 import { MyServiceService } from '../../../my-service.service';
-import { FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
 import * as bootstrap from 'bootstrap';
 import { SearchFilterPipe } from '../../../search-filter.pipe';
@@ -48,6 +48,7 @@ export class CusCurtransComponent implements OnInit{
   Tracking_Number:any;
   customerdata:any;
   errormessage:any;
+  cust_name:any;
   id = {cuid: localStorage.getItem('Cust_ID')};
   trans_id: {id: string | null} = {id: localStorage.getItem('Tracking_Number')};
 
@@ -212,9 +213,61 @@ export class CusCurtransComponent implements OnInit{
       console.log(data)
       this.trans = data.transaction; 
     })
+    this.user.getcustomer(this.id.cuid).subscribe((data:any)=>{
+      this.cust_name = data.customerFirst.Cust_fname
+      console.log(this.cust_name)
+    })
+
     this.fetchtransactions();
 
     this.getShippingAddress();
+  }
+  deleteaddress(id: any)
+  {
+    console.log(id);
+    this.post.deleteaddress(id).subscribe((result: any) => {
+      this.showaddress(this.id.cuid)
+      console.log("Success");
+    });
+  }
+
+  addaddress = new FormGroup({
+    CustAdd_ID: new FormControl(null),
+    Cust_ID: new FormControl(this.id.cuid),  // You may want to adjust this to your needs
+    Province: new FormControl(null),
+    Phoneno: new FormControl(null, [Validators.required, Validators.pattern(/^\d{11}$/)]),  // Example for phone number validation
+    BuildingUnitStreet_No: new FormControl(null),
+    Town_City: new FormControl(null),
+    Barangay: new FormControl(null)
+  });
+  showaddress(id: any) {
+    this.post.showaddress(id).subscribe((res: any) => {
+      console.log(res);
+      console.log(id);
+  
+      // Check if addresses are returned and not empty
+      if (res && res.length > 0) {
+        this.address = res;
+  
+        // Select the first address or the appropriate one from the list
+        const selectedAddress = this.address[0];
+  
+        // Update the form with the selected address values
+        this.addaddress.patchValue({
+          CustAdd_ID: selectedAddress.CustAdd_ID,
+          Province: selectedAddress.Province,
+          Phoneno: selectedAddress.Phoneno,
+          BuildingUnitStreet_No: selectedAddress.BuildingUnitStreet_No,
+          Town_City: selectedAddress.Town_City,
+          Barangay: selectedAddress.Barangay
+        });
+      } else {
+        console.log("No address found for the provided id");
+      }
+    }, (error) => {
+      // Handle error if the request fails
+      console.error("Error fetching address:", error);
+    });
   }
 
   gentrack() {
@@ -589,7 +642,7 @@ export class CusCurtransComponent implements OnInit{
   updateSelectedService(): void {
 
     // Update the selectedservices object based on servicearray content
-    if (this.servicesUpd.includes('Rush Job')) {
+    if (this.servicesUpd.includes('Rush-Job')) {
       this.selectedservices.rush = true;
     }
     if (this.servicesUpd.includes('Pick-Up Service')) {
@@ -695,12 +748,15 @@ export class CusCurtransComponent implements OnInit{
   // Method to remove a detail
   removeDetail(index: number) {
     const detail = this.selectedTransaction.details[index];
+    console.log(detail);
     if (detail.TransacDet_ID) {
       // Track the detail for deletion if it exists in the database
       this.deletedDetails.push(detail.TransacDet_ID);
+      console.log(this.deletedDetails); 
     }
     // Remove it from the details array
     this.selectedTransaction.details.splice(index, 1);
+    console.log(this.selectedTransaction)
   }
 
   // Method to close the modal
@@ -908,5 +964,24 @@ export class CusCurtransComponent implements OnInit{
 
   }
   
-  
+  newaddress(){
+    console.log(this.addaddress.value);
+    if (this.addaddress.valid) {
+      const addressData = this.addaddress.value;  // Make sure to use this.ddaddress
+      this.post.addAddress(addressData).subscribe(
+        (response) => {
+          console.log('Address saved successfully:', response);
+          this.addaddress.reset();  // Reset form after successful submission
+          this.showaddress(this.id.cuid)
+        },
+        (error) => {
+          console.error('Error saving address:', error);
+        }
+      );
+    } else {
+      console.log('Form is invalid');
+    }
+  }
 }
+
+

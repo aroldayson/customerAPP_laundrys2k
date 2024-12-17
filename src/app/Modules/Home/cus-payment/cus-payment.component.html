@@ -1,4 +1,4 @@
-<div class="card position-sticky top-0 mt-3" [ngClass]="{'disabled-card': !price_exists}">
+<div class="card position-sticky top-0 mt-3" [ngClass]="{'disabled-card': !price_exists || paymentexists}">
   <div class="card-body p-3 bg-light bg-opacity-10">
     <form [formGroup]="uploadForm" (submit)="upload()">
       <h6 class="card-title mb-3">UPLOAD PAYMENT</h6>
@@ -51,7 +51,7 @@
       <!-- Payment Amount -->
       <div class="form-group mb-3">
         <label for="paymentAmount">To Pay</label>
-        <input type="number" class="form-control" formControlName="Amount" value="{{payment}}">
+        <input type="number" class="form-control" formControlName="Amount" value="{{payment}}" [hidden]="paymentexists || !price_exists" [disabled]="true">
         <div *ngIf="uploadForm.get('Amount')?.invalid && uploadForm.get('Amount')?.touched" class="text-danger">
           Amount is required and must be a valid number.
         </div>

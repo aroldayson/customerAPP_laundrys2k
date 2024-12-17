@@ -15,7 +15,7 @@ export class HistoryComponent implements OnInit {
   selectedFile: File | null = null;
   imagePreview: string | null = null;
   cust_id = { id: localStorage.getItem('Cust_ID') };
-  steps:string[] =['pending','received','washing','folding','forRelease','released'];
+  steps:string[] =['pending','received','washing','folding','forRelease','completed'];
   // currentStep = 0;
   transacDates: string[] = [];
   currentDate: string | null = null;
@@ -31,76 +31,87 @@ export class HistoryComponent implements OnInit {
   servicename:any;
   serviceprice:any;
   servicearray: string[] = [];
+  servicearray2:string[] = [];
   currentStep: number = 0;  // Update this dynamically based on user progress (e.g., using a value from your logic)
   progressPercent: number = (this.currentStep / (this.steps.length - 1)) * 100; // Calculate progress percentage
+  serviceArray: any;
+  latestTransactionDate:any;
 
   constructor(private http: HttpClient, private service: MyServiceService) {}
 
   ngOnInit(): void {
     this.Transac_ID = localStorage.getItem('trans_ID');
-
-    this.service.getcustomer(this.customer).subscribe((result:any)=>{
-      console.log(result)
+  
+    // Fetch customer details
+    this.service.getcustomer(this.customer).subscribe((result: any) => {
       this.customer = result.customerFirst.Cust_fname;
-      console.log(this.customer)
-    })
-
+      console.log(this.customer);
+    });
+  
     // Format current date
     this.currentDate = this.formatDate(new Date());
-
+  
+    // Fetch transaction details if Transac_ID exists
     if (this.Transac_ID) {
       this.service.getDetails(this.Transac_ID).subscribe(
         (result: any) => {  
           const price = result[0].total;
-          const serviceprice = result[0].totalserviceprice
-          this.serviceprice = serviceprice
+          const serviceprice = result[0].totalserviceprice;
+          this.serviceprice = serviceprice;
           this.price = price;
-          this.totalprice = price + serviceprice
+          this.totalprice = price + serviceprice;
           this.totalqty = result[0].totalqty;
-          this.servicearray = result[0].services;   
+          this.servicearray = result[0].services;
+          this.servicearray2 = result[0].services[1].AddService_name;
           this.getDet = result || [];
-          this.totalweight = result[0].totalweight
-          console.log(this.totalweight)
-          console.log(this.servicearray)
-          console.log(result) 
-
+          this.totalweight = result[0].totalweight;
+          this.details = result[0].details
+          console.log(result,this.getDet)
+  
+          // Ensure transaction details are available
           if (this.getDet.length > 0) {
             const statuses: string[] = [];
             const transacDates: string[] = [];
-
-            // Process transaction status and date
-            this.getDet[0].Transac_status.forEach((transac: any) => {
-              console.log(transac);
+  
+            // Sort transaction details by datetime in descending order
+            const sortedTransactions = this.getDet[0].Transac_status.sort((a: any) => {
+              return new Date(a.TransacStatus_datetime).getTime()
+            });
+  
+            // Process each sorted transaction to capture all the dates and statuses
+            sortedTransactions.forEach((transac: any) => {
               const status = transac.TransacStatus_name;
               const transacDate = transac.TransacStatus_datetime;
-
+  
+              // Add status and datetime to the arrays
               if (status) {
                 statuses.push(status.toLowerCase()); // Ensure the status is in lowercase
                 this.updateCurrentStep(status.toLowerCase()); // Update the current step automatically
-                console.log(status);
               }
-
+  
               if (transacDate) {
+                // Format and push each transaction date into the array
                 transacDates.push(this.formatDateString(transacDate));
               } else {
                 transacDates.push('No transaction date available');
               }
             });
-
+  
             this.statuses = statuses;
             this.transacDates = transacDates;
-            console.log(this.transacDates);
-
-            // Log the statuses and dates for debugging
-            console.log('Statuses:', this.statuses);
-            console.log('Transaction Dates:', this.transacDates);
-
-            // Access the details array if it exists
-            if (this.getDet[0].details && this.getDet[0].details.length > 0) {
-              this.details = this.getDet[0].details;
-              console.log('Transaction Details:', this.details);
+  
+            // Get the latest (last step) transaction date from the sorted list
+            const latestTransactionDate = sortedTransactions.length > 0 ? sortedTransactions[0].TransacStatus_datetime : null;
+  
+            // Format and display the latest date in the console
+            if (latestTransactionDate) {
+              const formattedLatestDate = this.formatDateString(latestTransactionDate);
+              console.log('Latest transaction date:', formattedLatestDate);
+  
+              // Here, you can display the latest transaction date in your template or component
+              this.latestTransactionDate = formattedLatestDate;
             } else {
-              console.log('No details available.');
+              console.log('No transaction date available');
             }
           }
         },
@@ -110,13 +121,18 @@ export class HistoryComponent implements OnInit {
       );
     }
   }
+  
+  
+  
+  
+  
 
   // Update the current step based on status
   updateCurrentStep(status: string): void {
     const stepIndex = this.steps.findIndex(step => step.toLowerCase() === status.toLowerCase());
     if (stepIndex >= 0) {
       this.currentStep = stepIndex;
-      this.progressPercent = (this.currentStep / (this.steps.length - 1)) * 100;
+      this.progressPercent = (this.currentStep / (this.steps.length + 1)) * 100;
       this.currentStep = stepIndex; // Update the current step when status matches
       this.checkAndShowDateForCurrentStep(stepIndex); // Ensure the current step date is updated
     }

@@ -1,4 +1,12 @@
-<div class="container-fluid border-container" style="margin-bottom: 50px; background-color: #fff;">
+<div class="row mb-3 mt-3">
+    <div class="col-12">
+      <h3 class="text-center styled-heading">
+        <i class="fa-solid fa-clipboard-list laundry-icon"></i>
+        View Transactions
+      </h3>
+    </div>
+  </div>
+<div class="container border-container mt-4 " style="margin-bottom: 80px;">
     <div class="input-group rounded mb-3 search-bar-container" style="width: 100%; max-width: 400px;">
         <input
             type="search"
@@ -17,7 +25,7 @@
       <button class="btn btn-custom btn-sm m-1" (click)="filterStatus('Washing')">Washing</button>
       <button class="btn btn-custom btn-sm m-1" (click)="filterStatus('Folding')">Folding</button>
       <button class="btn btn-custom btn-sm m-1" (click)="filterStatus('Completed')">Completed</button>
-      <button class="btn btn-custom btn-sm m-1" (click)="filterStatus('Cancelled')">Cancelled</button>
+      <button class="btn btn-custom btn-sm m-1" (click)="filterStatus('Cancel')">Cancelled</button>
     </div>
     <div class="table-responsive">
         <table class="table table-bordered table-hover">
@@ -70,3 +78,34 @@
         </nav>
     </div>
   </div>
+<footer class="footer">
+  <div class="footer-container">
+    <!-- Company Branding -->
+    <div class="footer-logo">
+      <h2>S2K Laundry</h2>
+      <p>Experience laundry care at its finest!</p>
+    </div>
+    
+    <!-- Contact Information -->
+    <div class="footer-contact">
+      <h3>Contact Us</h3>
+      <p><i class="fas fa-phone-alt"></i> 0995 246 7588</p>
+      <p><i class="fas fa-map-marker-alt"></i> Pavia St., Poblacion East, Rosario, Philippines</p>
+      <p><i class="fas fa-envelope"></i> jeffs2k&#64;gmail.com</p>
+    </div>
+    
+    <!-- Store Location -->
+    <div class="footer-location">
+      <h3>Our Location</h3>
+      <p>Visit us at our store or use our delivery services.</p>
+      <a href="https://www.google.com/maps" target="_blank" class="location-link">
+        <i class="fas fa-map"></i> View on Google Maps
+      </a>
+    </div>
+    
+    <!-- Footer Bottom -->
+    <div class="footer-bottom">
+      <p>&copy; 2024 S2K Laundry. All rights reserved.</p>
+    </div>
+  </div>
+</footer>  

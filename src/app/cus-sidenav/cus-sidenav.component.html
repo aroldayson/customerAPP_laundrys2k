@@ -93,20 +93,53 @@
 
   <!-- Desktop Navigation Links -->
   <ul class="navbar-links desktop-nav">
-    <li><a [routerLink]="['/main/cusmainhome/homemain/cuscurtrans']"><i class="fa-solid fa-house"></i> <span>Home</span></a></li>
-    <li><a [routerLink]="['/main/maintrans']"><i class="fa-solid fa-exchange-alt"></i> <span>Transactions</span></a></li>
-    <li><a [routerLink]="['/main/mainaccount']"><i class="fa-solid fa-user"></i> <span>Account</span></a></li>
-    <li><a (click)="logout()" style="cursor: pointer;"><i class="fa-solid fa-sign-out-alt"></i> <span>Logout</span></a></li>
+    <li>
+      <a [routerLink]="['/main/cusmainhome/homemain/cuscurtrans']" routerLinkActive="active">
+        <i class="fa-solid fa-house"></i> <span>Home</span>
+      </a>
+    </li>
+    <li>
+      <a [routerLink]="['/main/maintrans']" routerLinkActive="active">
+        <i class="fa-solid fa-exchange-alt"></i> <span>Transactions</span>
+      </a>
+    </li>
+    <li>
+      <a [routerLink]="['/main/mainaccount']" routerLinkActive="active">
+        <i class="fa-solid fa-user"></i> <span>Account</span>
+      </a>
+    </li>
+    <li>
+      <a (click)="logout()" style="cursor: pointer;">
+        <i class="fa-solid fa-sign-out-alt"></i> <span>Logout</span>
+      </a>
+    </li>
   </ul>
 
   <!-- Bottom Navbar for Mobile/Tablet -->
-  <ul class="navbar-links bottom-nav">
-    <li><a [routerLink]="['/main/cusmainhome']"><i class="fa-solid fa-house"></i><span>Home</span></a></li>
-    <li><a [routerLink]="['/main/maintrans']"><i class="fa-solid fa-exchange-alt"></i><span>Transactions</span></a></li>
-    <li><a [routerLink]="['/main/mainaccount']"><i class="fa-solid fa-user"></i><span>Account</span></a></li>
-    <li><a (click)="logout()"><i class="fa-solid fa-sign-out-alt"></i><span>Logout</span></a></li>
-  </ul>
+<ul class="navbar-links bottom-nav">
+  <li>
+    <a [routerLink]="['/main/cusmainhome']" routerLinkActive="active">
+      <i class="fa-solid fa-house"></i>
+    </a>
+  </li>
+  <li>
+    <a [routerLink]="['/main/maintrans']" routerLinkActive="active">
+      <i class="fa-solid fa-exchange-alt"></i>
+    </a>
+  </li>
+  <li>
+    <a [routerLink]="['/main/mainaccount']" routerLinkActive="active">
+      <i class="fa-solid fa-user"></i>
+    </a>
+  </li>
+  <li>
+    <a (click)="logout()">
+      <i class="fa-solid fa-sign-out-alt"></i>
+    </a>
+  </li>
+</ul>
 </nav>
+
 
 
 

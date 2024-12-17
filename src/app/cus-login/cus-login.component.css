@@ -9,7 +9,11 @@
 } */
 section {
   height: 100vh;
-  background: #5988e2;
+  background: #5988e2 ;
+  background-image: url('/assets/LOGO.jpg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 40%;
   color: white;
   text-align: center;
   display: flex;

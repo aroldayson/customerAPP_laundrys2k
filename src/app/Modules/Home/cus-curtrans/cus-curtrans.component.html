@@ -1,147 +1,24 @@
-<!-- <div class="welcome-banner">
-  <h1>WELCOME CUSTOMER</h1>
-  <p>Thank you for choosing S2K Laundry Shop!</p>
-</div> -->
 
-
-
-<!-- <div class="hero-wrap vh-100 d-flex align-items-center" style="background-image: url('assets/bg.png'); background-size: cover; background-position: center;">
-  <div class="w-100 h-100 position-absolute bg-dark opacity-50"></div>
-  <div class="container position-relative">
-    <div class="row align-items-center h-100">
-      <div class="col-md-6">
-        <h2 class="text-light">Leave the house cleaning chores to us</h2>
-        <h1 class="mb-4 text-white">Let us do the dirty work, so you don't have to.</h1>
-        <a href="#" class="btn btn-primary py-2 px-4">Learn more <span class="ms-2">&rarr;</span></a>
-      </div>
-    </div>
-  </div>
-</div> -->
-
-
-<!-- <div class="container-fluid">
-  <div class="d-flex flex-wrap justify-content-between align-items-center my-3">
-    <button class="btn btn-primary mb-2" (click)="gentrack()">
-      New Transaction <i class="fa fa-plus-circle"></i>
-    </button>
-      <div class="search-container">
-        <input type="text" id="searchInput" [(ngModel)]="keyword" autocomplete="off" placeholder="Search" class="search-input">
-      </div>
-    </div>
-  <div class="table-responsive">
-    <table class="table table-hover d-none d-md-table">
-      <thead class="table-primary">
-        <tr>
-          <th scope="col"></th>
-          <th scope="col">Tracking #</th>
-          <th scope="col">Laundry Item</th>
-          <th scope="col">Qty</th>
-          <th scope="col">Weight</th>
-          <th scope="col">Transaction Date</th>
-          <th scope="col">Estimated Date</th>
-          <th scope="col">Status</th>
-          <th scope="col">Price</th>
-          <th scope="col">Estimated Price</th>
-          <th scope="col">Service</th>
-          <th scope="col">Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (item of trans | searchFilter: keyword ; track item.trans_ID) {
-        <tr>
-          <td></td>
-          <td (click)="viewItem(item.trans_ID)">{{item.track_num}}</td>
-          <td (click)="viewItem(item.trans_ID)">{{item.Category}}</td>
-          <td (click)="viewItem(item.trans_ID)">{{item.totalQty}}</td>
-          <td (click)="viewItem(item.trans_ID)">{{item.totalWeight}}</td>
-          <td (click)="viewItem(item.trans_ID)">{{item.trans_date}}</td>
-          <td (click)="viewItem(item.trans_ID)">{{item.estimated_date}}</td>
-          <td><span class="status pending">{{item.trans_stat}}</span></td>
-          <td >{{item.totalprice}}</td>
-          <td >{{item.calculatedTotalPrice}}
-            <i class="fa fa-info-circle" 
-              aria-hidden="true" 
-              data-bs-toggle="tooltip" 
-              data-bs-placement="left" 
-              title="Total Price might change base on additional services and laundry weight">
-            </i>
-          </td>
-          <td>{{item.Addservice_name}}</td>
-          <td>
-            <button class="btn btn-sm btn-primary me-2" 
-            [disabled]="item.trans_stat.toLowerCase() !== 'pending'"
-            (click)="showDetails(item.track_num, item, item.trans_ID)">
-              <i class="fa fa-pencil"></i>
-            </button>
-            <button 
-            class="btn btn-sm btn-danger" 
-            [disabled]="item.trans_stat.toLowerCase()!== 'pending'"
-            (click)="updateStatus(item.trans_ID)">
-            <i class="fa fa-trash"></i>
-          </button>
-          </td>
-        </tr>
-        }
-      </tbody>
-    </table>
-
-    
-    <div class="mobile-table d-md-none">
-      @for (item of trans | searchFilter: keyword ; track item.trans_ID) {
-      <div class="card mb-3 shadow-sm">
-        <div class="card-body" (click)="viewItem(item.trans_ID)">
-          <h5 class="card-title">
-            Tracking #: {{item.track_num}}
-          </h5>
-          <p class="card-text">
-            <strong>Item:</strong> {{item.Category}}<br>
-            <strong>Qty:</strong> {{item.totalQty}}<br>
-            <strong>Weight:</strong> {{item.totalWeight}}<br>
-            <strong>Date:</strong> {{item.trans_date}}<br>
-            <strong>Estimated Date:</strong> {{item.estimated_date}}<br>
-            <strong>Status:</strong> <span class="status pending">{{item.trans_stat}}</span><br>
-            <strong>Price:</strong> {{item.totalprice}}<br>
-            <strong>Estimated Price:</strong> {{item.calculatedTotalPrice}} 
-            <i class="fa fa-info-circle" 
-            aria-hidden="true" 
-            data-bs-toggle="tooltip" 
-            data-bs-placement="right" 
-            title="Total Price might change base on additional services and laundry weight">
-          </i><br>
-            <strong>Service:</strong> {{item.Addservice_name}}
-          </p>
-          <div class="d-flex">
-            <button class="btn btn-primary btn-sm me-2"
-            [disabled]="item.trans_stat.toLowerCase() !== 'pending'"
-             (click)="showDetails(item.track_num, item, item.trans_ID); $event.stopPropagation()">
-              <i class="fa fa-pencil"></i> Edit
-            </button>
-            <button class="btn btn-danger btn-sm"
-            [disabled]="item.trans_stat.toLowerCase() !== 'pending'"
-             (click)="updateStatus(item.trans_ID); $event.stopPropagation()">
-             <i class="fa fa-trash"></i> Delete
-            </button>
-          </div>
-        </div>
-      </div>
-      }
-    </div>
-  </div>
-</div> -->
 
 
 
 
 <div class="header">
   <h1>S2K Laundry</h1>
-  <p><span style="color: #15304f;">Welcome back </span><span style="color: #87bfff;">Customer Eleizer</span></p>
+  <p><span style="color: #15304f;">Welcome back </span><span style="color: #ffffff;text-shadow: 2px 2px 5px #15304f;">{{cust_name}}</span></p>
   <button class="btn btn-new mb-2" (click)="gentrack()">NEW TRANSACTION</button>
 </div>
 
-<!-- Container for Search and Card Layout -->
 <div class="container my-4">
+  <div class="row mb-3">
+    <div class="col-12">
+      <h3 class="text-center styled-heading">
+        <i class="fa-solid fa-basket-shopping laundry-icon"></i>
+        Transactions
+      </h3>
+    </div>
+  </div>
 
-  <!-- Search Container -->
   <div class="search-container mb-4">
     <input
       type="text"
@@ -152,77 +29,130 @@
       class="search-input form-control shadow-lg rounded-pill py-2 px-4"
     />
   </div>
-
-  <!-- Card Container -->
-  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-    @for (item of trans | searchFilter: keyword; track item.trans_ID) {
       <div class="col">
-        <div class="card shadow-lg border-0 rounded-3 h-100">
-          
-          <!-- Card Header with Tracking Number -->
-          <div class="card-header text-center">
-            <h5 class="card-title text-primary">
-              <strong>Tracking #:</strong> {{ item.track_num }}
-            </h5>
-          </div>
-          
-          <!-- Card Body with Transaction Details -->
-          <div class="card-body" (click)="viewItem(item.trans_ID)">
-            <p class="card-text">
-              <strong>Laundry Item:</strong> {{ item.Category }}<br />
-              <strong>Quantity:</strong> {{ item.totalQty }}<br />
-              <strong>Weight:</strong> {{ item.totalWeight }}<br />
-              <strong>Transaction Date:</strong> {{ item.trans_date }}<br />
-              <strong>Estimated Date:</strong> {{ item.estimated_date }}<br />
-              <strong>Status:</strong>
-              <span
-                [ngClass]="{
-                  'text-warning': item.trans_stat === 'Pending',
-                  'text-success': item.trans_stat === 'Completed'
-                }"
-              >
-                {{ item.trans_stat }}
-              </span>
-              <br />
-              <strong>Price:</strong> {{ item.totalprice | currency:'PHP':'symbol':'1.2-2'}}<br />
-              <strong>Estimated Price:</strong> {{ item.calculatedTotalPrice | currency:'PHP':'symbol':'1.2-2' }}
-
-              <i
-                class="fa fa-info-circle text-info"
-                aria-hidden="true"
-                data-bs-toggle="tooltip"
-                data-bs-placement="left"
-                title="Total Price might change based on additional services and laundry weight"
-              ></i>
-              <br />
-              <strong>Service:</strong> {{ item.Addservice_name }}
-            </p>
-          </div>
-          
-          <!-- Card Footer with Action Buttons -->
-          <div class="card-footer d-flex justify-content-between align-items-center">
-            <button
-              class="btn btn-edit btn-sm"
-              [disabled]="item.trans_stat.toLowerCase() !== 'pending'"
-              (click)="showDetails(item.track_num, item, item.trans_ID)"
-            >
-              <i class="fa fa-pencil"></i> Edit
-            </button>
-            <button
-              class="btn btn-delete btn-sm"
-              [disabled]="item.trans_stat.toLowerCase() !== 'pending'"
-              (click)="updateStatus(item.trans_ID)"
-            >
-              <i class="fa fa-trash"></i> Delete
-            </button>
-          </div>
-
+        <div class="table-responsive" style="max-width: 100%;border-radius: 25px;">
+          <!-- Desktop Table -->
+          <table class="table table-hover d-none d-md-table">
+            <thead class="table-primary">
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Tracking num</th>
+                <!-- <th scope="col">Laundry Item</th>
+                <th scope="col">Qty</th>
+                <th scope="col">Weight (kg)</th> -->
+                <th scope="col">Transaction Date</th>
+                <th scope="col">Estimated Date</th>
+                <th scope="col">Status</th>
+                <th scope="col">Price</th>
+                <!-- <th scope="col">Estimated Price</th> -->
+                <!-- <th scope="col">Service</th> -->
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (item of trans | searchFilter: keyword ; track item.trans_ID) {
+              <tr>
+                <td>{{item.trans_ID}}</td>
+                <td (click)="viewItem(item.trans_ID)">{{item.track_num}}</td>
+                <!-- <td (click)="viewItem(item.trans_ID)">{{item.Category}}</td>
+                <td>{{item.totalQty}}</td>
+                <td>{{item.totalWeight}}</td> -->
+                <td>{{item.trans_date}}</td>
+                <td>{{item.estimated_date}}</td>
+                <td>
+                  <span 
+                    class="badge" 
+                    [ngClass]="{
+                      'bg-warning': item.trans_stat === 'Pending',
+                      'bg-success': item.trans_stat === 'Completed',
+                      'bg-secondary': item.trans_stat !== 'Pending' && item.trans_stat !== 'Completed'
+                    }">
+                    {{item.trans_stat}}
+                  </span>
+                </td>
+                <!-- <td>{{item.totalprice | currency:'PHP':'symbol':'1.2-2'}}</td> -->
+                <td>
+                  {{item.calculatedTotalPrice | currency:'PHP':'symbol':'1.2-2'}}
+                  <i class="fa fa-info-circle text-info ms-1"
+                     data-bs-toggle="tooltip" 
+                     data-bs-placement="left"
+                     title="Total price may vary based on additional services and weight.">
+                  </i>
+                </td>
+                <!-- <td>{{item.Addservice_name}}</td> -->
+                <td>
+                  <button class="btn btn-sm btn-primary me-2" 
+                    [disabled]="item.trans_stat.toLowerCase() !== 'pending'"
+                    (click)="showDetails(item.track_num, item, item.trans_ID)">
+                    <i class="fa fa-pencil"></i>
+                  </button>
+                  <button class="btn btn-sm btn-danger"
+                    [disabled]="item.trans_stat.toLowerCase() !== 'pending'"
+                    (click)="updateStatus(item.trans_ID)">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
         </div>
+        
+        <!-- Mobile-Friendly Cards -->
+        <div class="d-md-none">
+          @for (item of trans | searchFilter: keyword ; track item.trans_ID) {
+          <div class="card mb-3 shadow-sm">
+            <div class="card-body">
+              <h5 class="card-title mb-2">
+                <strong>Tracking #:</strong> {{item.track_num}}
+              </h5>
+              <p class="card-text mb-2">
+                <strong>Item:</strong> {{item.Category}}<br>
+                <strong>Qty:</strong> {{item.totalQty}}<br>
+                <strong>Weight:</strong> {{item.totalWeight}} kg<br>
+                <strong>Transaction Date:</strong> {{item.trans_date}}<br>
+                <strong>Estimated Date:</strong> {{item.estimated_date}}<br>
+                <strong>Status:</strong> 
+                <span 
+                  class="badge"
+                  [ngClass]="{
+                    'bg-warning': item.trans_stat === 'Pending',
+                    'bg-success': item.trans_stat === 'Completed',
+                    'bg-secondary': item.trans_stat !== 'Pending' && item.trans_stat !== 'Completed'
+                  }">
+                  {{item.trans_stat}}
+                </span><br>
+                <strong>Price:</strong> {{item.totalprice | currency:'PHP':'symbol':'1.2-2'}}<br>
+                <strong>Estimated Price:</strong> {{item.calculatedTotalPrice | currency:'PHP':'symbol':'1.2-2'}}
+                <i class="fa fa-info-circle text-info ms-1"
+                   data-bs-toggle="tooltip" 
+                   data-bs-placement="right"
+                   title="Total price may vary based on additional services and weight.">
+                </i><br>
+                <strong>Service:</strong> {{item.Addservice_name}}
+              </p>
+              <div class="d-flex justify-content-start">
+                <button class="btn btn-sm btn-primary me-2"
+                  [disabled]="item.trans_stat.toLowerCase() !== 'pending'"
+                  (click)="showDetails(item.track_num, item, item.trans_ID); $event.stopPropagation()">
+                  <i class="fa fa-pencil"></i> Edit
+                </button>
+                <button class="btn btn-sm btn-danger"
+                  [disabled]="item.trans_stat.toLowerCase() !== 'pending'"
+                  (click)="updateStatus(item.trans_ID); $event.stopPropagation()">
+                  <i class="fa fa-trash"></i> Delete
+                </button>
+              </div>
+            </div>
+          </div>
+          }
+        </div>
+        
       </div>
-    }
+    <!-- } -->
   </div>
 
-</div>
+<!-- </div> -->
 
 <!-- Modal -->
 <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" #updateModal>
@@ -238,8 +168,8 @@
           <div class="d-flex justify-content-between align-items-center mb-3">
             <div>
               <p class="mb-0">
-                <span class="text-muted fw-medium">Tracking Number:</span>
-                <span class="text-primary fw-bold">{{ selectedTransaction?.track_num }}</span>
+                <span class="text-muted fw-medium fs-2">Tracking Number: </span>
+                <span class="text-primary fw-bold fs-2">{{ selectedTransaction?.track_num }}</span>
               </p>
             </div>
             <button class="btn btn-outline-primary btn-sm" (click)="copyToClipboard(selectedTransaction?.track_num)">
@@ -247,8 +177,8 @@
             </button>
           </div>
           <p class="mb-0">
-            <span class="text-muted fw-medium">Status:</span>
-            <span class="fw-bold">{{ selectedTransaction?.trans_stat }}</span>
+            <span class="text-muted fw-medium fs-2">Status:</span>
+            <span class="fw-bold fs-2">{{ selectedTransaction?.trans_stat }}</span>
           </p>
           <!-- <p class="mb-0">
             <span class="text-muted fw-medium">Address:</span>
@@ -271,7 +201,7 @@
                   [checked]="selectedservices.rush"
                   (change)="onCheckboxChange('Rush Job', $event)"
                 />
-                <label class="form-check-label" for="rush">Rush Jobs</label>
+                <label class="form-check-label" for="Rush-Job">Rush Jobs</label>
               </div>
               <div class="form-check form-switch">
                 <input
@@ -299,7 +229,37 @@
 
           <div class="row" [hidden]="selectAddDel==false">
           <p>Select your Delivery Address.</p>
-          <div class="col-md-4 mb-3">
+          <div class="col-md-12 mb-3">
+            <div class="container my-4">
+              <div class="d-flex align-items-center mb-3">
+                <h5 class="mb-0">My Address</h5>
+                <button class="btn btn-outline-secondary ms-3">
+                  <strong data-bs-toggle="modal" data-bs-target="#editADDRESS">+ Add New Address</strong>
+                </button>
+              </div>
+          
+              <div class="d-flex flex-wrap">
+                <div *ngFor="let c of address" class="address-container px-3 py-2 highlighted me-3 mb-3" style="flex-basis: 30%; min-width: 250px;">
+                  <input type="hidden" [value]="c.ShipServ_price">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="ShipServ_price" id="ShipServ_price" [value]="c.CustAdd_ID"  checked>
+                    <label class="form-check-label" for="City_Address_{{c.Town_City}}">
+                      <strong>{{c.Cust_fname}} {{c.Cust_mname}} {{c.Cust_lname}}</strong> 
+                      <span class="text-secondary">{{c.Phenono}}</span>
+                    </label>
+                  </div>
+                  <p class="mb-1 text-secondary" id="barangay">
+                    {{c.BuildingNo_Street}}, {{c.Barangay}} {{c.Town_City}} {{c.Province}}<br>
+                    North Luzon, 2434
+                  </p>
+                  <span class="default-label">Default</span>
+                  <a class="text-danger float-end" (click)="deleteaddress(c.CustAdd_ID)">Delete</a>
+                </div>
+              </div>
+          
+            </div>
+          </div>
+          <!-- <div class="col-md-4 mb-3">
             <label for="town" class="form-label">Town</label>
             <select class="form-select" id="town" [(ngModel)]="deliveryTown" (change)="getTownValue($event)">
               <option value="" disabled selected>Select Town</option>
@@ -308,29 +268,24 @@
               </option>
             </select>
           </div>
-        
-          <!-- Barangay Dropdown -->
+
           <div class="col-md-4 mb-3" [hidden]="selectBar==false">
             <label for="barangay" class="form-label">Barangay</label>
             <select class="form-select" id="barangay" [(ngModel)]="deliveryBarangay">
               <option value="" disabled selected>Select Barangay</option>
-              
-              <!-- Sison Barangays -->
+
               <option [hidden]="sison == false" *ngFor="let barangay of barangaysInSison" [value]="barangay">
                 {{ barangay }}
               </option>
-        
-              <!-- Rosario Barangays -->
+
               <option [hidden]="rosario == false" *ngFor="let barangay of barangaysInRosario" [value]="barangay">
                 {{ barangay }}
               </option>
-        
-              <!-- Nearby Barangays -->
+
               <option [hidden]="poz == false" *ngFor="let barangay of barangaysInPoz" [value]="barangay">
                 {{ barangay }}
               </option>
-        
-              <!-- Barangays Near Rosario -->
+
               <option [hidden]="pugo == false" *ngFor="let barangay of barangaysInPugo" [value]="barangay">
                 {{ barangay }}
               </option>
@@ -340,14 +295,44 @@
           <div class="col-md-4 mb-3" *ngIf="sison == true || rosario == true || poz == true || pugo == true">
             <label for="barangayInput" class="form-label">Building# and street</label>
             <input type="text" class="form-control" id="barangayInput" [(ngModel)]="deliveryStreet" placeholder="Enter details">
-          </div>
+          </div> -->
         </div>
         
         
         
         <div class="row" [hidden]="selectAddPick==false">
           <p>Select your Pick-Up Address.</p>
-          <div class="col-md-4 mb-3">
+          <div class="col-md-12 mb-3">
+            <div class="container my-4">
+              <div class="d-flex align-items-center mb-3">
+                <h5 class="mb-0">My Address</h5>
+                <button class="btn btn-outline-secondary ms-3">
+                  <strong data-bs-toggle="modal" data-bs-target="#editADDRESS">+ Add New Address</strong>
+                </button>
+              </div>
+          
+              <div class="d-flex flex-wrap">
+                <div *ngFor="let c of address" class="address-container px-3 py-2 highlighted me-3 mb-3" style="flex-basis: 30%; min-width: 250px;">
+                  <input type="hidden" [value]="c.ShipServ_price">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="ShipServ_prices" id="ShipServ_prices" [value]="c.CustAdd_ID"  checked>
+                    <label class="form-check-label" for="City_Address_{{c.Town_City}}">
+                      <strong>{{c.Cust_fname}} {{c.Cust_mname}} {{c.Cust_lname}}</strong> 
+                      <span class="text-secondary">{{c.Phenono}}</span>
+                    </label>
+                  </div>
+                  <p class="mb-1 text-secondary" id="barangay">
+                    {{c.BuildingNo_Street}}, {{c.Barangay}} {{c.Town_City}} {{c.Province}}<br>
+                    North Luzon, 2434
+                  </p>
+                  <span class="default-label">Default</span>
+                  <a class="text-danger float-end" (click)="deleteaddress(c.CustAdd_ID)">Delete</a>
+                </div>
+              </div>
+          
+            </div>
+          </div>
+          <!-- <div class="col-md-4 mb-3">
             <label for="picktown" class="form-label">Town</label>
             <select class="form-select" id="picktown" [(ngModel)]="selectedTownID" (change)="getTownValue($event)">
               <option value="" disabled selected>Select Town</option>
@@ -358,40 +343,35 @@
           </div>
         
         
-            <!-- Barangay Dropdown -->
+
             <div class="col-md-4 mb-3" [hidden]="selectBar==false">
               <label for="pickbarangay" class="form-label">Barangay</label>
               <select class="form-select" id="pickbarangay" formControlName="barangay">
                 <option value="" disabled selected>Select Barangay</option>
-                
-                <!-- Sison Barangays -->
+
                 <option [hidden]="sison == false" *ngFor="let barangay of barangaysInSison" [value]="barangay">
                   {{ barangay }}
                 </option>
-          
-                <!-- Rosario Barangays -->
+
                 <option [hidden]="rosario == false" *ngFor="let barangay of barangaysInRosario" [value]="barangay">
                   {{ barangay }}
                 </option>
-          
-                <!-- Nearby Barangays -->
+
                 <option [hidden]="poz == false" *ngFor="let barangay of barangaysInPoz" [value]="barangay">
                   {{ barangay }}
                 </option>
-          
-                <!-- Barangays Near Rosario -->
+
                 <option [hidden]="pugo == false" *ngFor="let barangay of barangaysInPugo" [value]="barangay">
                   {{ barangay }}
                 </option>
                 
               </select>
-                 <!-- Input Field beside Barangay Dropdown -->
                 </div>
                 <div class="col-md-4 mb-3" *ngIf="sison == true || rosario == true || poz == true || pugo == true">
                  <label for="pickbarangayInput" class="form-label">Building# and street</label>
                  <input type="text" class="form-control" id="pickbarangayInput" placeholder="Enter details">
-               </div>
-              </div>
+               </div> -->
+            </div>
 
         <!-- Transaction Details Table -->
         <div class="table-responsive">
@@ -441,16 +421,228 @@
       </div>
 
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-          <i class="fa fa-times"></i> Close
-        </button>
-        <button type="button" class="btn btn-primary" (click)="updateTransaction()">
-          <i class="fa fa-save"></i> Save Changes
-        </button>
+        <button 
+        type="button" 
+        class="btn btn-secondary d-flex align-items-center " style="border-radius: 30px;"
+        data-bs-dismiss="modal" 
+        aria-label="Close the modal"
+      >
+        <i class="fa fa-times me-2"></i> Close
+      </button>
+      <button 
+      type="button" 
+      class="btn btn-primary d-flex align-items-center" style="border-radius: 30px;"
+      (click)="updateTransaction()" 
+      aria-label="Save changes to the transaction"
+    >
+      <i class="fa fa-save me-2"></i> Save Changes
+    </button>
       </div>
     </div>
   </div>
 </div>
+
+
+
+
+<section class="steps-section">
+  <h2 class="styled-heading mb-2"><span class="laundry-icon">5</span> Easy Steps</h2>
+  <p>Experience the ultimate convenience in laundry care where quality service meets fresh scents, all with free detergent and fabric conditioner. Just with these 5 easy steps, we guarantee you a wonderful service.</p>
+  
+  <div class="steps">
+    <!-- Step 1 -->
+    <div class="step">
+      <div class="step-badge">1</div>
+      <img src="assets/step1.png" alt="Step 1" [ngStyle]="{'width': '100%', 'height': 'auto'}">
+      <h3>Place Your Transaction</h3>
+      <p>Enter your laundry details and confirm your transaction online.</p>
+    </div>
+    
+    <!-- Step 2 -->
+    <div class="step">
+      <div class="step-badge">2</div>
+      <img src="assets/step2.png" alt="Step 2">
+      <h3>We Pick It Up</h3>
+      <p>We collect your laundry or you drop it off.</p>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step">
+      <div class="step-badge">3</div>
+      <img src="assets/step3.png" alt="Step 3">
+      <h3>We Process It</h3>
+      <p>Clothes are weighed and handled carefully.</p>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="step">
+      <div class="step-badge">4</div>
+      <img src="assets/step4.png" alt="Step 4">
+      <h3>We Clean It</h3>
+      <p>Professionally cleaned, pressed, and checked.</p>
+    </div>
+
+    <!-- Step 5 -->
+    <div class="step">
+      <div class="step-badge">5</div>
+      <img src="./assets/step5.png" alt="Step 5">
+      <h3>We Deliver It</h3>
+      <p>Fresh and clean, back to your doorstep or pickup point.</p>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-container">
+    <!-- Company Branding -->
+    <div class="footer-logo">
+      <h2>S2K Laundry</h2>
+      <p>Experience laundry care at its finest!</p>
+    </div>
+    
+    <!-- Contact Information -->
+    <div class="footer-contact">
+      <h3>Contact Us</h3>
+      <p><i class="fas fa-phone-alt"></i> 0995 246 7588</p>
+      <p><i class="fas fa-map-marker-alt"></i> Pavia St., Poblacion East, Rosario, Philippines</p>
+      <p><i class="fas fa-envelope"></i> jeffs2k&#64;gmail.com</p>
+    </div>
+    
+    <!-- Store Location -->
+    <div class="footer-location">
+      <h3>Our Location</h3>
+      <p>Visit us at our store or use our delivery services.</p>
+      <a href="https://www.google.com/maps" target="_blank" class="location-link">
+        <i class="fas fa-map"></i> View on Google Maps
+      </a>
+    </div>
+    
+    <!-- Footer Bottom -->
+    <div class="footer-bottom">
+      <p>&copy; 2024 S2K Laundry. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<div class="modal fade" id="editADDRESS" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Add New Address</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="container-fluid">
+          <!-- <div class="card-body"> -->
+            <form [formGroup]="addaddress" (ngSubmit)="newaddress()">
+              <!-- Phone Number -->
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label for="phoneNumber" class="form-label">Phone Number</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="phoneNumber"
+                    formControlName="Phoneno"
+                    placeholder="Phone Number"
+                  />
+                  <small *ngIf="addaddress.get('Phoneno')?.touched && addaddress.get('Phoneno')?.invalid" class="text-danger">
+                    Please enter a valid phone number (10-12 digits).
+                  </small>
+                </div>
+
+                <div class="col-md-6">
+                  <label for="barangay" class="form-label">Barangay</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="barangay"
+                    formControlName="Barangay"
+                    placeholder="Barangay"
+                  />
+                  <small *ngIf="addaddress.get('Barangay')?.touched && addaddress.get('Barangay')?.invalid" class="text-danger">
+                    This field is required.
+                  </small>
+                </div>
+              </div>
+
+              <!-- Barangay -->
+              <!-- <div class="row mb-3">
+                <div class="col-md-6">
+                  <label for="barangay" class="form-label">Barangay</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="barangay"
+                    formControlName="Barangay"
+                    placeholder="Barangay"
+                  />
+                  <small *ngIf="addaddress.get('Barangay')?.touched && addaddress.get('Barangay')?.invalid" class="text-danger">
+                    This field is required.
+                  </small>
+                </div>
+              </div> -->
+
+              <!-- Town City -->
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label for="townCity" class="form-label">Town/City</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="townCity"
+                    formControlName="Town_City"
+                    placeholder="Town/City"
+                  />
+                  <small *ngIf="addaddress.get('Town_City')?.touched && addaddress.get('Town_City')?.invalid" class="text-danger">
+                    This field is required.
+                  </small>
+                </div>
+       
+                <div class="col-md-6">
+                  <label for="province" class="form-label">Province</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="province"
+                    formControlName="Province"
+                    placeholder="Province"
+                  />
+                  <small *ngIf="addaddress.get('Province')?.touched && addaddress.get('Province')?.invalid" class="text-danger">
+                    This field is required.
+                  </small>
+                </div>
+              </div>
+
+              <!-- Street/Building No. -->
+              <div class="row mb-3">
+                <div class="col-md">
+                  <label for="buildingNoStreet" class="form-label">Street/Building No.</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="buildingNoStreet"
+                    formControlName="BuildingUnitStreet_No"
+                    placeholder="Street/Building No."
+                  />
+                  <small *ngIf="addaddress.get('BuildingUnitStreet_No')?.touched && addaddress.get('BuildingUnitStreet_No')?.invalid" class="text-danger">
+                    This field is required.
+                  </small>
+                </div>
+              </div>
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Save Address</button>
+              </div>
+            </form>
+          <!-- </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 
 

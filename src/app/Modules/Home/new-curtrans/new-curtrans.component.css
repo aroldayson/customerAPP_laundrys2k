@@ -26,7 +26,7 @@
 
 .form-label {
   font-weight: 600;
-  color: #4a4a4a;
+  color: #1a1a1a;
 }
 
 .form-control {
@@ -226,7 +226,7 @@
 }
 
 .product-details p {
-  color: #666;
+  color: #666666;
   font-size: 0.9rem;
 }
 
@@ -243,18 +243,30 @@
 /* select new address */
 .address-container { border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 15px; }
 .address-container:last-child { border-bottom: none; }
-.default-label { color: #ff5733; font-size: 14px; }
-.highlighted { border: 2px solid #ff5733; border-radius: 10px; }
-.confirm-btn { background-color: #ff5733; color: white; }
+.default-label { color: #ccc; font-size: 14px; }
+.highlighted { border: 2px solid #ccc; border-radius: 10px; }
+.confirm-btn { background-color: #ccc; color: white; }
 
 
 /*edit add*/
-.required-field { color: red; }
-        .submit-btn { background-color: #ff5733; color: white; }
-        .map-placeholder { background-color: #f8f9fa; height: 120px; border: 1px solid #e0e0e0; display: flex; align-items: center; justify-content: center; }
-        .map-placeholder span { font-size: 14px; color: #6c757d; }
-        .label-btn { width: 80px; height: 35px; }
-        .inactive-label { color: #bdbdbd; border: 1px solid #e0e0e0; background-color: #f8f9fa; }
+.styled-heading {
+  margin: auto;
+  color: #ffbb33;
+  letter-spacing: .4em;
+  font-size: 3em;
+  text-shadow: 0 1px #5998e2, -1px 0 #307ed8, -1px 2px #5998e2, -2px 1px #307ed8,
+    -2px 3px #5998e2, -3px 2px #307ed8, -3px 4px #5998e2, -4px 3px #307ed8,
+    -4px 5px #5998e2, -5px 4px #307ed8, -5px 6px #5998e2, -6px 5px #307ed8,
+    -6px 7px #5998e2, -7px 6px #307ed8, -7px 8px #5998e2, -8px 7px #307ed8;
+  text-align: center;
+}
+
+.laundry-icon {
+  color: #ffbb33; /* Matching the heading text color */
+  font-size: 1em; /* Slightly larger icons */
+  margin: 0 0.2em; /* Space between the icons and the heading */
+}
+
 /* .form-container {
   max-width: 600px;
   margin: 20px auto;
