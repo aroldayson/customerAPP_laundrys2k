@@ -15,7 +15,7 @@ export class PanelComponent implements OnInit {
   selectedFile: File | null = null;
   imagePreview: string | null = null;
   cust_id = { id: localStorage.getItem('Cust_ID') };
-  steps = ['Pending', 'Shipped', 'On the way', 'Delivered'];
+  steps = ['pending', 'received', 'washing', 'folding','forRelease','completed'];
   currentStep = 0;
   // stepDates = ['2024-11-21', '2024-11-22', '2024-11-23', '2024-11-24'];
   transacDates: string[] = [];

@@ -1,0 +1,72 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 100%;
+    padding: 15px;
+    margin: 20px auto;
+}
+
+.card {
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    border: none;
+    overflow: hidden;
+}
+
+.logo {
+    width: 120px;
+    height: auto;
+}
+
+.table {
+    width: 100%;
+    margin: 0;
+}
+
+.table-bordered {
+    border: 1px solid #dee2e6;
+}
+
+.table-bordered th,
+.table-bordered td {
+    border: 1px solid #dee2e6;
+    padding: 8px;
+}
+
+.table-light {
+    background-color: #f8f9fa;
+}
+
+.table-primary {
+    background-color: #e7f1ff;
+    font-weight: bold;
+}
+
+h4, h5, h6 {
+    margin: 0;
+}
+h4{
+    color: #5998e2;
+}
+
+
+@media (max-width: 768px) {
+    .invoice-title {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .text-sm-end {
+        text-align: center !important;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+}

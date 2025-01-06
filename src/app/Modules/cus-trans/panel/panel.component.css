@@ -114,3 +114,227 @@
       margin-bottom: 0.5rem;
     }
   }
+
+
+
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 100%;
+    padding: 15px;
+    margin: 20px auto;
+}
+
+.card {
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    border: none;
+    overflow: hidden;
+}
+
+.logo {
+    width: 120px;
+    height: auto;
+}
+
+.table {
+    width: 100%;
+    margin: 0;
+}
+
+.table-bordered {
+    border: 1px solid #dee2e6;
+}
+
+.table-bordered th,
+.table-bordered td {
+    border: 1px solid #dee2e6;
+    padding: 8px;
+}
+
+.table-light {
+    background-color: #f8f9fa;
+}
+
+.table-primary {
+    background-color: #e7f1ff;
+    font-weight: bold;
+}
+
+h4, h5, h6 {
+    margin: 0;
+}
+h4{
+    color: #5998e2;
+}
+
+
+@media (max-width: 768px) {
+    .invoice-title {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .text-sm-end {
+        text-align: center !important;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+}
+
+/* Styling for steps */
+.steps-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.step-item {
+  text-align: center;
+  flex: 1; /* Ensures steps are evenly spaced */
+  margin-bottom: 15px;
+  padding: 0 10px; /* Adds space between each step */
+  font-size: 16px;
+}
+
+.step-item .step-number {
+  font-weight: bold;
+  margin-bottom: 5px;
+  background-color: rgb(109, 150, 238);
+  color: white;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: inline-block;
+  line-height: 30px;
+  text-align: center;
+}
+
+.step-item .step-title {
+  font-size: 14px;
+}
+
+.step-item .step-date {
+  font-size: 12px;
+  color: #666;
+}
+
+/* Active step styles */
+.step-item.active .step-title {
+  font-weight: bold;
+  color: rgb(109, 150, 238); /* Green for active step */
+}
+
+/* Completed step styles */
+.step-item.completed .step-title {
+  color: #888; /* Gray for completed steps */
+}
+
+/* Styling for active and completed steps */
+.step-item.active .step-number {
+  background-color: rgb(109, 150, 238);
+}
+
+.step-item.completed .step-number {
+  background-color: #888;
+}
+
+/* Make the steps list responsive (tablet/phone view) */
+@media (max-width: 1024px) {
+  /* Tablets */
+  .step-item {
+    flex: 0 0 48%;  /* Two steps per row */
+  }
+}
+
+@media (max-width: 768px) {
+  /* Small tablets and smaller screens */
+  .step-item {
+    flex: 0 0 48%;  /* Two steps per row */
+  }
+}
+
+@media (max-width: 480px) {
+  /* Phones */
+  .step-item {
+    flex: 0 0 100%;  /* One step per row */
+  }
+}
+
+/* Add some margin between progress bar and steps list */
+@media (max-width: 768px) {
+  .progress {
+    margin-bottom: 10px; /* Reduces margin on smaller screens */
+  }
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+  .progress-bar-container {
+    padding: 0 2%;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  #progressbar {
+    flex-direction: column;
+    padding: 0;
+  }
+
+  #progressbar li {
+    font-size: 12px;
+    margin-bottom: 1rem;
+    text-align: left;
+  }
+
+  .laundry-details {
+    padding: 10px;
+    margin-top: 10px;
+  }
+
+  .laundry-details .fw-bold {
+    font-size: 1.1rem;
+  }
+
+  .laundry-details .text-end {
+    text-align: left;
+  }
+
+  .card-body {
+    padding: 1.5rem;
+  }
+
+  .card-footer {
+    padding: 1rem;
+  }
+
+  .h5 {
+    font-size: 1.25rem;
+  }
+
+  .col-md-6 {
+    margin-bottom: 1rem;
+  }
+
+  .col-12 {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .d-none.d-lg-block {
+    display: none;
+  }
+}
+  
+  

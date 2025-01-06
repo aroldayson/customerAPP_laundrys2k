@@ -13,7 +13,7 @@
       <h5 class="mb-0">Good day! <span style="color: #f1c40f;"><strong></strong></span>!</h5>
     </div>
     <div class="modal-body">
-      <div class="container-fluid">
+      <div class="container-fluid py-3">
         <form [formGroup]="newtransac" id="manage-laundry">
           <div class="row mb-4">
             <div class="col-md-6">
@@ -95,7 +95,7 @@
                   <tr>
                     <td>{{ l.Category }}</td>
                     <td>{{ l.Qty }}</td>
-                    <td>{{l.Price}}</td>
+                    <td id="price">{{l.Price}}</td>
                     <td>
                       <button class="btn btn-sm btn-outline-danger" (click)="removeFromList(l)">
                         <i class="fa fa-trash"></i>
@@ -110,17 +110,17 @@
       </div>
     </div>
      <!-- Services Section -->
-     <div class="row mb-4" *ngIf="showservices !== false">
+     <div class="row mb-4 px-3" *ngIf="showservices !== false">
       <div class="col-md-6">
         <label for="services" class="form-label h4">Additional Services</label>
         <p>Pick your choice/s of services here.</p>
         <div class="d-flex gap-3">
           <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="Rush-Job" (change)="onCheckboxChange($event)">
+            <input class="form-check-input" type="checkbox" value="Rush-Job" (change)="onCheckboxChange($event)"  id="rush-job-checkbox">
             <label class="form-check-label" for="rush">Rush Jobs</label>  
           </div>
           <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="PickUp-Service"  (click)="showaddress(id.cuid)" (change)="onCheckboxChange($event)">
+            <input class="form-check-input" type="checkbox" value="PickUp-Service"  (click)="showaddress(id.cuid)" (change)="onCheckboxChange($event)" id="pickUp-service-checkbox">
             <label class="form-check-label" for="pick">Pick-up</label>
           </div>
           <div class="form-check">
@@ -130,54 +130,18 @@
         </div>
       </div>
     </div>
-    <div class="row" [hidden]="selectAddDel==false">
-      <p>Select your Delivery Address.</p>
-      <div class="col-md-12 mb-3">
-        <div class="col-md-12 mb-3">
-          <div class="container my-4">
-            <div class="d-flex align-items-center mb-3" [hidden]>
-              <h5 class="mb-0">My Address</h5>
-              <button class="btn btn-outline-secondary ms-3">
-                <strong data-bs-toggle="modal" data-bs-target="#editADDRESS">+ Add New Address</strong>
-              </button>
-            </div>
-        
-            <div class="d-flex flex-wrap">
-              <div *ngFor="let c of address" class="address-container px-3 py-2 highlighted me-3 mb-3" style="flex-basis: 30%; min-width: 250px;">
-                <input type="hidden" [value]="c.ShipServ_price">
-                <div class="form-check">
-                  <!-- Radio button to select address -->
-                  <input class="form-check-input" 
-                         type="radio" 
-                         name="ShipServ_price" 
-                         id="ShipServ_price_{{c.CustAdd_ID}}" 
-                         [value]="c.CustAdd_ID" 
-                         [(ngModel)]="selectedAddress" 
-                         (change)="selectAddress(c)"
-                         [checked]="c.CustAdd_ID === selectedAddress">
-                  <label class="form-check-label" for="City_Address_{{c.Town_City}}">
-                    <strong>{{ c.Cust_fname }} {{ c.Cust_mname }} {{ c.Cust_lname }}</strong>
-                    <span class="text-secondary">{{ c.Phenono }}</span>
-                  </label>
-                </div>
-                <p class="mb-1 text-secondary" id="barangay">
-                  {{ c.BuildingNo_Street }}, {{ c.Barangay }} {{ c.Town_City }} {{ c.Province }}<br>
-                  North Luzon, 2434
-                </p>
-                <a class="text-danger float-end" (click)="deleteaddress(c.CustAdd_ID)">Delete</a>
-              </div>
-            </div>
-            
-        
-          </div>
-        </div>
-      </div>
-    </div>
+   
       <div class="row" [hidden]="selectAddPick==false">
         <p>Select your Pick-Up Address.</p>
         <div class="col-md-12 mb-3">
           <div class="col-md-12 mb-3">
             <div class="container my-4">
+              <div class="d-flex align-items-center mb-3" [hidden]>
+                <h5 class="mb-0">My Address</h5>
+                <button class="btn btn-outline-secondary ms-3">
+                  <strong data-bs-toggle="modal" data-bs-target="#editADDRESS">+ Add New Address</strong>
+                </button>
+              </div>
               <div class="d-flex flex-wrap">
                 <div *ngFor="let c of address" class="address-container px-3 py-2 highlighted me-3 mb-3" style="flex-basis: 30%; min-width: 250px;">
                   <div class="form-check">
@@ -199,7 +163,50 @@
             </div>
           </div>
         </div>              
-      </div>    
+      </div> 
+      <div class="row" [hidden]="selectAddDel==false">
+        <p>Select your Delivery Address.</p>
+        <div class="col-md-12 mb-3">
+          <div class="col-md-12 mb-3">
+            <div class="container my-4">
+              <!-- <div class="d-flex align-items-center mb-3" [hidden]>
+                <h5 class="mb-0">My Address</h5>
+                <button class="btn btn-outline-secondary ms-3">
+                  <strong data-bs-toggle="modal" data-bs-target="#editADDRESS">+ Add New Address</strong>
+                </button>
+              </div> -->
+          
+              <div class="d-flex flex-wrap">
+                <div *ngFor="let c of address" class="address-container px-3 py-2 highlighted me-3 mb-3" style="flex-basis: 30%; min-width: 250px;">
+                  <input type="hidden" [value]="c.ShipServ_price">
+                  <div class="form-check">
+                    <!-- Radio button to select address -->
+                    <input class="form-check-input" 
+                           type="radio" 
+                           name="ShipServ_price" 
+                           id="ShipServ_price_{{c.CustAdd_ID}}" 
+                           [value]="c.CustAdd_ID" 
+                           [(ngModel)]="selectedAddress" 
+                           (change)="selectAddress(c)"
+                           [checked]="c.CustAdd_ID === selectedAddress">
+                    <label class="form-check-label" for="City_Address_{{c.Town_City}}">
+                      <strong>{{ c.Cust_fname }} {{ c.Cust_mname }} {{ c.Cust_lname }}</strong>
+                      <span class="text-secondary">{{ c.Phenono }}</span>
+                    </label>
+                  </div>
+                  <p class="mb-1 text-secondary" id="barangay">
+                    {{ c.BuildingNo_Street }}, {{ c.Barangay }} {{ c.Town_City }} {{ c.Province }}<br>
+                    North Luzon, 2434
+                  </p>
+                  <a class="text-danger float-end" (click)="deleteaddress(c.CustAdd_ID)">Delete</a>
+                </div>
+              </div>
+              
+          
+            </div>
+          </div>
+        </div>
+      </div>   
     <p class="m-3"><strong>Total Estimated Price: </strong> {{total_estimated_price}}</p>
     <div class="modal-footer gap-2 m-3">
       <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>

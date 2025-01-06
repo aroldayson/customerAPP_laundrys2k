@@ -1,33 +1,537 @@
- <!-- Right Column for Category and Pricing -->
-    <div class="col-12 col-md-4">
-      <div class="card shadow mb-4">
-        <div class="card-header py-3 d-flex justify-content-between align-items-center">
-          <div class="d-flex align-items-center">
-            <img src="assets/logo.png" alt="Logo" style="height: 30px; margin-right: 10px;">
-            <h6 style="text-transform: uppercase;">S2K wash-dry-fold</h6>
-          </div>
-        </div>
+<div class="container">
+  <div class="row">
+    <div class="col-xl-8">
+      <div class="card">
         <div class="card-body">
+          <ol class="activity-checkout mb-0 px-4 mt-3">
+            <form [formGroup]="newtransac" id="manage-laundry">
+            <li class="checkout-item">
+              <div class="avatar checkout-icon p-1">
+                <div class="avatar-title rounded-circle">
+                  <i
+                    class="fa fa-file text-o text-white font-size-20"
+                    aria-hidden="true"
+                  ></i>
+                </div>
+              </div>
+              <div class="feed-item-list">
+                <div>
+                  <h5 class="font-size-16 mb-1">Tracking number</h5>
+                  <h4 class="fw-bold" style="color: #5998e2">
+                    {{ trackingNumber }}
+                  </h4>
+                  <div class="mb-3">
+                    <form [formGroup]="laundryForm" (ngSubmit)="addToList()">
+                      <div>
+                        <div class="row">
+                          <!-- Laundry Category Dropdown -->
+                          <div class="col-lg-4">
+                            <label class="form-label" for="laundry-category"
+                              >Laundry Type</label
+                            >
+                            <select
+                              class="form-control"
+                              id="laundry-category"
+                              formControlName="category"
+                              (change)="getLaundryPrice($event)"
+                              aria-label="Select Laundry Type"
+                            >
+                              <option value="" selected disabled>Select Laundry Type</option>
+                              <option
+                                *ngFor="let c of categ"
+                                [value]="c.Categ_ID"
+                              >
+                                {{ c.Category }}
+                              </option>
+                            </select>
+                            <div *ngIf="laundryForm.get('category')?.touched && laundryForm.get('category')?.invalid" class="text-danger">
+                              <small *ngIf="laundryForm.get('category')?.errors?.['required']">Laundry type is required</small>
+                            </div>
+                          </div>
+
+                          <!-- Quantity Input -->
+                          <div class="col-md">
+                            <div class="mb-3">
+                              <label class="form-label" for="quantity"
+                                >Quantity/Counts</label
+                              >
+                              <input
+                                type="number"
+                                step="1"
+                                min="1"
+                                class="form-control"
+                                id="quantity"
+                                formControlName="quantity"
+                                placeholder="Enter count"
+                                aria-label="Enter count"
+                              />
+                              <div *ngIf="laundryForm.get('quantity')?.touched && laundryForm.get('quantity')?.invalid" class="text-danger">
+                                <small *ngIf="laundryForm.get('quantity')?.errors?.['required']">Quantity is required</small>
+                                <small *ngIf="laundryForm.get('quantity')?.errors?.['min']">Quantity must be at least 1</small>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div
+                            class="col-md mb-3"
+                            *ngIf="selectedPrice !== undefined"
+                          >
+                            <label for="price" class="form-label fw-bold"
+                              >Laundry Price (Per kg)</label
+                            >
+                            <p
+                              id="price"
+                              class="form-control-plaintext mb-0 text-danger fw-bold"
+                            >
+                              {{
+                                selectedPrice
+                                  | currency : " " : "symbol" : "1.2-2"
+                              }}
+                            </p>
+                          </div>
+
+                          <!-- Add to List Button -->
+                          <div class="col-md">
+                            <div class="mb-3">
+                              <label class="form-label d-flex" for="add-to-list"
+                                >Add to List</label
+                              >
+                              <button
+                                type="submit"
+                                class="btn btn-add"
+                                id="add_to_list"
+                                [disabled]="laundryForm.invalid"
+                              >
+                                <i class="fa fa-plus" aria-hidden="true"></i>
+                                Add to List
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+
+                    <!-- Laundry List Table -->
+                    <div class="mb-3">
+                      <table
+                        class="table table-bordered"
+                        id="added-laundry-table"
+                      >
+                        <thead class="text-center table-light">
+                          <tr>
+                            <th>Category</th>
+                            <th>Qty</th>
+                            <th>Estimated Laundry Price</th>
+                            <th>Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          @for (l of laundrylist; track l.category) {
+                          <tr>
+                            <td>{{ l.Category }}</td>
+                            <td>{{ l.Qty }}</td>
+                            <td class="text-right"id="price">{{ l.Price | currency: ' ':'symbol':'1.2-2' }}</td>
+                            <td class="text-right">
+                              <button
+                                class="btn btn-sm btn-outline-danger " 
+                                (click)="removeFromList(l)"
+                              >
+                                <i class="fa fa-trash"></i>
+                              </button>
+                            </td>
+                          </tr>
+                          }
+                        </tbody>
+                      </table>
+                    </div>
+
+                    <!-- Services Form -->
+                    <!-- <form [formGroup]="servicesForm"> -->
+                      <div class="row mb-4">
+                        <div class="row mb-4 px-3" *ngIf="showservices !== false">
+                          <div class="col-md-6">
+                            <label for="services" class="form-label">Additional Services</label>
+                            <p>Pick your choice/s of services here.</p>
+                            <div class="d-flex gap-3">
+                              <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Rush-Job" (change)="onCheckboxChange($event)"  id="rush-job-checkbox">
+                                <label class="form-check-label" for="rush">Rush Jobs</label>  
+                              </div>
+                              <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="PickUp-Service"  (click)="showaddress(id.cuid)" (change)="onCheckboxChange($event)" id="pickUp-service-checkbox">
+                                <label class="form-check-label" for="pick">Pick-up</label>
+                              </div>
+                              <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="Delivery-Service" (click)="showaddress(id.cuid)"  (change)="onCheckboxChange($event)" id="pickUp-service-checkbox">
+                                <label class="form-check-label" for="deliver" >Delivery</label>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-6 mt-5 text-end">
+                            <label for="amount" class="form-label">Estimated Amount</label>
+                            <p class="text-success fw-bold">
+                              {{ total_estimated_price | currency: ' ':'symbol':'1.2-2' }}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    <!-- </form> -->
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li class="checkout-item" >
+              <div class="avatar checkout-icon p-1" [hidden]="selectAddPick==false">
+                <div class="avatar-title rounded-circle">
+                  <i
+                    class="fa fa-truck text-white font-size-20"
+                    aria-hidden="true"
+                  ></i>
+                </div>
+              </div>
+              
+              <div class="feed-item-list" [hidden]="selectAddPick==false">
+                <div [hidden]>
+                  <h5 class="font-size-16 mb-1">Shipping Address</h5>
+                  <button
+                    data-bs-toggle="modal" data-bs-target="#editADDRESS"
+                    class="btn btn-add mb-2"
+                  >
+                    Add new Address
+                  </button>
+                  <div class="mb-3">
+                    <div class="row">
+                      <div class="col-lg-12 col-sm-6">
+                        <div data-bs-toggle="collapse" *ngFor="let c of address" >
+                          <label class="card-radio-label mb-0">
+                            <input
+                              type="radio"
+                              name="address"
+                              id="info-address1"
+                              class="card-radio-input"
+                              checked=""
+                            />
+                            <div class="card-radio text-truncate p-3">
+                              <!-- <span class="fs-14 mb-4 d-block">Address 1</span> -->
+                              <span class="fs-14 mb-2 d-block"
+                                >{{ c.Cust_fname }} {{ c.Cust_mname }} {{ c.Cust_lname }}</span
+                              >
+                              <span
+                                class="text-muted fw-normal text-wrap mb-1 d-block"
+                                >{{c.BuildingUnitStreet_No}}, {{c.Barangay}}, {{c.Town_City}}, {{c.Province}}</span
+                              >
+                              <span class="text-muted fw-normal d-block"
+                                >{{c.Phoneno}}</span
+                              >
+                            </div>
+                          </label>
+                          <div class="edit-btn">
+                            <a
+                              href=""
+                              data-bs-toggle="tooltip"
+                              data-placement="top"
+                              title=""
+                              data-bs-original-title="Edit"
+                              [class.disabled]="isNextStepDisabled"
+                            >
+                              <i class="fa fa-pencil" aria-hidden="true"></i>
+                              <i class="fa fa-trash" aria-hidden="true"></i>
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- <div class="col-lg-12 col-sm-6">
+                        <div>
+                          <label class="card-radio-label mb-0">
+                            <input
+                              type="radio"
+                              name="address"
+                              id="info-address2"
+                              class="card-radio-input"
+                            
+                            />
+                            <div class="card-radio text-truncate p-3">
+                              <span class="fs-14 mb-4 d-block">Address 2</span>
+                              <span class="fs-14 mb-2 d-block"
+                                >Bradley McMillian</span
+                              >
+                              <span
+                                class="text-muted fw-normal text-wrap mb-1 d-block"
+                                >109 Clarksburg Park Road Show Low, AZ
+                                85901</span
+                              >
+                              <span class="text-muted fw-normal d-block"
+                                >Mo. 012-345-6789</span
+                              >
+                            </div>
+                          </label>
+                          <div class="edit-btn">
+                            <a
+                              href="#"
+                              data-bs-toggle="tooltip"
+                              data-placement="top"
+                              title=""
+                              data-bs-original-title="Edit"
+                              [class.disabled]="isNextStepDisabled"
+                            >
+                              <i class="fa fa-pencil" aria-hidden="true"></i>
+                            </a>
+                          </div>
+                        </div>
+                      </div> -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="feed-item-list" [hidden]="selectAddDel==false">
+                <div [hidden]>
+                  <h5 class="font-size-16 mb-1">Delivery Address</h5>
+                  <button
+                    class="btn btn-add mb-2"
+                    [disabled]="isNextStepDisabled"
+                  >
+                    Add new Address
+                  </button>
+                  <div class="mb-3">
+                    <div class="row">
+                      <div class="col-lg-12 col-sm-6">
+                        <div data-bs-toggle="collapse" *ngFor="let c of address" >
+                          <label class="card-radio-label mb-0">
+                            <input
+                              type="radio"
+                              name="address"
+                              id="info-address1"
+                              class="card-radio-input"
+                              checked=""
+                              [disabled]="isNextStepDisabled"
+                            />
+                            <div class="card-radio text-truncate p-3">
+                              <!-- <span class="fs-14 mb-4 d-block">Address 1</span> -->
+                              <span class="fs-14 mb-2 d-block"
+                                >Bradley McMillian</span
+                              >
+                              <span
+                                class="text-muted fw-normal text-wrap mb-1 d-block"
+                                >{{c.Town_City}}</span
+                              >
+                              <span class="text-muted fw-normal d-block"
+                                >Mo. 012-345-6789</span
+                              >
+                            </div>
+                          </label>
+                          <div class="edit-btn">
+                            <a
+                              href=""
+                              data-bs-toggle="tooltip"
+                              data-placement="top"
+                              title=""
+                              data-bs-original-title="Edit"
+                              [class.disabled]="isNextStepDisabled"
+                            >
+                              <i class="fa fa-pencil" aria-hidden="true"></i>
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+            </form>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-4">
+      <div class="card checkout-order-summary">
+        <div class="card-body">
+          <div class="card-header p-3 mb-3">
+            <h5 class="font-size-16 mb-0">
+              Laundry Summary
+              <span class="float-end ms-2">{{ trackingNumber }}</span>
+            </h5>
+          </div>
           <div class="table-responsive">
-            <table class="table mb-0">
+            <table class="table table-centered mb-0 table-nowrap">
               <thead>
-                <tr>
-                  <th scope="col">Category</th>
-                  <th scope="col" class="text-right">Price</th>
-                </tr>
+                <!-- <tr>
+                  <th class="border-top-0" style="width: 110px" scope="col">
+                    Laundry
+                  </th>
+                  <th class="border-top-0" scope="col">Quantity</th>
+                  <th class="border-top-0" scope="col">Price</th>
+                </tr> -->
               </thead>
               <tbody>
-                @for (c of categ; track c.Categ_ID) {
+                <!-- @for (item of laundrylist; track item.category) {
                 <tr>
-                  <td>{{c.Category}}</td>
-                  <td class="text-right">
-                    <span class="badge rounded-pill" style="background-color: #5988E2;">{{c.Per_kilograms}}/kg</span>
+                  <td>
+                    <h5 class="font-size-16 text-truncate">
+                      <a href="#" class="text-dark">{{ item.Category }}</a>
+                    </h5>
                   </td>
+                  <td><p class="text-muted mb-0 mt-1">{{ item.Qty }}</p></td>
+                  <td>{{ item.Price | currency:'PHP':'symbol':'1.2-2' }}</td>
                 </tr>
-                }
+                } -->
+
+                <tr>
+                  <td colspan="2">
+                    <h5 class="font-size-14 m-0">Sub Total :</h5>
+                  </td>
+                  <td>{{ calculateSubTotal() | currency:'PHP':'symbol':'1.2-2' }}</td>
+                </tr>
+                <!-- <tr>
+                  <td colspan="2">
+                    <h5 class="font-size-14 m-0">Discount :</h5>
+                  </td>
+                  <td>{{ discount | currency:'PHP':'symbol':'1.2-2' }}</td>
+                </tr> -->
+
+                <tr>
+                  <td colspan="2">
+                    <h5 class="font-size-14 m-0">Shipping Charge :</h5>
+                  </td>
+                  <td>{{ shippingCharge | currency:'PHP':'symbol':'1.2-2' }}</td>
+                </tr>
+                <tr class="bg-light">
+                  <td colspan="2">
+                    <h5 class="font-size-14 m-0">Total:</h5>
+                  </td>
+                  <td>{{ calculateTotal() | currency:'PHP':'symbol':'1.2-2' }}</td>
+                </tr>
               </tbody>
             </table>
+          </div>
+          <div class="text-end mt-4">
+            <button type="submit" class="btn btn-primary">
+              Submit Order
+            </button>
           </div>
         </div>
       </div>
     </div>
+  </div>
+</div>
+
+<div class="modal fade" id="editADDRESS" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Add New Address</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="card" style="max-width: 600px;">
+          <div class="card-body">
+            <form [formGroup]="addaddress" (ngSubmit)="newaddress()">         
+              <!-- Phone Number -->
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label for="phoneNumber" class="form-label">Phone Number</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="phoneNumber"
+                    formControlName="Phoneno"
+                    placeholder="Phone Number"
+                  />
+                  <small *ngIf="addaddress.get('Phoneno')?.touched && addaddress.get('Phoneno')?.invalid" class="text-danger">
+                    Please enter a valid phone number (10-12 digits).
+                  </small>
+                </div>
+
+                <div class="col-md-6">
+                  <label for="barangay" class="form-label">Barangay</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="barangay"
+                    formControlName="Barangay"
+                    placeholder="Barangay"
+                  />
+                  <small *ngIf="addaddress.get('Barangay')?.touched && addaddress.get('Barangay')?.invalid" class="text-danger">
+                    This field is required.
+                  </small>
+                </div>
+              </div>
+
+              <!-- Barangay -->
+              <!-- <div class="row mb-3">
+                <div class="col-md-6">
+                  <label for="barangay" class="form-label">Barangay</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="barangay"
+                    formControlName="Barangay"
+                    placeholder="Barangay"
+                  />
+                  <small *ngIf="addaddress.get('Barangay')?.touched && addaddress.get('Barangay')?.invalid" class="text-danger">
+                    This field is required.
+                  </small>
+                </div>
+              </div> -->
+
+              <!-- Town City -->
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label for="townCity" class="form-label">Town/City</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="townCity"
+                    formControlName="Town_City"
+                    placeholder="Town/City"
+                  />
+                  <small *ngIf="addaddress.get('Town_City')?.touched && addaddress.get('Town_City')?.invalid" class="text-danger">
+                    This field is required.
+                  </small>
+                </div>
+       
+                <div class="col-md-6">
+                  <label for="province" class="form-label">Province</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="province"
+                    formControlName="Province"
+                    placeholder="Province"
+                  />
+                  <small *ngIf="addaddress.get('Province')?.touched && addaddress.get('Province')?.invalid" class="text-danger">
+                    This field is required.
+                  </small>
+                </div>
+              </div>
+
+              <!-- Street/Building No. -->
+              <div class="row mb-3">
+                <div class="col-md">
+                  <label for="buildingNoStreet" class="form-label">Street/Building No.</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="buildingNoStreet"
+                    formControlName="BuildingUnitStreet_No"
+                    placeholder="Street/Building No."
+                  />
+                  <small *ngIf="addaddress.get('BuildingUnitStreet_No')?.touched && addaddress.get('BuildingUnitStreet_No')?.invalid" class="text-danger">
+                    This field is required.
+                  </small>
+                </div>
+              </div>
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Save Address</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

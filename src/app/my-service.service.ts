@@ -7,8 +7,8 @@ import { Observable } from 'rxjs';
 })
 export class MyServiceService {
   url = "http://localhost/CustomerS2K/";
-  // Apiurl="http://localhost:8000/api/";
-  Apiurl="http://192.168.3.85:8000/api/";
+  Apiurl="http://localhost:8000/api/";
+  // Apiurl="http://192.168.1.14 :8000/api/";
   // Apiurl="http://10.0.118.64:8000/api/";
 
 

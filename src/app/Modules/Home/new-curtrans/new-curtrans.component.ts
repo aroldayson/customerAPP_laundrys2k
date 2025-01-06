@@ -57,6 +57,10 @@ export class NewCurtransComponent implements OnInit {
   selectedAddress: number | null = null; // track selected address ID
   totalEstimatedPrice: number = 0; // to store the total price
 
+  isRushJob: boolean = false;
+  isPickUpService: boolean = false;
+  isDeliveryService: boolean = false;
+
 
 
   id = { cuid: localStorage.getItem('Cust_ID') };
@@ -165,6 +169,7 @@ export class NewCurtransComponent implements OnInit {
  }
 
   addToList() {
+
   const selectElement = document.getElementById('laundryType') as HTMLSelectElement;
   const laundryType = selectElement.value;
   const count = (document.getElementById('weight') as HTMLInputElement).value;
@@ -183,9 +188,10 @@ export class NewCurtransComponent implements OnInit {
     if (selectedCategory) {
       // Destructure the necessary fields from the selected category
       const { Minimum_weight, Price, Delivery_fee } = selectedCategory;
+      // const prices = (document.getElementById('price') as HTMLSelectElement).value
 
       // Calculate the total price based on the quantity, price, and delivery fee
-      const totalPrice = (Minimum_weight * Price) + (Delivery_fee || 0) + this.shippingCost;
+      const totalPrice =  (Price) + (Delivery_fee || 0) + this.shippingCost;
 
       console.log(`Price per unit: ${Price}, Minimum weight: ${Minimum_weight}`);
       console.log(`Delivery fee: ${Delivery_fee || 0}`);
@@ -196,7 +202,7 @@ export class NewCurtransComponent implements OnInit {
         Categ_ID: laundryType,
         Category: selectedCategory.Category,
         Qty: count,
-        Price: totalPrice, 
+        Price: totalPrice,  
         Tracking_number: this.trackingNumber
       };
 
@@ -431,6 +437,33 @@ export class NewCurtransComponent implements OnInit {
     const serviceArray = this.newtransac.get('service') as FormControl<string[]>;
     const selServ = event.target.value; const checkbox = event.target as HTMLInputElement;
     const value = checkbox.value;
+    const checkboxValue = event.target.value;
+    const isChecked = event.target.checked;
+  
+    if (checkboxValue === "Rush-Job") {
+      this.isRushJob = isChecked;
+    } else if (checkboxValue === "PickUp-Service") {
+      this.isPickUpService = isChecked;
+    } else if (checkboxValue === "Delivery-Service") {
+      this.isDeliveryService = isChecked;
+    }
+  
+    // Recalculate total price based on active checkboxes
+    const basePrice = this.laundrylist.reduce((acc: number, item: any) => acc + item.Price, 0);
+  
+    this.total_estimated_price = basePrice;
+  
+    if (this.isRushJob) {
+      this.total_estimated_price *= 2; // Double the price for rush job
+    }
+  
+    if (this.isPickUpService) {
+      this.total_estimated_price += 50; // Add a fixed fee for pick-up service
+    }
+  
+    if (this.isDeliveryService) {
+      this.total_estimated_price += 50; // Add a fixed fee for delivery service
+    }
 
     if (value === 'PickUp-Service' || value === 'Delivery-Service') {
       this.showmodaladdress = checkbox.checked; 

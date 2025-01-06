@@ -3,11 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { MyServiceService } from '../../../my-service.service';
 import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-history',
   standalone: true,
-  imports: [RouterModule, CommonModule],
+  imports: [RouterModule, CommonModule,ReactiveFormsModule],
   templateUrl: './history.component.html',
   styleUrls: ['./history.component.css'],
 })
@@ -30,12 +31,17 @@ export class HistoryComponent implements OnInit {
   totalqty:any;
   servicename:any;
   serviceprice:any;
-  servicearray: string[] = [];
+  servicearray: any;
   servicearray2:string[] = [];
   currentStep: number = 0;  // Update this dynamically based on user progress (e.g., using a value from your logic)
   progressPercent: number = (this.currentStep / (this.steps.length - 1)) * 100; // Calculate progress percentage
   serviceArray: any;
   latestTransactionDate:any;
+  total: any;
+  track: any;
+  transacDate: any;
+  estimatedate: any;
+  totalserviceprice: any;
 
   constructor(private http: HttpClient, private service: MyServiceService) {}
 
@@ -66,7 +72,12 @@ export class HistoryComponent implements OnInit {
           this.getDet = result || [];
           this.totalweight = result[0].totalweight;
           this.details = result[0].details
-          console.log(result,this.getDet)
+          this.total = result[0].total
+          this.track = result[0].Tracking_number 
+          this.totalserviceprice = result[0].totalserviceprice
+          this.transacDate = result[0].services[0].trans_date   
+          this.estimatedate = result[0].services[0].estimated_date        
+          console.log(result,this.getDet,this.servicearray2,this.servicearray)
   
           // Ensure transaction details are available
           if (this.getDet.length > 0) {

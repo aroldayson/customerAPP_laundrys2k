@@ -57,8 +57,8 @@
                 <!-- <td (click)="viewItem(item.trans_ID)">{{item.Category}}</td>
                 <td>{{item.totalQty}}</td>
                 <td>{{item.totalWeight}}</td> -->
-                <td>{{item.trans_date}}</td>
-                <td>{{item.estimated_date}}</td>
+                <td>{{item.trans_date | date:'MM/dd/yyyy'}}</td>
+                <td>{{item.estimated_date | date:'MM/dd/yyyy'}}</td>
                 <td>
                   <span 
                     class="badge" 
@@ -110,8 +110,8 @@
                 <strong>Item:</strong> {{item.Category}}<br>
                 <strong>Qty:</strong> {{item.totalQty}}<br>
                 <strong>Weight:</strong> {{item.totalWeight}} kg<br>
-                <strong>Transaction Date:</strong> {{item.trans_date}}<br>
-                <strong>Estimated Date:</strong> {{item.estimated_date}}<br>
+                <strong>Transaction Date:</strong> {{item.trans_date | date:'MM/dd/yyyy'}}<br>
+                <strong>Estimated Date:</strong> {{item.estimated_date | date:'MM/dd/yyyy'}}<br>
                 <strong>Status:</strong> 
                 <span 
                   class="badge"
