@@ -118,24 +118,6 @@ export class CusCurtransComponent implements OnInit{
       new bootstrap.Tooltip(tooltipTriggerEl);
     });
   }
-  // addToList() {
-  //   const laundryType = (document.getElementById('laundryType') as HTMLInputElement).value;
-  //   const count = (document.getElementById('weight') as HTMLInputElement).value;
-  //   if(laundryType && count != null){
-  //     const newItem = {
-  //       Categ_ID: laundryType,
-  //       Qty: count,
-  //     };
-  //     this.laundrylist.push(newItem);
-  //     console.log(this.laundrylist);
-
-  //     const laundryTypes = (document.getElementById('laundryType') as HTMLInputElement);
-  //     laundryTypes.value = '';
-
-  //     const counts = (document.getElementById('weight') as HTMLInputElement);
-  //     counts.value = '';
-  //   }
-  // }
 
   addToList() {
     // Cast the select element to HTMLSelectElement
@@ -168,6 +150,7 @@ export class CusCurtransComponent implements OnInit{
       (document.getElementById('weight') as HTMLInputElement).value = '';
     }
   }
+
   fetchtransactions(){
     this.post.display(this.id.cuid).subscribe((data:any)=>{
       this.trans = data.transaction;
@@ -196,6 +179,7 @@ export class CusCurtransComponent implements OnInit{
       this.calculateTotalQuantity();
     })
   }
+
   ngOnInit(): void{
     // this.fetchtransactions();
     console.log(this.id)
@@ -222,6 +206,7 @@ export class CusCurtransComponent implements OnInit{
 
     this.getShippingAddress();
   }
+
   deleteaddress(id: any)
   {
     console.log(id);
@@ -240,6 +225,7 @@ export class CusCurtransComponent implements OnInit{
     Town_City: new FormControl(null),
     Barangay: new FormControl(null)
   });
+
   showaddress(id: any) {
     this.post.showaddress(id).subscribe((res: any) => {
       console.log(res);
@@ -274,112 +260,10 @@ export class CusCurtransComponent implements OnInit{
     this.post.getTrackingNo().subscribe((data:any)=>{
       this.Tracking_Number = data;
 
-      this.route.navigate(['/main/cusmainhome/homemain/newcurtrans']);
+      this.route.navigate(['/main/cusmainhome/homemain/cuscateg']);
       console.log(this.Tracking_Number);
     })
   }
-
-  // updateTransaction() {
-  //   if (this.selectedTransaction && this.selectedTransaction.details) {
-  //     const updates: any[] = [];
-  //     const newEntries: any[] = [];
-  //     const addservices: any[] = [];
-  //     const removedServicess: string[] = [];
-
-  //     // if(this.selectedservices.rush === true){
-  //     //   this.servicesUpd.push('')
-  //     // }
-  //     console.log(this.removedServices);
-      
-
-  //     const transacStatus = this.selectedTransaction.Transac_status || 'Pending';
-      
-  //     console.log(this.servicesUpd)
-  //     // Prepare data for updates, new additions, and deletions
-  //     this.selectedTransaction.details.forEach((detail: any) => {
-  //       if (detail.TransacDet_ID) {
-  //         updates.push({
-  //           TransacDet_ID: detail.TransacDet_ID,
-  //           Categ_ID: detail.Categ_ID,
-  //           Qty: detail.Qty,
-  //           Transac_status: transacStatus,
-  //           Transac_ID: this.selectedTransaction.trans_ID,
-  //         });
-        
-  //         this.servicesUpd.forEach((services: any) => {
-  //           addservices.push({
-  //             Transac_ID: this.selectedTransaction.trans_ID,
-  //             Addservices_name: services
-  //           });
-  //         });
-        
-  //       } else {
-  //         newEntries.push({
-  //           Categ_ID: detail.Categ_ID,
-  //           Qty: detail.Qty,
-  //           Tracking_Number: this.selectedTransaction.track_num
-  //         });
-
-  //       }
-
-
-  //       console.log(addservices);
-        
-  //       // Send updates to the server
-  //       if (updates.length > 0) {
-  //         this.post.updatetransac({ updates }).subscribe((result: any) => {
-  //           console.log('Update result:', result);
-  //           this.fetchtransactions();
-  //           this.closeModal();
-  //         });
-  //       }
-
-  //       if (addservices.length > 0) {
-  //         this.post.updatetransac({ addservices }).subscribe((result: any) => {
-  //           console.log('Services result:', result);
-  //           this.fetchtransactions();
-  //           this.closeModal();
-  //         });
-  //       }
-        
-  //       // Send new entries to the server
-  //       if (newEntries.length > 0) {
-  //         this.post.insertNewDetails(newEntries).subscribe((result: any) => {
-  //           console.log('Insert result:', result);
-  //           this.fetchtransactions();
-  //           this.closeModal();
-  //         });
-  //       }
-
-  //       if(this.removedServices.length > 0) {
-  //         this.post.removeServices(this.selectedTransaction.trans_ID, this.removedServices).subscribe((result: any) => {
-  //           console.log('Deleted result:', result);
-  //           this.fetchtransactions();
-  //           this.closeModal();
-  //         });
-  //       }
-        
-  //       // Send deleted entries to the server
-  //       if (this.deletedDetails.length > 0) {
-  //         this.post.deleteDetails(this.deletedDetails).subscribe((result: any) => {
-  //           console.log('Deleted result:', result);
-  //           this.fetchtransactions();
-  //           this.closeModal();
-  //         });
-  //       }
-        
-  //       // Update the transaction status in the transactions table
-  //       if (this.selectedTransaction.Tracking_number) {
-  //         this.post.updateTransactionStatus(this.selectedTransaction.Tracking_number, transacStatus).subscribe((result: any) => {
-  //           console.log('Transaction status updated:', result);
-  //         });
-  //       }
-        
-  //       this.fetchtransactions();  // Refresh transactions after all operations
-  //     }       
-  //   )}
-  // }
-
 
   updateTransaction() {
     if (this.selectedTransaction && this.selectedTransaction.details) {
@@ -534,47 +418,6 @@ export class CusCurtransComponent implements OnInit{
       }
     }
   }
-  
-
-
-
-  // showDetails(Tracking_number: any, transaction: any, transId: any) {
-  //   this.selectedservices = {
-  //     rush: false,
-  //     pick: false,
-  //     deliver: false,
-  //   };
-
-  //   // First, set selectedTransaction based on the passed transaction
-  //   this.selectedTransaction = { ...transaction }; // Create a copy of the transaction
-  //   this.service = this.selectedTransaction.Addservice_name
-  //   console.log('Selected transaction:', this.selectedTransaction);
-  //   console.log(this.service)
-  //   console.log(this.selectedTransaction)
-
-  //   if (this.service) {
-  //     this.servicesUpd = this.service.split(", ").map((service: string) => service.trim());
-  //   }
-
-  //   console.log(this.servicesUpd);
-
-  //   // Then, fetch the details and add them to the selected transaction
-  //   this.post.displayDet(Tracking_number).subscribe((res: any) => { 
-  //     this.selectedTransaction.details = res; // Assign details separately
-  //     console.log('Transaction details:', this.selectedTransaction.details);
-  //     console.log(res)
-
-  //     // Now open the modal
-  //     const modalElement = document.getElementById('updateModal');
-  //     if (modalElement) {
-  //       const modal = new bootstrap.Modal(modalElement);
-  //       modal.show();
-  //     }
-  //   });
-
-  //   this.updateSelectedService();
-  // }
-
 
   showDetails(Tracking_number: any, transaction: any, transId: any) {
     this.selectedservices = {
@@ -633,11 +476,6 @@ export class CusCurtransComponent implements OnInit{
   
     this.updateSelectedService();
   }
-  
-
-
- 
-
 
   updateSelectedService(): void {
 
@@ -656,38 +494,6 @@ export class CusCurtransComponent implements OnInit{
 
     console.log(this.selectedservices)
   }
-
-  // onCheckboxChange(service: string, event: any): void {
-  //   // If the checkbox is unchecked, add the service to the removedServices array
-  //   if (!event.target.checked) {
-  //     if (!this.removedServices.includes(service)) {
-  //       this.removedServices.push(service);  // Add service name to removedServices if it's unchecked
-  //     }
-  //   } else {
-  //     // If the checkbox is checked again, remove the service from removedServices
-  //     const index = this.removedServices.indexOf(service);
-  //     if (index !== -1) {
-  //       this.removedServices.splice(index, 1);  // Remove the service from the array
-  //     }
-  //   }
-
-  //   if (event.target.checked) {
-  //     // If the checkbox is checked, add the service to servicesUpd if it's not already there
-  //     if (!this.servicesUpd.includes(service)) {
-  //       this.servicesUpd.push(service);  // Add service to servicesUpd if it's checked
-  //     }
-  //   } else {
-  //     // If the checkbox is unchecked, remove the service from servicesUpd
-  //     const index = this.servicesUpd.indexOf(service);
-  //     if (index !== -1) {
-  //       this.servicesUpd.splice(index, 1);  // Remove the service from servicesUpd
-  //     }
-  //   }
-
-    
-  //   console.log('Added Services:', this.servicesUpd);
-  //   console.log('Removed services:', this.removedServices);
-  // }
 
   getShippingAddress(){
     this.post.getShippingAddress().subscribe((result: any) => {
@@ -744,8 +550,6 @@ export class CusCurtransComponent implements OnInit{
     console.log('Removed Services:', this.removedServices);
   }
   
-
-  // Method to remove a detail
   removeDetail(index: number) {
     const detail = this.selectedTransaction.details[index];
     console.log(detail);
@@ -759,7 +563,6 @@ export class CusCurtransComponent implements OnInit{
     console.log(this.selectedTransaction)
   }
 
-  // Method to close the modal
   closeModal() {
     const modalElement = document.getElementById('updateModal');
     if (modalElement) {
@@ -777,7 +580,6 @@ export class CusCurtransComponent implements OnInit{
     }
   }
 
-  // Method to add a new detail row
   addDetail() {
     if (!this.selectedTransaction.details) {
       this.selectedTransaction.details = [];
@@ -788,7 +590,6 @@ export class CusCurtransComponent implements OnInit{
     });
   }
 
-  // Optionally, add method to clear deletedDetails after saving
   resetDeletedDetails() {
     this.deletedDetails = [];
   }
@@ -838,6 +639,7 @@ export class CusCurtransComponent implements OnInit{
       }
     );
   }
+
   cancelItem(id: any){
     console.log(id);
     // if (this.newtransac.valid) {
@@ -862,6 +664,7 @@ export class CusCurtransComponent implements OnInit{
     // }
     
   }
+
   insert() {
     // Ensure the form data is properly patched before making the API call
     const categories = this.laundrylist.map(item => item.Categ_ID);

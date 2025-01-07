@@ -59,7 +59,7 @@
             
             <!-- Laundry Price Display -->
             <div class="col-md-2 mb-3" *ngIf="selectedPrice !== undefined">
-              <label for="price" class="form-label fw-bold">Laundry Price (Per kg)</label>
+              <label for="price" class="form-label fw-bold">Laundry Price (Minimum per 2 kg)</label>
               <p id="price" class="form-control-plaintext mb-0 text-danger fw-bold">
                 {{ selectedPrice | currency:'PHP':'symbol':'1.2-2' }}
               </p>

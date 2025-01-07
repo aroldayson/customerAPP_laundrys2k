@@ -218,3 +218,92 @@
     text-align: center;
   }
 }
+
+.container-fluid {
+  font-family: 'Arial', sans-serif;
+}
+.search-input {
+  border: 1px solid #ccc;
+  padding: 12px 15px;
+  border-radius: 50px 0 0 50px;
+  font-size: 16px;
+}
+
+.search-addon {
+  border-radius: 0 50px 50px 0;
+}
+.filter-buttons {
+  display: flex;
+  gap: 8px;
+}
+.btn-filter {
+  border: none;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+}
+.btn-filter:hover {
+  transform: scale(1.05);
+}
+.btn-pending {
+  background-color: #FFA94D; 
+  color: #000000; 
+}
+.btn-recieve {
+  background-color: #FFD84D; 
+  color: #000000; 
+}
+.btn-washing {
+  background-color: #4FC3F7; 
+  color: #000000; 
+}
+.btn-folding {
+  background-color: #B39DDB; 
+  color: #000000; 
+}
+.btn-release {
+  background-color: #FFEB3B; 
+  color: #000000; 
+}
+.btn-complete {
+  background-color: #7CB342;
+  color: #000000; 
+}
+.btn-cancelled {
+  background-color: #FF1744; 
+  color: #000000; 
+}
+.btn-all {
+  background-color: #BDBDBD; 
+  color: #000000; 
+}
+.active-filter {
+  background-color: #007bff !important;
+  color: white !important;
+  box-shadow: 0 4px 6px rgba(0, 123, 255, 0.3);
+}
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: #f8f9fa;
+}
+
+.sticky-header th {
+  position: sticky;
+  top: 0;
+  background-color: #5988e2;
+  color: white;
+  border: 1px solid #ddd;
+}
+
+/* Mobile Cards */
+.card {
+  border-radius: 10px;
+  padding: 15px;
+}
+
+/* Pagination */
+.pagination .page-item .page-link {
+  border-radius: 50px;
+}
+

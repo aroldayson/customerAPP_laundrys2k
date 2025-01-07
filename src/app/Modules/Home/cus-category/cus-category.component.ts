@@ -22,7 +22,7 @@ export class CusCategoryComponent implements OnInit {
   selectedServices: string[] = [];  
   l_price: number = 0;
   l_min_weight: number = 0;
-  total_estimated_price: number = 0;
+  total_estimated_price: any ;
   townAddresses: any[] = [];
   selectedTownID: string = '';
   townAddress: string = '';
@@ -88,15 +88,13 @@ export class CusCategoryComponent implements OnInit {
   isNextStepDisabled: boolean = true;
 
   newtransac = new FormGroup({
-    Category: new FormControl('Select Laundry Type', Validators.required),
-    Qty: new FormControl(1, [Validators.required, Validators.min(1)]),
     CustAdd_ID: new FormControl<string | null>(null),
     AddService_price: new FormControl(null),
-    Tracking_number: new FormControl(null), 
+    Tracking_number: new FormControl(null),
     Cust_ID: new FormControl(this.id.cuid),
     Transac_status: new FormControl('pending'),
     laundry: new FormControl(this.laundrylist),
-    service: new FormControl<string[]>([])
+    service: new FormControl<string[]>([]) 
   });
  
 
@@ -133,6 +131,7 @@ export class CusCategoryComponent implements OnInit {
     this.initializeForm();
     this.fetchInitialData();
     const serviceControl = this.newtransac.get('service') as FormControl;
+    this.getShippingAddress();
   }
 
   // onServiceChange(selectedService: string): void {
@@ -247,7 +246,7 @@ export class CusCategoryComponent implements OnInit {
         };
 
         this.laundrylist.push(newItem);
-        this.updateTotalEstimatedPrice();
+        // this.updateTotalEstimatedPrice();
         this.laundryForm.reset({ quantity: 1 });
         this.selectedPrice = 0;
       }
@@ -259,6 +258,7 @@ export class CusCategoryComponent implements OnInit {
       }
     }
   }
+
   showaddress(id: any) {
     this.post.showaddress(id).subscribe((res: any) => {
       console.log(res);
@@ -366,7 +366,7 @@ export class CusCategoryComponent implements OnInit {
     const index = this.laundrylist.indexOf(item);
     if (index !== -1) {
       this.laundrylist.splice(index, 1);
-      this.updateTotalEstimatedPrice();
+      // this.updateTotalEstimatedPrice();
     }
   }
 
@@ -380,133 +380,71 @@ export class CusCategoryComponent implements OnInit {
       }
     });
   }
+
+  deleteaddress(id: any)
+  {
+    console.log(id);
+    this.post.deleteaddress(id).subscribe((result: any) => {
+      this.showaddress(this.id.cuid)
+      console.log("Success");
+    });
+  }
+
   insert() {
-    const townElem = (document.getElementById("ShipServ_price") as HTMLSelectElement)?.value
-    console.log("Selected Barangay in Delivery", townElem);
-
-    const townElems = (document.getElementById("ShipServ_prices") as HTMLSelectElement)?.value
-    console.log("Selected Barangay in Pickup", townElems);
-
-    // Validate if the laundry list has items
+    const townElem = (document.getElementById("ShipServ_price") as HTMLSelectElement)?.value;
+    console.log("Piniling Barangay sa Delivery", townElem);
+  
+    const townElems = (document.getElementById("ShipServ_prices") as HTMLSelectElement)?.value;
+    console.log("Piniling Barangay sa Pickup", townElems);
+  
+    // Suriin kung may mga item sa laundry list
     if (this.laundrylist.length === 0) {
       Swal.fire({
         position: "center",
         icon: "warning",
-        title: "Please add at least one item to the list before saving!",
+        title: "Mangyaring magdagdag ng kahit isang item sa listahan bago mag-save!",
         showConfirmButton: false,
       });
       return;
     }
-
-    // Prepare the transaction data
+  
+    // I-prepare ang transaction data
     this.newtransac.patchValue({
-      CustAdd_ID: (document.getElementById("ShipServ_prices") as HTMLSelectElement)?.value || null, // Default to null if the value is empty or invalid
-      // AddService_price: this.inputElement,
+      CustAdd_ID: (document.getElementById("ShipServ_prices") as HTMLSelectElement)?.value || null,
+      AddService_price: this.total_estimated_price,
       Tracking_number: this.trackingNumber,
       laundry: this.laundrylist,
-      service: this.selectedServices.length > 0 ? this.selectedServices : ['none'], // Default to 'none' if no service selected
+      service: this.selectedServices
     });
-
+  
     const formData = this.newtransac.value;
-
-    // Log form data for debugging
+  
+    // I-log ang form data para sa debugging
     console.log("Transaction Form Data:", formData);
-    console.log(formData)
-
-    // Call API to insert transaction data
+    console.log(formData);
+  
+    // Tumawag sa API para mag-insert ng transaction data
     this.post.addtrans(formData).subscribe(
       (result: any) => {
         console.log("Transaction API Response:", result);
-
+  
         if (result && result.Transaction) {
-          // Get address data only if the elements exist
-          const townElem = document.getElementById("town") as HTMLSelectElement | null;
-          const barangayElem = document.getElementById("barangay") as HTMLSelectElement | null;
-          const streetElem = document.getElementById("barangayInput") as HTMLSelectElement | null;
-
-          const picktownElem = document.getElementById("picktown") as HTMLSelectElement | null;
-          const pickbarangayElem = document.getElementById("pickbarangay") as HTMLSelectElement | null;
-          const pickstreetElem = document.getElementById("pickbarangayInput") as HTMLSelectElement | null;
-
-          // Ensure the elements exist before accessing their value
-          const town = townElem ? townElem.value : '';
-          const barangay = barangayElem ? barangayElem.value : '';
-          const street = streetElem ? streetElem.value : '';
-
-          const picktown = picktownElem ? picktownElem.value : '';
-          const pickbarangay = pickbarangayElem ? pickbarangayElem.value : '';
-          const pickstreet = pickstreetElem ? pickstreetElem.value : '';
-
-
-
-
-          // Check if any address field is null or empty
-          if (!(town || barangay || street) && !(picktown || pickbarangay || pickstreet)) {
-            // If address fields are null or empty, proceed only with the transaction (no address insertion)
-            console.log("Address data is incomplete. Skipping address insertion.");
-
-            Swal.fire({
-              position: "center",
-              icon: "success",
-              title: "Transaction details added successfully",
-              showConfirmButton: false,
-            }).then(() => {
-              this.route.navigate(['/main/cusmainhome/homemain/cuscurtrans']);
-              this.fetchtransactions();
-            });
-
-          } else {
-            // If all address fields are filled, proceed with both transaction and address insertion
-            const addressData = {
-              delivery: {
-                Cust_ID: this.id.cuid,
-                Town_City: town,
-                Barangay: barangay,
-                BuildingNo_Street: street,
-              },
-              pickup: {
-                Cust_ID: this.id.cuid,
-                Town_City: picktown,
-                Barangay: pickbarangay,
-                BuildingNo_Street: pickstreet,
-              }
-            };
-
-            console.log("Prepared Address Data:", addressData);
-
-            // Insert address data
-            this.post.insertaddress(addressData).subscribe(
-              (response: any) => {
-                console.log("Address data inserted:", response);
-
-                Swal.fire({
-                  position: "center",
-                  icon: "success",
-                  title: "Transaction details and address added successfully!",
-                  showConfirmButton: false,
-                }).then(() => {
-                  this.route.navigate(['/main/cusmainhome/homemain/cuscurtrans']);
-                  this.fetchtransactions();
-                });
-              },
-              (error) => {
-                console.error("Error inserting address data:", error);
-                Swal.fire({
-                  position: "center",
-                  icon: "error",
-                  title: "Error occurred while saving address data.",
-                  text: error.message || "Unknown error",
-                  showConfirmButton: false,
-                });
-              }
-            );
-          }
+          // Kung walang address na isusunod, magpatuloy lamang sa transaction
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Transaction details and address added successfully!",
+            showConfirmButton: false,
+          }).then(() => {
+            this.route.navigate(['/main/cusmainhome/homemain/cuscurtrans']);
+            this.fetchtransactions();
+          });
         } else {
-          console.error("Unexpected Transaction API Response:", result);
+          console.error("Unknown error:", result);
           Swal.fire({
             position: "center",
             icon: "error",
-            title: "Error occurred during saving transaction.",
+            title: "Error occurred while saving address data.",
             text: result?.message || "Unknown error",
             showConfirmButton: false,
           });
@@ -517,13 +455,15 @@ export class CusCategoryComponent implements OnInit {
         Swal.fire({
           position: "top-end",
           icon: "error",
-          title: "An error occurred while saving the transaction.",
-          text: error.message || "No additional error details provided by the server",
+          title: "Error occurred during saving transaction..",
+          text: error.message || "Unknown error",
           showConfirmButton: false,
         });
       }
     );
   }
+  
+
   newaddress(){
     console.log(this.addaddress.value);
     if (this.addaddress.valid) {
@@ -542,4 +482,19 @@ export class CusCategoryComponent implements OnInit {
       console.log('Form is invalid');
     }
   }
+  selectAddress(selected: any): void {
+    this.selectedAddress = selected.CustAdd_ID;
+    // Get the ShipServ_price and add it to totalEstimatedPrice
+    this.totalEstimatedPrice = selected.ShipServ_price;
+
+    console.log('Selected address:', selected);
+    console.log('Total Estimated Price:', this.totalEstimatedPrice);
+  }
+  // getShippingAddress()
+  // {
+  //   this.post.getShippingAddress().subscribe((result: any) => {
+  //     this.townAddresses = result.shippings;
+  //     console.log(this.townAddresses);
+  //   });
+  // }
 }

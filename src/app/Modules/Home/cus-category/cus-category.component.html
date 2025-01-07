@@ -1,4 +1,13 @@
 <div class="container">
+  <div class="row mb-3 mt-2">
+    <div class="col-12">
+      <h3 class="text-center styled-heading">
+        <i class="fas fa-tshirt laundry-icon"></i> <!-- T-shirt Icon -->
+        New Transaction
+        <i class="fas fa-washing-machine laundry-icon"></i> <!-- Washing Machine Icon -->
+      </h3>
+    </div>
+  </div>
   <div class="row">
     <div class="col-xl-8">
       <div class="card">
@@ -162,7 +171,7 @@
                                 <label class="form-check-label" for="pick">Pick-up</label>
                               </div>
                               <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="Delivery-Service" (click)="showaddress(id.cuid)"  (change)="onCheckboxChange($event)" id="pickUp-service-checkbox">
+                                <input class="form-check-input" type="checkbox" value="Delivery-Service" (click)="showaddress(id.cuid)"  (change)="onCheckboxChange($event)">
                                 <label class="form-check-label" for="deliver" >Delivery</label>
                               </div>
                             </div>
@@ -192,13 +201,16 @@
               
               <div class="feed-item-list" [hidden]="selectAddPick==false">
                 <div [hidden]>
-                  <h5 class="font-size-16 mb-1">Shipping Address</h5>
-                  <button
-                    data-bs-toggle="modal" data-bs-target="#editADDRESS"
-                    class="btn btn-add mb-2"
-                  >
-                    Add new Address
-                  </button>
+                  <div class="d-flex align-items-center justify-content-between mb-2">
+                    <h5 class="font-size-22 mb-0 text-underline "><b>Shipping Address</b></h5>
+                    <button
+                      data-bs-toggle="modal"
+                      data-bs-target="#editADDRESS"
+                      class="btn btn-add"
+                    >
+                      Add new Address
+                    </button>
+                  </div>                  
                   <div class="mb-3">
                     <div class="row">
                       <div class="col-lg-12 col-sm-6">
@@ -206,10 +218,61 @@
                           <label class="card-radio-label mb-0">
                             <input
                               type="radio"
-                              name="address"
-                              id="info-address1"
+                              name="ShipServ_prices" 
+                              id="ShipServ_prices" 
+                              [value]="c.CustAdd_ID" [checked]="c.isDefault"
                               class="card-radio-input"
                               checked=""
+                            />
+                            <div class="card-radio text-truncate p-3">
+    
+                              <span class="fs-14 mb-2 d-block"
+                                >{{ c.Cust_fname }} {{ c.Cust_mname }} {{ c.Cust_lname }}</span
+                              >
+                              <span
+                                class="text-muted fw-normal text-wrap mb-1 d-block"
+                                >{{c.BuildingUnitStreet_No}}, {{c.Barangay}}, {{c.Town_City}}, {{c.Province}}</span
+                              >
+                              <span class="text-muted fw-normal d-block"
+                                >{{c.Phoneno}}</span
+                              >
+                            </div>
+                          </label>
+                          <div class="edit-btn">
+                          <a>
+                            <i class="fa fa-pencil" aria-hidden="true"></i>
+                            <i class="fa fa-trash" aria-hidden="true" (click)="deleteaddress(c.CustAdd_ID)"></i>
+                          </a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="feed-item-list" [hidden]="selectAddDel==false">
+                <div [hidden]>
+                  <h5 class="font-size-22 mb-1"><b>Delivery Address</b></h5>
+                 <!-- <button
+                    class="btn btn-add mb-2"
+                    [disabled]="isNextStepDisabled"
+                  >
+                    Add new Address
+                  </button> -->
+                  <div class="mb-3">
+                    <div class="row">
+                      <div class="col-lg-12 col-sm-6">
+                        <div data-bs-toggle="collapse" *ngFor="let c of address" >
+                          <label class="card-radio-label mb-0">
+                            <input
+                              type="radio" 
+                              name="ShipServ_price" 
+                              id="ShipServ_price_{{c.CustAdd_ID}}"
+                              [value]="c.CustAdd_ID" 
+                              [checked]="c.isDefault"
+                              (change)="selectAddress(c)"
+                              class="card-radio-input"
                             />
                             <div class="card-radio text-truncate p-3">
                               <!-- <span class="fs-14 mb-4 d-block">Address 1</span> -->
@@ -226,111 +289,10 @@
                             </div>
                           </label>
                           <div class="edit-btn">
-                            <a
-                              href=""
-                              data-bs-toggle="tooltip"
-                              data-placement="top"
-                              title=""
-                              data-bs-original-title="Edit"
-                              [class.disabled]="isNextStepDisabled"
-                            >
-                              <i class="fa fa-pencil" aria-hidden="true"></i>
-                              <i class="fa fa-trash" aria-hidden="true"></i>
-                            </a>
-                          </div>
-                        </div>
-                      </div>
-                      <!-- <div class="col-lg-12 col-sm-6">
-                        <div>
-                          <label class="card-radio-label mb-0">
-                            <input
-                              type="radio"
-                              name="address"
-                              id="info-address2"
-                              class="card-radio-input"
-                            
-                            />
-                            <div class="card-radio text-truncate p-3">
-                              <span class="fs-14 mb-4 d-block">Address 2</span>
-                              <span class="fs-14 mb-2 d-block"
-                                >Bradley McMillian</span
-                              >
-                              <span
-                                class="text-muted fw-normal text-wrap mb-1 d-block"
-                                >109 Clarksburg Park Road Show Low, AZ
-                                85901</span
-                              >
-                              <span class="text-muted fw-normal d-block"
-                                >Mo. 012-345-6789</span
-                              >
-                            </div>
-                          </label>
-                          <div class="edit-btn">
-                            <a
-                              href="#"
-                              data-bs-toggle="tooltip"
-                              data-placement="top"
-                              title=""
-                              data-bs-original-title="Edit"
-                              [class.disabled]="isNextStepDisabled"
-                            >
-                              <i class="fa fa-pencil" aria-hidden="true"></i>
-                            </a>
-                          </div>
-                        </div>
-                      </div> -->
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="feed-item-list" [hidden]="selectAddDel==false">
-                <div [hidden]>
-                  <h5 class="font-size-16 mb-1">Delivery Address</h5>
-                  <button
-                    class="btn btn-add mb-2"
-                    [disabled]="isNextStepDisabled"
-                  >
-                    Add new Address
-                  </button>
-                  <div class="mb-3">
-                    <div class="row">
-                      <div class="col-lg-12 col-sm-6">
-                        <div data-bs-toggle="collapse" *ngFor="let c of address" >
-                          <label class="card-radio-label mb-0">
-                            <input
-                              type="radio"
-                              name="address"
-                              id="info-address1"
-                              class="card-radio-input"
-                              checked=""
-                              [disabled]="isNextStepDisabled"
-                            />
-                            <div class="card-radio text-truncate p-3">
-                              <!-- <span class="fs-14 mb-4 d-block">Address 1</span> -->
-                              <span class="fs-14 mb-2 d-block"
-                                >Bradley McMillian</span
-                              >
-                              <span
-                                class="text-muted fw-normal text-wrap mb-1 d-block"
-                                >{{c.Town_City}}</span
-                              >
-                              <span class="text-muted fw-normal d-block"
-                                >Mo. 012-345-6789</span
-                              >
-                            </div>
-                          </label>
-                          <div class="edit-btn">
-                            <a
-                              href=""
-                              data-bs-toggle="tooltip"
-                              data-placement="top"
-                              title=""
-                              data-bs-original-title="Edit"
-                              [class.disabled]="isNextStepDisabled"
-                            >
-                              <i class="fa fa-pencil" aria-hidden="true"></i>
-                            </a>
+                          <a >
+                            <i class="fa fa-pencil" aria-hidden="true"></i>
+                            <i class="fa fa-trash" aria-hidden="true" (click)="deleteaddress(c.CustAdd_ID)"></i>
+                          </a>
                           </div>
                         </div>
                       </div>
@@ -390,6 +352,12 @@
                   <td>{{ discount | currency:'PHP':'symbol':'1.2-2' }}</td>
                 </tr> -->
 
+                <tr *ngIf="selectedServices.includes('Rush-Job')">
+                  <td colspan="3" class="text-muted">
+                    <small class="text-success">Rush Job added to the transaction</small>
+                  </td>
+                </tr>
+
                 <tr>
                   <td colspan="2">
                     <h5 class="font-size-14 m-0">Shipping Charge :</h5>
@@ -406,7 +374,7 @@
             </table>
           </div>
           <div class="text-end mt-4">
-            <button type="submit" class="btn btn-primary">
+            <button type="submit" class="btn btn-primary"  (click)="insert()">
               Submit Order
             </button>
           </div>
@@ -458,22 +426,6 @@
                 </div>
               </div>
 
-              <!-- Barangay -->
-              <!-- <div class="row mb-3">
-                <div class="col-md-6">
-                  <label for="barangay" class="form-label">Barangay</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="barangay"
-                    formControlName="Barangay"
-                    placeholder="Barangay"
-                  />
-                  <small *ngIf="addaddress.get('Barangay')?.touched && addaddress.get('Barangay')?.invalid" class="text-danger">
-                    This field is required.
-                  </small>
-                </div>
-              </div> -->
 
               <!-- Town City -->
               <div class="row mb-3">
@@ -525,7 +477,7 @@
 
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Save Address</button>
+                <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Save Address</button>
               </div>
             </form>
           </div>

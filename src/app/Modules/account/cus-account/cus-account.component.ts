@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-cus-account',
@@ -7,6 +7,17 @@ import { Component } from '@angular/core';
   templateUrl: './cus-account.component.html',
   styleUrl: './cus-account.component.css'
 })
-export class CusAccountComponent {
+export class CusAccountComponent implements OnInit{
+  showConfirmPassword: boolean = false;
+  showNewPassword: boolean = false;
+  showCurrentPassword: boolean = false;
+  
+  ngOnInit(): void {
+    throw new Error('Method not implemented.');
+  }
+
+  togglePasswordVisibility(data: any){
+
+  }
 
 }

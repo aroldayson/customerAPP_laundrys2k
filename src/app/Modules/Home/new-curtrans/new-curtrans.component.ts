@@ -144,10 +144,9 @@ export class NewCurtransComponent implements OnInit {
 
 
 
-//  selectedAddress: number | null = null; //
  shippingCost: number = 0;
 
- addShippingCost(selectedAddress: any) {
+addShippingCost(selectedAddress: any) {
 
   const shippingFee = 50;
 
@@ -159,16 +158,16 @@ export class NewCurtransComponent implements OnInit {
   console.log(`Shipping cost added: ${this.shippingCost}`);
 
 //   this.updateTotalPrice();
- }
+}
 
- UpdateTotalPrice() {
+UpdateTotalPrice() {
 
   this.total_estimated_price += this.shippingCost;
 
   console.log(`Updated Total Estimated Price: ${this.total_estimated_price}`);
- }
+}
 
-  addToList() {
+addToList() {
 
   const selectElement = document.getElementById('laundryType') as HTMLSelectElement;
   const laundryType = selectElement.value;
@@ -202,7 +201,7 @@ export class NewCurtransComponent implements OnInit {
         Categ_ID: laundryType,
         Category: selectedCategory.Category,
         Qty: count,
-        Price: totalPrice,  
+        Price: totalPrice * 2,  
         Tracking_number: this.trackingNumber
       };
 
@@ -228,11 +227,6 @@ export class NewCurtransComponent implements OnInit {
   }
 }
 
-  // selectAddress(selected: any): void {
-  //   this.selectedAddress = selected.CustAdd_ID;
-  //   // You can log or do any other processing you need
-  //   console.log('Selected address:', selected);
-  // }
 
   
   // Method to handle address selection
@@ -244,11 +238,6 @@ export class NewCurtransComponent implements OnInit {
     console.log('Selected address:', selected);
     console.log('Total Estimated Price:', this.totalEstimatedPrice);
   }
-
-  // Method to delete an address
-  // deleteaddress(addressId: number): void {
-  //   this.address = this.address.filter(a => a.CustAdd_ID !== addressId);
-  // }
 
   // Finalize transaction and include the selected address
   saveTransaction(): void {
@@ -297,9 +286,10 @@ export class NewCurtransComponent implements OnInit {
     // Prepare the transaction data
     this.newtransac.patchValue({
       CustAdd_ID: (document.getElementById("ShipServ_prices") as HTMLSelectElement)?.value || null, // Default to null if the value is empty or invalid
-      AddService_price: this.inputElement,
+      AddService_price: this.total_estimated_price,
       Tracking_number: this.trackingNumber,
       laundry: this.laundrylist,
+      // service: this.selectedServices
       service: this.selectedServices.length > 0 ? this.selectedServices : ['none'], // Default to 'none' if no service selected
     });
 
@@ -454,13 +444,13 @@ export class NewCurtransComponent implements OnInit {
     this.total_estimated_price = basePrice;
   
     if (this.isRushJob) {
-      this.total_estimated_price *= 2; // Double the price for rush job
+      this.total_estimated_price *= 2; 
     }
   
     if (this.isPickUpService) {
       this.total_estimated_price += 50; // Add a fixed fee for pick-up service
     }
-  
+   
     if (this.isDeliveryService) {
       this.total_estimated_price += 50; // Add a fixed fee for delivery service
     }
@@ -503,9 +493,9 @@ export class NewCurtransComponent implements OnInit {
 
     // Update the FormControl value
     serviceArray.setValue(selectedServices);
-    console.log('Updated selected services:', selectedServices);
+    console.log('Updated selected services:', selectedServices,this.total_estimated_price);
   }
-
+  
   addaddress = new FormGroup({
     CustAdd_ID: new FormControl(null),
     Cust_ID: new FormControl(this.id.cuid),  
@@ -613,7 +603,7 @@ export class NewCurtransComponent implements OnInit {
     const selectedCategory = this.categ.find((c:any) => c.Categ_ID == selectedCategID);  // Find category by Categ_ID
 
     if (selectedCategory) {
-      this.selectedPrice = selectedCategory.Price;  // Store the price in selectedPrice
+      this.selectedPrice = selectedCategory.Price * 2;  // Store the price in selectedPrice
     }
   }
 

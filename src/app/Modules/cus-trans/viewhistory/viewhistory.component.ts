@@ -22,6 +22,7 @@ throw new Error('Method not implemented.');
   rowsPerPage: number = 15; // Number of rows per page
   totalPages: number = 1;
   totalPagesArray: number[] = []; // Array to generate pagination buttons
+  currentFilter: any;
 
   constructor(private post: MyServiceService, private router: Router) {}
 
@@ -39,14 +40,18 @@ throw new Error('Method not implemented.');
         this.filteredHist = this.histf;
     } else if (status === 'Pending') {
         this.filteredHist = this.histf.filter(item => item.latest_transac_status === "pending");
-    }else if (status === 'Washing') {
+    } else if (status === 'Receive') {
+        this.filteredHist = this.histf.filter(item => item.latest_transac_status === "receive");
+    } else if (status === 'Washing') {
         this.filteredHist = this.histf.filter(item => item.latest_transac_status === "washing");
     }else if (status === 'Folding') {
         this.filteredHist = this.histf.filter(item => item.latest_transac_status === "folding");
+    }else if (status === 'for Release') {
+        this.filteredHist = this.histf.filter(item => item.latest_transac_status === "forRelease");
     }else if (status === 'Completed') {
         this.filteredHist = this.histf.filter(item => item.latest_transac_status === "completed");
     }
-    else if (status === 'Cancel') {
+    else if (status === 'Cancelled') {
         this.filteredHist = this.histf.filter(item => item.latest_transac_status === "cancel");
     }
     else {

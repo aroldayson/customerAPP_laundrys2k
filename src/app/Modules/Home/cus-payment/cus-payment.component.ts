@@ -172,7 +172,7 @@ export class CusPaymentComponent implements OnInit {
     formData.append('Proof_filename', this.selectedFile, this.selectedFile.name); // Use backend's expected field name
     formData.append('Cust_ID', this.cust_id || '');
   
-    this.http.post(`http://192.168.3.85:8000/api/upload/${this.trackingNumber}`, formData)
+    this.http.post(`http://localhost:8000/api/upload/${this.trackingNumber}`, formData)
 
     // .subscribe((result:any)=>{
 

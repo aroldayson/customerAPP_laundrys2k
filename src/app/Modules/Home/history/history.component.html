@@ -155,7 +155,7 @@
           <h5 class="font-size-16">
             <i class="fas fa-user me-2 icon-style"></i>Billed To:
           </h5>
-          <p><strong>Customer Name:</strong> John Doe</p>
+          <p><strong>Customer Name:</strong> {{customer}}</p>
           <p class="text-muted mb-1">
             <i class="fas fa-home me-2 icon-style"></i>456 Neat Street, Laundryville, LV 12345
           </p>
@@ -258,7 +258,9 @@
                 <td>
                   <i class="fas fa-truck-fast me-2 icon-style"></i>{{servicearray.AddService_name}}
                 </td>
-                <td>{{servicearray.FullAddress}}</td>
+                <td >
+                  <span *ngIf="servicearray.AddService_name !== 'Rush-Job'">{{servicearray.FullAddress}}</span>
+                </td>
                 <td>{{servicearray.AddService_price | currency:' ':'symbol'}}</td>
                 <td class="text-end"></td>
               </tr>
