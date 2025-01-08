@@ -42,6 +42,8 @@ export class HistoryComponent implements OnInit {
   transacDate: any;
   estimatedate: any;
   totalserviceprice: any;
+  payments: any;
+  paymentss: any;
 
   constructor(private http: HttpClient, private service: MyServiceService) {}
 
@@ -76,8 +78,9 @@ export class HistoryComponent implements OnInit {
           this.track = result[0].Tracking_number 
           this.totalserviceprice = result[0].totalserviceprice
           this.transacDate = result[0].services[0].trans_date   
-          this.estimatedate = result[0].services[0].estimated_date        
-          console.log(result,this.getDet,this.servicearray2,this.servicearray)
+          this.estimatedate = result[0].services[0].estimated_date   
+          this.paymentss = result[0].payments[0].Amount        
+          console.log(result,this.getDet,this.servicearray2,this.servicearray,this.paymentss)
   
           // Ensure transaction details are available
           if (this.getDet.length > 0) {
