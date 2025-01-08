@@ -66,30 +66,30 @@
       <div class="row mb-4">
         <div class="col-sm-6">
           <h5 class="font-size-16">
-            <i class="fas fa-user me-2 icon-style"></i>Billed To:
+            <i class="fas fa-user me-2 icon-style" style="color: #5988e2;"></i>Billed To:
           </h5>
           <p><strong>Customer Name:</strong> {{customer}}</p>
           <p class="text-muted mb-1">
-            <i class="fas fa-home me-2 icon-style"></i>456 Neat Street, Laundryville, LV 12345
+            <i class="fas fa-home me-2 icon-style" style="color: #5988e2;"></i>456 Neat Street, Laundryville, LV 12345
           </p>
           <p class="text-muted mb-1">
-            <i class="fas fa-envelope me-2 icon-style"></i>johndoeexample.com
+            <i class="fas fa-envelope me-2 icon-style" style="color: #5988e2;"></i>johndoeexample.com
           </p>
           <p class="text-muted">
-            <i class="fas fa-phone me-2 icon-style"></i>001-234-5678
+            <i class="fas fa-phone me-2 icon-style" style="color: #5988e2;"></i>001-234-5678
           </p>
         </div>
         <div class="col-sm-6 text-sm-end">
-          <p><strong>Invoice No:</strong>{{track}}</p>
-          <p><strong>Order Date:</strong> <i class="fas fa-calendar-alt me-1 icon-style"></i>{{transacDate | date:'MM/dd/yyyy'}}</p>
-          <p><strong>Estimated Date:</strong> <i class="fas fa-calendar-check me-1 icon-style"></i>{{estimatedate | date:'MM/dd/yyyy'}}</p>
+          <p><strong>Invoice No:</strong> {{track}}</p>
+          <p><i class="fas fa-calendar-alt me-1 icon-style" style="color: #5988e2;"></i><strong>Order Date:</strong> {{transacDate | date:'MM/dd/yyyy'}}</p>
+          <p><i class="fas fa-calendar-check me-1 icon-style" style="color: #5988e2;"></i><strong>Estimated Date:</strong> {{estimatedate | date:'MM/dd/yyyy'}}</p>
         </div>
       </div>
 
       <!-- Service Summary -->
       <div class="py-2 mt-4">
         <h5 class="font-size-16 mb-3">
-          <i class="fas fa-list-alt me-2 icon-style"></i>Service Summary
+          <i class="fas fa-list-alt me-2 icon-style" style="color: #5988e2;"></i>Service Summary
         </h5>
         <div class="table-responsive">
           <table class="table table-bordered">
@@ -127,7 +127,7 @@
       <!-- Additional Charges -->
       <div class="py-2 mt-4">
         <h5 class="font-size-16 mb-3">
-          <i class="fas fa-plus-circle me-2 icon-style"></i>Additional Charges
+          <i class="fas fa-plus-circle me-2 icon-style" style="color: #5988e2;"></i>Additional Charges
         </h5>
         <div class="table-responsive">
           <table class="table ">
@@ -208,7 +208,7 @@
                 <td class="text-end text-danger">
                   {{ ((paymentss - total) - totalserviceprice) < 0 
                     ? (0 - ((paymentss - total) - totalserviceprice)) 
-                    : 0 | currency:'':'symbol':'1.2-2' }}
+                    : 0 | currency:' ':'symbol':'1.2-2' }}
                 </td>
               </tr>
             </tbody>

@@ -19,7 +19,7 @@
     </div>
   </div>
 
-  <div class="search-container mb-4">
+  <!-- <div class="search-container mb-4">
     <input
       type="text"
       id="searchInput"
@@ -28,24 +28,111 @@
       placeholder="Search Transactions..."
       class="search-input form-control shadow-lg rounded-pill py-2 px-4"
     />
-  </div>
-      <div class="col">
-        <div class="table-responsive" style="max-width: 100%;border-radius: 25px;">
-          <!-- Desktop Table -->
-          <table class="table table-hover d-none d-md-table">
+  </div> -->
+      <!-- <div class="col"> -->
+        <!-- <div class="table-responsive" style="max-width: 100%;border-radius: 25px;"> -->
+          <main class="table" id="customers_table">
+            <section class="table__header">
+                <h1>Customer's Orders</h1>
+                <div class="input-group">
+                    <input type="search" placeholder="Search Data..." [(ngModel)]="keyword">
+                </div>
+            </section>
+            <section class="table__body">
+                <table>
+                    <thead>
+                        <tr>
+                            <th> Tracking Number </th>
+                            <th> Transaction Date </th>
+                            <th> Estimated Date </th>
+                            <th> Status </th>
+                            <th> Price </th>
+                            <th> Action </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      @for (item of trans | searchFilter: keyword ; track item.trans_ID) {
+                        <tr>
+                            <td (click)="viewItem(item.trans_ID)"> {{item.track_num}} </td>
+                            <td>{{item.trans_date | date:'MM/dd/yyyy'}}</td>
+                            <td>{{item.estimated_date | date:'MM/dd/yyyy'}}</td>
+                            <td>
+                              <p *ngIf="item.trans_stat === 'pending'" class="status pending">Pending</p>
+                              <p *ngIf="item.trans_stat === 'receive'" class="status release">Recieve</p>
+                              <p *ngIf="item.trans_stat === 'washing'" class="status washing">Washing</p>
+                              <p *ngIf="item.trans_stat === 'folding'" class="status folding">Folding</p>
+                              <p *ngIf="item.trans_stat === 'forRelease'" class="status release">For Release</p>
+                            </td>
+                            
+                            <td>  
+                              {{item.calculatedTotalPrice | currency:'PHP':'symbol':'1.2-2'}} 
+                              <i class="fa fa-info-circle text-info ms-1"
+                                data-bs-toggle="tooltip" 
+                                data-bs-placement="left"
+                                title="Total price may vary based on additional services and weight.">
+                              </i>
+                            </td>
+                            <td> 
+                              <button class="btn btn-edit me-2"
+                                [disabled]="item.trans_stat.toLowerCase() !== 'pending'"
+                                (click)="showDetails(item.track_num, item, item.trans_ID)">
+                                <i class="fa fa-pencil" aria-hidden="true"></i> 
+                              </button>
+                              <button class="btn btn-delete"
+                              [disabled]="item.trans_stat.toLowerCase() !== 'pending'"
+                              (click)="updateStatus(item.trans_ID)">
+                                <i class="fas fa-trash-alt me-1"></i> 
+                              </button>                    
+                            </td>
+                        </tr>
+                      }
+                        <!-- <tr>
+                            <td> S2K-D5221000017 </td>
+                            <td> 01/09/2025 </td>
+                            <td> Kathmandu </td>
+                            <td>
+                                <p class="status cancelled">Cancelled</p>
+                            </td>
+                            <td> 27 Aug, 2023 </td>
+                            <td> 
+                              <button class="btn btn-edit me-2">
+                                <i class="fa fa-pencil" aria-hidden="true"></i> 
+                              </button>
+                              <button class="btn btn-delete">
+                                <i class="fas fa-trash-alt me-1"></i> 
+                              </button>      
+                            </td>
+                        </tr>
+                        <tr>
+                            <td> S2K-D5221000018 </td>
+                            <td> 01/10/2025 </td>
+                            <td> Tokyo </td>
+                            <td>
+                                <p class="status shipped">Shipped</p>
+                            </td>
+                            <td> 14 Mar, 2023 </td>
+                            <td>
+                              <button class="btn btn-edit me-2">
+                                <i class="fa fa-pencil" aria-hidden="true"></i> 
+                              </button>
+                              <button class="btn btn-delete">
+                                <i class="fas fa-trash-alt me-1"></i> 
+                              </button>      
+                            </td>
+                        </tr> -->
+                    </tbody>
+                </table>
+            </section>
+          </main>
+          <!-- <table class="table table-hover d-none d-md-table">
             <thead class="table-primary">
               <tr>
                 <th scope="col">#</th>
                 <th scope="col">Tracking num</th>
-                <!-- <th scope="col">Laundry Item</th>
-                <th scope="col">Qty</th>
-                <th scope="col">Weight (kg)</th> -->
                 <th scope="col">Transaction Date</th>
                 <th scope="col">Estimated Date</th>
                 <th scope="col">Status</th>
                 <th scope="col">Price</th>
-                <!-- <th scope="col">Estimated Price</th> -->
-                <!-- <th scope="col">Service</th> -->
                 <th scope="col">Actions</th>
               </tr>
             </thead>
@@ -54,9 +141,6 @@
               <tr>
                 <td>{{item.trans_ID}}</td>
                 <td (click)="viewItem(item.trans_ID)">{{item.track_num}}</td>
-                <!-- <td (click)="viewItem(item.trans_ID)">{{item.Category}}</td>
-                <td>{{item.totalQty}}</td>
-                <td>{{item.totalWeight}}</td> -->
                 <td>{{item.trans_date | date:'MM/dd/yyyy'}}</td>
                 <td>{{item.estimated_date | date:'MM/dd/yyyy'}}</td>
                 <td>
@@ -70,7 +154,6 @@
                     {{item.trans_stat}}
                   </span>
                 </td>
-                <!-- <td>{{item.totalprice | currency:'PHP':'symbol':'1.2-2'}}</td> -->
                 <td>
                   {{item.calculatedTotalPrice | currency:'PHP':'symbol':'1.2-2'}}
                   <i class="fa fa-info-circle text-info ms-1"
@@ -79,7 +162,6 @@
                      title="Total price may vary based on additional services and weight.">
                   </i>
                 </td>
-                <!-- <td>{{item.Addservice_name}}</td> -->
                 <td>
                   <button class="btn btn-sm btn-primary me-2" 
                     [disabled]="item.trans_stat.toLowerCase() !== 'pending'"
@@ -95,10 +177,9 @@
               </tr>
               }
             </tbody>
-          </table>
+          </table> -->
         </div>
         
-        <!-- Mobile-Friendly Cards -->
         <div class="d-md-none">
           @for (item of trans | searchFilter: keyword ; track item.trans_ID) {
           <div class="card mb-3 shadow-sm">
@@ -148,9 +229,9 @@
           }
         </div>
         
-      </div>
+      <!-- </div> -->
     <!-- } -->
-  </div>
+  <!-- </div> -->
 
 <!-- </div> -->
 
@@ -180,12 +261,6 @@
             <span class="text-muted fw-medium fs-2">Status:</span>
             <span class="fw-bold fs-2">{{ selectedTransaction?.trans_stat }}</span>
           </p>
-          <!-- <p class="mb-0">
-            <span class="text-muted fw-medium">Address:</span>
-            @for(a of address ; track a){
-            <span class="fw-bold">{{a.Province}} {{a.Town_City}} {{ a.Barangay }} </span>
-            }
-          </p> -->
         </div>
 
         <!-- Service Selection Form -->
@@ -259,43 +334,6 @@
           
             </div>
           </div>
-          <!-- <div class="col-md-4 mb-3">
-            <label for="town" class="form-label">Town</label>
-            <select class="form-select" id="town" [(ngModel)]="deliveryTown" (change)="getTownValue($event)">
-              <option value="" disabled selected>Select Town</option>
-              <option *ngFor="let town of townAddresses" [value]="town.City_Address">
-                {{ town.City_Address }}
-              </option>
-            </select>
-          </div>
-
-          <div class="col-md-4 mb-3" [hidden]="selectBar==false">
-            <label for="barangay" class="form-label">Barangay</label>
-            <select class="form-select" id="barangay" [(ngModel)]="deliveryBarangay">
-              <option value="" disabled selected>Select Barangay</option>
-
-              <option [hidden]="sison == false" *ngFor="let barangay of barangaysInSison" [value]="barangay">
-                {{ barangay }}
-              </option>
-
-              <option [hidden]="rosario == false" *ngFor="let barangay of barangaysInRosario" [value]="barangay">
-                {{ barangay }}
-              </option>
-
-              <option [hidden]="poz == false" *ngFor="let barangay of barangaysInPoz" [value]="barangay">
-                {{ barangay }}
-              </option>
-
-              <option [hidden]="pugo == false" *ngFor="let barangay of barangaysInPugo" [value]="barangay">
-                {{ barangay }}
-              </option>
-            </select>
-          </div>
-        
-          <div class="col-md-4 mb-3" *ngIf="sison == true || rosario == true || poz == true || pugo == true">
-            <label for="barangayInput" class="form-label">Building# and street</label>
-            <input type="text" class="form-control" id="barangayInput" [(ngModel)]="deliveryStreet" placeholder="Enter details">
-          </div> -->
         </div>
         
         
@@ -332,46 +370,7 @@
           
             </div>
           </div>
-          <!-- <div class="col-md-4 mb-3">
-            <label for="picktown" class="form-label">Town</label>
-            <select class="form-select" id="picktown" [(ngModel)]="selectedTownID" (change)="getTownValue($event)">
-              <option value="" disabled selected>Select Town</option>
-              <option *ngFor="let town of townAddresses" [value]="town.City_Address">
-                {{ town.City_Address }}
-              </option>
-            </select>
-          </div>
-        
-        
-
-            <div class="col-md-4 mb-3" [hidden]="selectBar==false">
-              <label for="pickbarangay" class="form-label">Barangay</label>
-              <select class="form-select" id="pickbarangay" formControlName="barangay">
-                <option value="" disabled selected>Select Barangay</option>
-
-                <option [hidden]="sison == false" *ngFor="let barangay of barangaysInSison" [value]="barangay">
-                  {{ barangay }}
-                </option>
-
-                <option [hidden]="rosario == false" *ngFor="let barangay of barangaysInRosario" [value]="barangay">
-                  {{ barangay }}
-                </option>
-
-                <option [hidden]="poz == false" *ngFor="let barangay of barangaysInPoz" [value]="barangay">
-                  {{ barangay }}
-                </option>
-
-                <option [hidden]="pugo == false" *ngFor="let barangay of barangaysInPugo" [value]="barangay">
-                  {{ barangay }}
-                </option>
-                
-              </select>
-                </div>
-                <div class="col-md-4 mb-3" *ngIf="sison == true || rosario == true || poz == true || pugo == true">
-                 <label for="pickbarangayInput" class="form-label">Building# and street</label>
-                 <input type="text" class="form-control" id="pickbarangayInput" placeholder="Enter details">
-               </div> -->
-            </div>
+        </div>
 
         <!-- Transaction Details Table -->
         <div class="table-responsive">
