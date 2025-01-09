@@ -45,13 +45,13 @@
                               aria-label="Select Laundry Type"
                             >
                               <option value="" selected disabled>Select Laundry Type</option>
-                              <option
-                                *ngFor="let c of categ"
-                                [value]="c.Categ_ID"
-                              >
+                              <option *ngFor="let c of categ" [value]="c.Categ_ID" [disabled]="c.disabled">
                                 {{ c.Category }}
                               </option>
                             </select>
+
+
+
                             <div *ngIf="laundryForm.get('category')?.touched && laundryForm.get('category')?.invalid" class="text-danger">
                               <small *ngIf="laundryForm.get('category')?.errors?.['required']">Laundry type is required</small>
                             </div>
@@ -131,9 +131,11 @@
                           </tr>
                         </thead>
                         <tbody>
-                          @for (l of laundrylist; track l.category) {
+                          <!-- @for (l of laundrylist; track l.category) {
                           <tr>
-                            <td>{{ l.Category }}</td>
+                            <td>
+                              <span >{{ l.Category }}</span>
+                            </td>
                             <td>{{ l.Qty }}</td>
                             <td class="text-right"id="price">{{ l.Price | currency: ' ':'symbol':'1.2-2' }}</td>
                             <td class="text-right">
@@ -145,7 +147,45 @@
                               </button>
                             </td>
                           </tr>
-                          }
+                          } -->
+                          <tr *ngFor="let l of getUniqueCategories()">
+                            <td>{{ l.Category }}</td>
+                            <td class="text-center">
+                              <ng-container *ngIf="editingItem === l; else viewMode">
+                                <input
+                                  type="number"
+                                  [value]="l.Qty"
+                                  class="form-control form-control-sm"
+                                  id="Qty"
+                                  (change)="saveQty(l,l.Qty)"
+                                  min="1"
+                                />
+                              </ng-container>
+                              <ng-template #viewMode>
+                                <span class="edit-mode-trigger">
+                                  {{ l.Qty }}
+                                </span>
+                              </ng-template>
+                            </td>                            
+                            <td class="text-right" id="price">
+                              {{ l.Price | currency: ' ':'symbol':'1.2-2' }}
+                            </td>
+                            <td class="text-center">
+                              <button
+                                class="btn btn-sm btn-outline-primary mx-3"
+                                (click)="edit(l)"
+                              >
+                                <i class="fa" [ngClass]="editingItem === l ? 'fa-check' : 'fa-pencil'"></i>
+                              </button>
+                              <button
+                                class="btn btn-sm btn-outline-danger"
+                                (click)="removeFromList(l)"
+                              >
+                                <i class="fa fa-trash"></i>
+                              </button>
+                            </td>
+                          </tr>
+                                                   
                         </tbody>
                       </table>
                     </div>
@@ -426,8 +466,8 @@
                     [attr.disabled]="!addaddress.get('Town_City')?.value ? true : null"
                   >
                     <option value="" disabled>Select Province</option>
-                    <option *ngFor="let barangaysInRosario of barangaysInRosario" [value]="barangaysInRosario">
-                      {{ barangaysInRosario }}
+                    <option *ngFor="let province of province" [value]="province">
+                      {{ province }}
                     </option>
                   </select>
                   <small *ngIf="addaddress.get('Province')?.touched && addaddress.get('Province')?.invalid" class="text-danger">
@@ -552,8 +592,8 @@
                     [attr.disabled]="!editaddress.get('Town_City')?.value ? true : null"
                   >
                     <option value="" disabled>Select Province</option>
-                    <option *ngFor="let barangaysInRosario of barangaysInRosario" [value]="barangaysInRosario">
-                      {{ barangaysInRosario }}
+                    <option *ngFor="let province of province" [value]="province">
+                      {{ province }}
                     </option>
                   </select>
                   <small *ngIf="editaddress.get('Province')?.touched && editaddress.get('Province')?.invalid" class="text-danger">

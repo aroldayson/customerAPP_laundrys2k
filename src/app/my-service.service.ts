@@ -143,8 +143,12 @@ export class MyServiceService {
     return this.http.post(`${this.Apiurl}updateaddress`,data);
     // return this.http.post(this.Apiurl + 'updateaddress' + data);
   }
-
-
+  saveAddress(addServe: any, custAddID: any, custAddTown: any, custId: any, openedTransac_ID: any): Observable<any> {
+    const request = [addServe, custAddID, custAddTown, openedTransac_ID];
+    console.log(request);
+    return this.http.post(`${this.Apiurl}updateaddress/${custId}`,request);
+  }
+  
   getTrackingNo(){
     return this.http.get(this.Apiurl + 'getTrackingNo');
   }

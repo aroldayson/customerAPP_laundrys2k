@@ -4,6 +4,7 @@ import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, 
 import { Router, RouterLink } from '@angular/router';
 import { MyServiceService } from '../../../my-service.service';
 import Swal from 'sweetalert2';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-cus-category',
@@ -14,7 +15,7 @@ import Swal from 'sweetalert2';
 })
 export class CusCategoryComponent implements OnInit {
   private post = inject(MyServiceService);
-  categ: any;
+  categ: any[] = [];
   trans: any;
   trackingNumber: any;
   customerdata: any;
@@ -67,7 +68,17 @@ export class CusCategoryComponent implements OnInit {
 
   showShippingAddress: boolean = false;
 
-  towns: string[] = ['Pugo', 'Sison', 'Rosario'];
+  editingItem: any = null;
+
+  inputElement: HTMLInputElement | null = null;
+
+  discount: number = 0;
+  shippingCharge: number = 0;
+  shippingCost: number = 0;
+
+  addressupdate: any;
+
+
 
   barangaysInSison: string[] = [
     "Amagbagan", "Artacho", "Asan Norte", "Asan Sur", "Bantay Insik", 
@@ -88,10 +99,13 @@ export class CusCategoryComponent implements OnInit {
 
   barangaysInPoz: string[] = ["Batakil", "Poblacion I"];
 
+
+  towns: string[] = ['Pugo', 'Sison', 'Rosario', 'Pozurubio'];
+  province: string[] = ["Pangasinan", "La Union"];
+
   isNextStepDisabled: boolean = true;
 
   
-
   newtransac = new FormGroup({
     CustAdd_ID: new FormControl<string | null>(null),
     AddService_price: new FormControl(null),
@@ -111,22 +125,6 @@ export class CusCategoryComponent implements OnInit {
     BuildingUnitStreet_No: new FormControl(null),
   });
 
-  // editaddress = this.fb.group({
-  //   Phoneno: ['', [Validators.required, Validators.pattern(/^\d{10,12}$/)]],
-  //   Town_City: ['', Validators.required],
-  //   Barangay: ['', Validators.required],
-  //   Province: ['', Validators.required],
-  //   BuildingUnitStreet_No: ['', Validators.required],
-  // });
-  addressupdate: any;
- 
-
-  // editAddress = {
-  //   Province: '',
-  //   Town_City: '',
-  //   Barangay: '',
-  //   BuildingNo_Street: '',
-  // };
 
   openEditModal(address: any) {
     console.log(address)
@@ -175,15 +173,6 @@ export class CusCategoryComponent implements OnInit {
     }
   }
   
-  
-  
-
-  inputElement: HTMLInputElement | null = null;
-
-  discount: number = 0;
-  shippingCharge: number = 0;
-  shippingCost: number = 0;
-
   laundryForm = new FormGroup({
     category: new FormControl('', Validators.required),
     quantity: new FormControl(1, [Validators.required, Validators.min(1)]),
@@ -198,7 +187,8 @@ export class CusCategoryComponent implements OnInit {
   constructor(
     private route: Router,
     private user: MyServiceService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -308,15 +298,83 @@ export class CusCategoryComponent implements OnInit {
     return subtotal;
   }
 
+ 
+
+  edit(item: any): void {
+    this.editingItem = this.editingItem === item ? null : item;
+    console.log('Editing item:',item);
+  }
+  
+  saveQty(item: any, newQty: any): void {
+    if (newQty > 0) {
+
+      const townElem = (document.getElementById("Qty") as HTMLSelectElement)?.value;
+      console.log("Piniling Barangay sa Delivery", townElem);
+
+      const index = this.laundrylist.findIndex((i) => i.Categ_ID === item.Categ_ID);
+      if (index !== -1) {
+        this.laundrylist[index].Qty = townElem; 
+  
+        console.log('Updated item:', this.laundrylist[index]);
+      }
+
+      this.editingItem = null;
+  
+      Swal.fire({
+        icon: 'success',
+        title: 'Quantity Updated',
+        showConfirmButton: false,
+        timer: 1500,
+      });
+  
+      this.cdr.detectChanges();
+    } else {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Invalid Quantity',
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    }
+  }
+  
+  
+  getUniqueCategories(): any[] {
+    const uniqueCategories = new Set<string>();
+    return this.laundrylist.filter((item) => {
+      if (uniqueCategories.has(item.Category)) {
+        return false;
+      } else {
+        uniqueCategories.add(item.Category);
+        return true;
+      }
+    });
+  }  
+
   addToList(): void {
     if (this.laundryForm.valid) {
       const categoryValue = this.laundryForm.value.category;
       const quantityValue = this.laundryForm.value.quantity ?? 1;
-      
+  
+      // Check if the category already exists in the uniqueCategories set
+      const uniqueCategories = new Set(this.laundrylist.map(item => item.Category));
+  
+      if (uniqueCategories.has(this.categ?.find(c => c.Categ_ID === parseInt(categoryValue!, 10))?.Category)) {
+        // Alert using SweetAlert2 for duplicate category
+        Swal.fire({
+          icon: 'warning',
+          title: 'Duplicate Category',
+          text: 'This category already exists in the list.',
+          showConfirmButton: false, // Removes the "OK" button
+          timer: 1500, // Automatically closes after 1.5 seconds
+        });
+        return;
+      }
+  
       const selectedCategory = this.categ?.find(
         (c: any) => c.Categ_ID === parseInt(categoryValue!, 10)
-      );  
-
+      );
+  
       if (selectedCategory) {
         const newItem = {
           Categ_ID: categoryValue,
@@ -326,20 +384,22 @@ export class CusCategoryComponent implements OnInit {
           Tracking_number: this.trackingNumber,
           State: 'Pending'
         };
-
+  
         this.laundrylist.push(newItem);
-
+  
+        // Reset the form fields
         this.laundryForm.reset({ quantity: 1 });
         this.selectedPrice = 0;
       }
-
+  
       const serviceValue = this.laundryForm.get('service')?.value || 0;
-      console.log("🚀 ~ CusCategoryComponent ~ addToList ~ serviceValue:", serviceValue)
       if (this.laundrylist.length > 0 && serviceValue && serviceValue.length > 0) {
         this.isNextStepDisabled = false;
       }
     }
   }
+  
+  
 
   showaddress(id: any) {
     this.post.showaddress(id).subscribe((res: any) => {
@@ -534,13 +594,13 @@ export class CusCategoryComponent implements OnInit {
   
     // I-prepare ang transaction data
     this.newtransac.patchValue({
-      CustAdd_ID: townElems && townElem,
-      AddService_price: this.total_estimated_price,
+      CustAdd_ID: townElems && townElem ? townElem : null,
+      AddService_price: this.total_estimated_price ? this.total_estimated_price : 0,
       Tracking_number: this.trackingNumber,
       laundry: this.laundrylist,
-      service: this.selectedServices
+      service: this.selectedServices && this.selectedServices.length > 0 ? this.selectedServices : null
     });
-  
+    
     const formData = this.newtransac.value;
   
     // I-log ang form data para sa debugging

@@ -104,18 +104,25 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let d of details; let i = index track d">
+              <tr *ngFor="let d of details; let i = index track d" >
                 <th scope="row">{{ i + 1 }}</th>
                 <td>
                   <h6 class="mb-0">
                     <i class="fas fa-tshirt me-2 icon-style"></i>{{ d.Category || 'N/A' }}
                   </h6>
-                  <!-- <small class="text-muted">Standard washing service</small> -->
                 </td>
                 <td><b>Qty:</b> {{ d.Qty }} | <b>Weight:</b> {{ d.Weight }} <b>kg</b></td>
                 <td class="text-right">{{ d.price | currency:' ':'symbol' }}</td>
                 <td class="text-end"></td>
               </tr>
+              <ng-container *ngIf="details.length === 0">
+                <tr>
+                  <td colspan="5" class="text-center text-muted">
+                    No service details available.
+                  </td>
+                </tr>
+              </ng-container>
+              
               <tr class="table-light">
                 <td colspan="4" class="text-end fw-bold">Sub Total</td>
                 <td class="text-end fw-bold">{{total | currency:' ':'symbol' }}</td>
@@ -160,17 +167,15 @@
                 </td>                
                 <td class="text-right">{{servicearray.AddService_price | currency:' ':'symbol'}}</td>
                 <td class="text-end"></td>
+                <ng-template #noDetails>
+                  <tr>
+                    <td colspan="5" class="text-center text-muted">
+                      No service details available.
+                    </td>
+                  </tr>
+                </ng-template>
               </tr>
               }
-              <!-- <tr>
-                <th scope="row">2</th>
-                <td>
-                  <i class="fas fa-spray-can me-2 icon-style"></i>Stain Removal
-                </td>
-                <td>Special stain treatment</td>
-                <td>5.00</td>
-                <td class="text-end">5.00</td>
-              </tr> -->
               <tr class="table-light">
                 <td colspan="4" class="text-end fw-bold">Sub Total</td>
                 <td class="text-end fw-bold">{{totalserviceprice | currency:' ':'symbol'}}</td>
@@ -185,14 +190,6 @@
         <div class="table-responsive">
           <table class="table table-bordered">
             <tbody>
-              <!-- <tr>
-                <td colspan="4" class="text-end">Discount</td>
-                <td class="text-end">10.00</td>
-              </tr> -->
-              <!-- <tr>
-                <td colspan="4" class="text-end">Tax</td>
-                <td class="text-end">5.00</td>
-              </tr> -->
               <tr class="table-primary">
                 <td colspan="4" class="text-end fw-bold">
                   <i class="fas fa-wallet me-2 icon-style"></i>Grand Total

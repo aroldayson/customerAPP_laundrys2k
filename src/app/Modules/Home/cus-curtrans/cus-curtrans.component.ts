@@ -92,6 +92,16 @@ export class CusCurtransComponent implements OnInit{
   pickupBarangay: string = '';
   pickupStreet: string = '';
 
+  rushPicked: boolean = false;
+
+  openedTransac_ID: any;
+  shipDetails: any;
+  selectShipDetails: any;
+  pickCustAddID: any;
+  delCustAddID: any;
+
+  shipPrice : any = 0;
+
   
   barangaysInSison: any[] = ["Amagbagan", "Artacho", "Asan Norte", "Asan Sur", "Bantay Insik", "Bila", "Binmeckeg", "Bulaoen East", "Bulaoen West", "Cabaritan", "Calunetan", "Camangaan", "Cauringan", "Dungon", "Esperanza", "Inmalog", "Killo", "Labayug", "Paldit", "Pindangan", "Pinmilapil", "Poblacion Central", "Poblacion Norte"]
 
@@ -216,6 +226,44 @@ export class CusCurtransComponent implements OnInit{
     });
   }
 
+  onCheckboxAddress(custAddID: any, custAddTown: any, custId: any){
+    console.log(custAddID, custAddTown, this.openedTransac_ID);
+    if (custAddTown == 'Sison'){
+      this.shipPrice = 50;
+    }else if(custAddTown == 'Rosario'){
+      this.shipPrice = 40;
+    }else if(custAddTown == 'Pugo'){
+      this.shipPrice = 50;
+    }else if(custAddTown == 'Pozorubbio'){
+      this.shipPrice = 60;
+    }else{
+      this.shipPrice = 0;
+    }
+
+    
+    if(this.selectAddPick == true){
+      const addServe = 'PickUp-Service';
+      this.post.saveAddress(addServe, custAddID, custAddTown, custId, this.openedTransac_ID).subscribe(
+        (response) => {
+          console.log(response);
+        }
+      )
+    }else{
+
+    }
+
+    if(this.selectAddDel == true){
+      const addServe = 'Delivery-Service';
+      this.post.saveAddress(addServe, custAddID, custAddTown, custId, this.openedTransac_ID).subscribe(
+        (response) => {
+          console.log(response);
+        }
+      )
+    }else{
+      
+    }
+  }
+
   addaddress = new FormGroup({
     CustAdd_ID: new FormControl(null),
     Cust_ID: new FormControl(this.id.cuid),  // You may want to adjust this to your needs
@@ -225,6 +273,41 @@ export class CusCurtransComponent implements OnInit{
     Town_City: new FormControl(null),
     Barangay: new FormControl(null)
   });
+
+  onselectaddress(selectedId: any) {
+    console.log('Selected Address ID:', selectedId);
+  
+    // Find the selected address based on the ID
+    const selectedAddress = this.address.find((addr: any) => addr.CustAdd_ID === selectedId);
+  
+    if (selectedAddress) {
+      // Update the form with the selected address details
+      this.addaddress.patchValue({
+        CustAdd_ID: selectedAddress.CustAdd_ID,
+        Province: selectedAddress.Province,
+        Phoneno: selectedAddress.Phoneno,
+        BuildingUnitStreet_No: selectedAddress.BuildingUnitStreet_No,
+        Town_City: selectedAddress.Town_City,
+        Barangay: selectedAddress.Barangay
+      });
+  
+      console.log('Selected Address:', selectedAddress);
+    } else {
+      console.warn('Address not found for the selected ID');
+    }
+  }
+
+  getLaundryPrice(event: Event): void {
+    const select = event.target as HTMLSelectElement;
+    const selectedCategID: any = select.value;
+    const selectedCategory = this.categ.find((c: any) => c.Categ_ID == selectedCategID);
+    
+    if (selectedCategory) {
+      this.selectedPrice[selectedCategID] = selectedCategory.Price;
+      console.log(selectedCategory)
+      // this.showservices = true;
+    }
+  }
 
   showaddress(id: any) {
     this.post.showaddress(id).subscribe((res: any) => {

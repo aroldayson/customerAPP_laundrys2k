@@ -39,11 +39,18 @@
                     <td (click)="viewItem(item.trans_ID)">{{item.trans_date | date:'MM/dd/yyyy'}}</td>
                     <td (click)="viewItem(item.trans_ID)">{{item.estimated_date | date:'MM/dd/yyyy'}}</td>
                     <td>
-                      <p *ngIf="item.trans_stat === 'pending'" class="status pending">Pending</p>
-                      <p *ngIf="item.trans_stat === 'received'" class="status recieved">Recieved</p>
-                      <p *ngIf="item.trans_stat === 'washing'" class="status washing">Washing</p>
-                      <p *ngIf="item.trans_stat === 'folding'" class="status folding">Folding</p>
-                      <p *ngIf="item.trans_stat === 'forRelease'" class="status release">For Release</p>
+                      <span 
+                        class="badge fs-6" 
+                        [ngClass]="{
+                          'color-pending': item.trans_stat === 'pending',
+                          'color-receive': item.trans_stat === 'received',
+                          'color-washing': item.trans_stat === 'washing',
+                          'color-folding': item.trans_stat === 'folding',
+                          'color-forRelease': item.trans_stat === 'forRelease',
+                          'bg-secondary': item.trans_stat !== 'Pending' && item.trans_stat !== 'Completed'
+                        }">
+                        {{item.trans_stat.charAt(0).toUpperCase() + item.trans_stat.slice(1).toLowerCase()}}
+                      </span>
                     </td>
                     
                     <td>  
@@ -123,214 +130,6 @@
   }
 </div>
       
-<div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" #updateModal>
-  <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content shadow-lg border-0 rounded-3">
-      <div class="modal-header text-white" style="background-color: #5998e2;">
-        <h5 class="modal-title fw-bold">Update Transaction</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-
-      <div class="modal-body">
-        <div class="alert alert-light shadow-sm rounded mb-4 p-3">
-          <div class="d-flex justify-content-between align-items-center mb-3">
-            <div>
-              <p class="mb-0">
-                <span class="text-muted fw-medium fs-2">Tracking Number: </span>
-                <span class="text-primary fw-bold fs-2">{{ selectedTransaction?.track_num }}</span>
-              </p>
-            </div>
-            <button class="btn btn-outline-primary btn-sm" (click)="copyToClipboard(selectedTransaction?.track_num)">
-              <i class="fa fa-copy"></i> Copy
-            </button>
-          </div>
-          <p class="mb-0">
-            <span class="text-muted fw-medium fs-2">Status:</span>
-            <span class="fw-bold fs-2">{{ selectedTransaction?.trans_stat }}</span>
-          </p>
-        </div>
-
-        <!-- Service Selection Form -->
-        <form #form="ngForm">
-          <div class="mb-4">
-            <label class="fw-medium text-muted mb-2">Selected Service</label>
-            <div class="d-flex flex-wrap gap-3">
-              <div class="form-check form-switch">
-                <input
-                  class="form-check-input"
-                  type="checkbox"
-                  id="rush"
-                  [checked]="selectedservices.rush"
-                  (change)="onCheckboxChange('Rush Job', $event)"
-                />
-                <label class="form-check-label" for="Rush-Job">Rush Jobs</label>
-              </div>
-              <div class="form-check form-switch">
-                <input
-                  class="form-check-input"
-                  type="checkbox"
-                  id="pick"
-                  [checked]="selectedservices.pick"
-                  (change)="onCheckboxChange('PickUp-Service', $event)"
-                />
-                <label class="form-check-label" for="pick">Pick-up</label>
-              </div>
-              <div class="form-check form-switch">
-                <input
-                  class="form-check-input"
-                  type="checkbox"
-                  id="deliver"
-                  [checked]="selectedservices.deliver"
-                  (change)="onCheckboxChange('Delivery-Service', $event)"
-                />
-                <label class="form-check-label" for="deliver">Delivery</label>
-              </div>
-            </div>
-          </div>
-        </form>
-
-          <div class="row" [hidden]="selectAddDel==false">
-          <p>Select your Delivery Address.</p>
-          <div class="col-md-12 mb-3">
-            <div class="container my-4">
-              <div class="d-flex align-items-center mb-3">
-                <h5 class="mb-0">My Address</h5>
-                <button class="btn btn-outline-secondary ms-3">
-                  <strong data-bs-toggle="modal" data-bs-target="#editADDRESS">+ Add New Address</strong>
-                </button>
-              </div>
-          
-              <div class="d-flex flex-wrap">
-                <div *ngFor="let c of address" class="address-container px-3 py-2 highlighted me-3 mb-3" style="flex-basis: 30%; min-width: 250px;">
-                  <input type="hidden" [value]="c.ShipServ_price">
-                  <div class="form-check">
-                    <input class="form-check-input" type="radio" name="ShipServ_price" id="ShipServ_price" [value]="c.CustAdd_ID"  checked>
-                    <label class="form-check-label" for="City_Address_{{c.Town_City}}">
-                      <strong>{{c.Cust_fname}} {{c.Cust_mname}} {{c.Cust_lname}}</strong> 
-                      <span class="text-secondary">{{c.Phenono}}</span>
-                    </label>
-                  </div>
-                  <p class="mb-1 text-secondary" id="barangay">
-                    {{c.BuildingNo_Street}}, {{c.Barangay}} {{c.Town_City}} {{c.Province}}<br>
-                    North Luzon, 2434
-                  </p>
-                  <span class="default-label">Default</span>
-                  <a class="text-danger float-end" (click)="deleteaddress(c.CustAdd_ID)">Delete</a>
-                </div>
-              </div>
-          
-            </div>
-          </div>
-        </div>
-        
-        
-        
-        <div class="row" [hidden]="selectAddPick==false">
-          <p>Select your Pick-Up Address.</p>
-          <div class="col-md-12 mb-3">
-            <div class="container my-4">
-              <div class="d-flex align-items-center mb-3">
-                <h5 class="mb-0">My Address</h5>
-                <button class="btn btn-outline-secondary ms-3">
-                  <strong data-bs-toggle="modal" data-bs-target="#editADDRESS">+ Add New Address</strong>
-                </button>
-              </div>
-          
-              <div class="d-flex flex-wrap">
-                <div *ngFor="let c of address" class="address-container px-3 py-2 highlighted me-3 mb-3" style="flex-basis: 30%; min-width: 250px;">
-                  <input type="hidden" [value]="c.ShipServ_price">
-                  <div class="form-check">
-                    <input class="form-check-input" type="radio" name="ShipServ_prices" id="ShipServ_prices" [value]="c.CustAdd_ID"  checked>
-                    <label class="form-check-label" for="City_Address_{{c.Town_City}}">
-                      <strong>{{c.Cust_fname}} {{c.Cust_mname}} {{c.Cust_lname}}</strong> 
-                      <span class="text-secondary">{{c.Phenono}}</span>
-                    </label>
-                  </div>
-                  <p class="mb-1 text-secondary" id="barangay">
-                    {{c.BuildingNo_Street}}, {{c.Barangay}} {{c.Town_City}} {{c.Province}}<br>
-                    North Luzon, 2434
-                  </p>
-                  <span class="default-label">Default</span>
-                  <a class="text-danger float-end" (click)="deleteaddress(c.CustAdd_ID)">Delete</a>
-                </div>
-              </div>
-          
-            </div>
-          </div>
-        </div>
-
-        <!-- Transaction Details Table -->
-        <div class="table-responsive">
-          <table class="table table-hover">
-            <thead class="table-light">
-              <tr>
-                <th>Category</th>
-                <th>Quantity</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let detail of selectedTransaction?.details; let i = index">
-                <td>
-                  <select class="form-select" [(ngModel)]="detail.Categ_ID">
-                    <option value="" disabled>Select Category</option>
-                    <ng-container *ngFor="let category of categ">
-                      <option [value]="category.Categ_ID">{{ category.Category }}</option>
-                    </ng-container>
-                  </select>
-                </td>
-                <td>
-                  <input
-                    type="number"
-                    class="form-control"
-                    [(ngModel)]="detail.Qty"
-                    placeholder="Enter quantity"
-                    min="1"
-                  />
-                </td>
-                <td>
-                  <button class="btn btn-delete btn-sm" (click)="removeDetail(i)">
-                    <i class="fa fa-trash"></i> Remove
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <!-- Add Item Button -->
-        <div class="text-end mt-3">
-          <button class="btn btn-additem btn-sm" (click)="addDetail()">
-            <i class="fa fa-plus"></i> Add Item
-          </button>
-        </div>
-      </div>
-
-      <div class="modal-footer">
-        <button 
-        type="button" 
-        class="btn btn-secondary d-flex align-items-center " style="border-radius: 30px;"
-        data-bs-dismiss="modal" 
-        aria-label="Close the modal"
-      >
-        <i class="fa fa-times me-2"></i> Close
-      </button>
-      <button 
-      type="button" 
-      class="btn btn-primary d-flex align-items-center" style="border-radius: 30px;"
-      (click)="updateTransaction()" 
-      aria-label="Save changes to the transaction"
-    >
-      <i class="fa fa-save me-2"></i> Save Changes
-    </button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
-
 <section class="steps-section">
   <h2 class="styled-heading mb-2"><span class="laundry-icon">5</span> Easy Steps</h2>
   <p>Experience the ultimate convenience in laundry care where quality service meets fresh scents, all with free detergent and fabric conditioner. Just with these 5 easy steps, we guarantee you a wonderful service.</p>
@@ -528,6 +327,546 @@
     </div>
   </div>
 </div>
+
+<!-- <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" #updateModal>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content shadow-lg border-0 rounded-3">
+      <div class="modal-header text-white" style="background-color: #5998e2;">
+        <h5 class="modal-title fw-bold">Update Transaction</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="alert alert-light shadow-sm rounded mb-4 p-3">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+              <p class="mb-0">
+                <span class="text-muted fw-medium fs-2">Tracking Number: </span>
+                <span class="text-primary fw-bold fs-2">{{ selectedTransaction?.track_num }}</span>
+              </p>
+            </div>
+            <button class="btn btn-outline-primary btn-sm" (click)="copyToClipboard(selectedTransaction?.track_num)">
+              <i class="fa fa-copy"></i> Copy
+            </button>
+          </div>
+          <p class="mb-0">
+            <span class="text-muted fw-medium fs-2">Status:</span>
+            <span class="fw-bold fs-2">{{ selectedTransaction?.trans_stat }}</span>
+          </p>
+        </div>
+
+        <form #form="ngForm">
+          <div class="mb-4">
+            <label class="fw-medium text-muted mb-2">Selected Service</label>
+            <div class="d-flex flex-wrap gap-3">
+              <div class="form-check form-switch">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  id="rush"
+                  [checked]="selectedservices.rush"
+                  (change)="onCheckboxChange('Rush Job', $event)"
+                />
+                <label class="form-check-label" for="Rush-Job">Rush Jobs</label>
+              </div>
+              <div class="form-check form-switch">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  id="pick"
+                  [checked]="selectedservices.pick"
+                  (change)="onCheckboxChange('PickUp-Service', $event)"
+                />
+                <label class="form-check-label" for="pick">Pick-up</label>
+              </div>
+              <div class="form-check form-switch">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  id="deliver"
+                  [checked]="selectedservices.deliver"
+                  (change)="onCheckboxChange('Delivery-Service', $event)"
+                />
+                <label class="form-check-label" for="deliver">Delivery</label>
+              </div>
+            </div>
+          </div>
+        </form>
+
+          <div class="row" [hidden]="selectAddDel==false">
+          <p>Select your Delivery Address.</p>
+          <div class="col-md-12 mb-3">
+            <div class="container my-4">
+              <div class="d-flex align-items-center mb-3">
+                <h5 class="mb-0">My Address</h5>
+                <button class="btn btn-outline-secondary ms-3">
+                  <strong data-bs-toggle="modal" data-bs-target="#editADDRESS">+ Add New Address</strong>
+                </button>
+              </div>
+          
+              <div class="d-flex flex-wrap">
+                <div *ngFor="let c of address" class="address-container px-3 py-2 highlighted me-3 mb-3" style="flex-basis: 30%; min-width: 250px;">
+                  <input type="hidden" [value]="c.ShipServ_price">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="ShipServ_price" id="ShipServ_price" [value]="c.CustAdd_ID"  checked>
+                    <label class="form-check-label" for="City_Address_{{c.Town_City}}">
+                      <strong>{{c.Cust_fname}} {{c.Cust_mname}} {{c.Cust_lname}}</strong> 
+                      <span class="text-secondary">{{c.Phenono}}</span>
+                    </label>
+                  </div>
+                  <p class="mb-1 text-secondary" id="barangay">
+                    {{c.BuildingNo_Street}}, {{c.Barangay}} {{c.Town_City}} {{c.Province}}<br>
+                    North Luzon, 2434
+                  </p>
+                  <span class="default-label">Default</span>
+                  <a class="text-danger float-end" (click)="deleteaddress(c.CustAdd_ID)">Delete</a>
+                </div>
+              </div>
+          
+            </div>
+          </div>
+        </div>
+        
+        
+        
+        <div class="row" [hidden]="selectAddPick==false">
+          <p>Select your Pick-Up Address.</p>
+          <div class="col-md-12 mb-3">
+            <div class="container my-4">
+              <div class="d-flex align-items-center mb-3">
+                <h5 class="mb-0">My Address</h5>
+                <button class="btn btn-outline-secondary ms-3">
+                  <strong data-bs-toggle="modal" data-bs-target="#editADDRESS">+ Add New Address</strong>
+                </button>
+              </div>
+          
+              <div class="d-flex flex-wrap">
+                <div *ngFor="let c of address" class="address-container px-3 py-2 highlighted me-3 mb-3" style="flex-basis: 30%; min-width: 250px;">
+                  <input type="hidden" [value]="c.ShipServ_price">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="ShipServ_prices" id="ShipServ_prices" [value]="c.CustAdd_ID"  checked>
+                    <label class="form-check-label" for="City_Address_{{c.Town_City}}">
+                      <strong>{{c.Cust_fname}} {{c.Cust_mname}} {{c.Cust_lname}}</strong> 
+                      <span class="text-secondary">{{c.Phenono}}</span>
+                    </label>
+                  </div>
+                  <p class="mb-1 text-secondary" id="barangay">
+                    {{c.BuildingNo_Street}}, {{c.Barangay}} {{c.Town_City}} {{c.Province}}<br>
+                    North Luzon, 2434
+                  </p>
+                  <span class="default-label">Default</span>
+                  <a class="text-danger float-end" (click)="deleteaddress(c.CustAdd_ID)">Delete</a>
+                </div>
+              </div>
+          
+            </div>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead class="table-light">
+              <tr>
+                <th>Category</th>
+                <th>Quantity</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let detail of selectedTransaction?.details; let i = index">
+                <td>
+                  <select class="form-select" [(ngModel)]="detail.Categ_ID">
+                    <option value="" disabled>Select Category</option>
+                    <ng-container *ngFor="let category of categ">
+                      <option [value]="category.Categ_ID">{{ category.Category }}</option>
+                    </ng-container>
+                  </select>
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    class="form-control"
+                    [(ngModel)]="detail.Qty"
+                    placeholder="Enter quantity"
+                    min="1"
+                  />
+                </td>
+                <td>
+                  <button class="btn btn-delete btn-sm" (click)="removeDetail(i)">
+                    <i class="fa fa-trash"></i> Remove
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="text-end mt-3">
+          <button class="btn btn-additem btn-sm" (click)="addDetail()">
+            <i class="fa fa-plus"></i> Add Item
+          </button>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button 
+        type="button" 
+        class="btn btn-secondary d-flex align-items-center " style="border-radius: 30px;"
+        data-bs-dismiss="modal" 
+        aria-label="Close the modal"
+      >
+        <i class="fa fa-times me-2"></i> Close
+      </button>
+      <button 
+      type="button" 
+      class="btn btn-primary d-flex align-items-center" style="border-radius: 30px;"
+      (click)="updateTransaction()" 
+      aria-label="Save changes to the transaction"
+    >
+      <i class="fa fa-save me-2"></i> Save Changes
+    </button>
+      </div>
+    </div>
+  </div>
+</div> -->
+<div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" #updateModal>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content shadow-lg border-0 rounded-3">
+      <div class="modal-header text-white" style="background-color: #5998e2;">
+        <h5 class="modal-title fw-bold">Update Transaction</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="alert alert-light shadow-sm rounded mb-4 p-3">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+              <p class="mb-0">
+                <span class="text-muted fw-medium fs-2">Tracking Number: </span>
+                <span class="text-primary fw-bold fs-2">{{ selectedTransaction?.track_num }}</span>
+              </p>
+            </div>
+            <button class="btn btn-outline-primary btn-sm" (click)="copyToClipboard(selectedTransaction?.track_num)">
+              <i class="fa fa-copy"></i> Copy
+            </button>
+          </div>
+          <p class="mb-0">
+            <span class="text-muted fw-medium fs-2">Status:</span>
+            <span class="fw-bold fs-2"
+            [ngClass]="{
+              'color-pending': selectedTransaction?.trans_stat === 'pending',
+              'color-receive': selectedTransaction?.trans_stat === 'received',
+              'color-washing': selectedTransaction?.trans_stat === 'washing',
+              'color-folding': selectedTransaction?.trans_stat === 'folding',
+              'color-forRelease': selectedTransaction?.trans_stat === 'forRelease',
+              'bg-secondary': selectedTransaction?.trans_stat !== 'pending' &&
+                              selectedTransaction?.trans_stat !== 'completed'
+            }">
+              {{ selectedTransaction?.trans_stat 
+                  ? selectedTransaction.trans_stat.charAt(0).toUpperCase() + 
+                    selectedTransaction.trans_stat.slice(1).toLowerCase()
+                  : 'N/A' }}
+            </span>
+          </p>
+          <!-- <p class="mb-0">
+            <span class="text-muted fw-medium">Address:</span>
+            @for(a of address ; track a){
+            <span class="fw-bold">{{a.Province}} {{a.Town_City}} {{ a.Barangay }} </span>
+            }
+          </p> -->
+        </div>
+
+        <!-- Transaction Details Table -->
+        <div class="fs-bold fs-4">
+          <i class="fas fa-list-alt me-2"></i> Laundry Details
+        </div>
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead class="table-light">
+              <tr>
+                <th>Category</th>
+                <th>Quantity</th>
+                <th>Estimmated Laundry <br>Price (Per kg)</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let detail of selectedTransaction?.details; let i = index">
+                <td>
+                  <select class="form-select" [(ngModel)]="detail.Categ_ID" (change)="getLaundryPrice($event)">
+                    <option value="" disabled>Select Category</option>
+                    <ng-container *ngFor="let category of categ">
+                      <option [value]="category.Categ_ID">{{ category.Category }}</option>
+                    </ng-container>
+                  </select>
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    class="form-control"
+                    [(ngModel)]="detail.Qty"
+                    placeholder="Enter quantity"
+                    min="1"
+                  />
+                </td>
+                <td class="text-end">{{
+                  detail.Price || selectedPrice[detail.Categ_ID]
+                    | currency : " " : "symbol" : "1.2-2"
+                  }}
+                </td>
+                <td>
+                  <button class="btn btn-delete btn-sm" (click)="removeDetail(i)">
+                    <i class="fa fa-trash"></i> Remove
+                  </button>
+                </td>
+              </tr>
+              <tr class="fw-bold">
+                <td colspan="2" class="text-end">Estimated Subtotal:</td>
+                <td class="text-end">160.00</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Add Item Button -->
+        <div class="text-end mt-1 me-4">
+          <button class="btn btn-additem btn-sm p-2" (click)="addDetail()">
+            <i class="fa fa-plus"></i> Add Item
+          </button>
+        </div>
+      
+
+
+        <div class="fs-bold fs-4">
+          <i class="fas fa-plus-circle me-2"></i> Additional Service
+        </div>
+
+        <div class="container">
+          <!-- Service Selection Form -->
+          <form #form="ngForm">
+            <!-- <div class="mb-4">
+              <label class="fw-medium text-muted mb-2">Selected Service</label>
+              <div class="d-flex flex-wrap gap-3">
+                <div class="form-check form-switch">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="rush"
+                    [checked]="selectedservices.rush"
+                    (change)="onCheckboxChange('Rush Job', $event)"
+                  />
+                  <label class="form-check-label" for="Rush-Job">Rush Jobs</label>
+                </div>
+                <div class="form-check form-switch">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="pick"
+                    [checked]="selectedservices.pick"
+                    (change)="onCheckboxChange('PickUp-Service', $event)"
+                  />
+                  <label class="form-check-label" for="pick">Pick-up</label>
+                </div>
+                <div class="form-check form-switch">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="deliver"
+                    [checked]="selectedservices.deliver"
+                    (change)="onCheckboxChange('Delivery-Service', $event)"
+                  />
+                  <label class="form-check-label" for="deliver">Delivery</label>
+                </div>
+              </div>
+            </div> -->
+
+            <div class="row mb-1">
+              <div class="row mb-1 px-3">
+                <div class="col-md-6">
+                  <!-- <label for="services" class="form-label">Additional Services</label> -->
+                  <p>Pick your choice/s of services here.</p>
+                  <div class="d-flex gap-3">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" value="Rush-Job" [checked]="rushPicked == true" (change)="onCheckboxChange('Rush Job', $event)"  id="rush-job-checkbox">
+                      <label class="form-check-label" for="rush">Rush Jobs</label>  
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" value="PickUp-Service" [checked]="selectAddPick == true" (click)="showaddress(id.cuid)" (change)="onCheckboxChange('PickUp-Service', $event)" id="pickUp-service-checkbox">
+                      <label class="form-check-label" for="pick">Pick-up</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" value="Delivery-Service" [checked]="selectAddDel == true" (click)="showaddress(id.cuid)"  (change)="onCheckboxChange('Delivery-Service', $event)">
+                      <label class="form-check-label" for="deliver" >Delivery</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6 mt-5 text-end">
+                  <label for="amount" class="form-label">Estimated Amount</label>
+                  <p class="text-success fw-bold">
+                    <!-- {{ total_estimated_price | currency: ' ':'symbol':'1.2-2' }} --> HELOOO
+                  </p>
+                </div>
+              </div>
+            </div>
+          </form>
+
+
+          
+
+          <li class="checkout-item" style="list-style-type: none;">
+            <!-- <div class="avatar checkout-icon p-1" [hidden]="selectAddPick==false ">
+              <div class="avatar-title rounded-circle">
+                <i class="fa fa-truck text-white font-size-20" aria-hidden="true"></i>
+              </div>
+            </div> -->
+            
+            <div class="feed-item-list" [hidden]="selectAddPick==false">
+              <div [hidden]>
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                  <h5 class="font-size-22 mb-0 text-underline"><b>Shipping Address</b></h5>
+                  
+                  <!-- Hide the Add New Address button if the number of addresses is 2 -->
+                  <button
+                    data-bs-toggle="modal"
+                    data-bs-target="#editADDRESS"
+                    class="btn btn-add"
+                    [disabled]="address?.length >= 2"
+                  >
+                  <!-- [disabled]="address.length >= 2" -->
+                    Add new Address
+                  </button>
+                </div>
+            
+                <div class="mb-3">
+                  <div class="row">
+                    <div class="col-lg-12 col-sm-6">
+                      <div data-bs-toggle="collapse" *ngFor="let c of address; let i = index" [hidden]="i >= 2"> <!-- Limit to 2 addresses -->
+                        <label class="card-radio-label mb-0">
+                          <input
+                            type="radio"
+                            name="ShipServ_prices"
+                            id="ShipServ_prices"
+                            [value]="c.CustAdd_ID"
+                            [checked]="pickCustAddID == c.CustAdd_ID"
+                            (change)="onCheckboxAddress(c.CustAdd_ID, c.Town_City, c.Cust_ID)"
+                            class="card-radio-input"
+                          />
+                          <div class="card-radio text-truncate p-3">
+                            <span class="fs-14 mb-2 d-block">
+                              {{ c.Cust_fname }} {{ c.Cust_mname }} {{ c.Cust_lname }}
+                            </span>
+                            <span class="text-muted fw-normal text-wrap mb-1 d-block">
+                              {{ c.BuildingUnitStreet_No }}, {{ c.Barangay }}, {{ c.Town_City }},
+                              {{ c.Province }}
+                            </span>
+                            <span class="text-muted fw-normal d-block">{{ c.Phoneno }}</span>
+                          </div>
+                        </label>
+                        <div class="edit-btn">
+                          <a>
+                            <i
+                              class="fa fa-pencil mx-3"
+                              aria-hidden="true"
+                              data-bs-toggle="modal"
+                              data-bs-target="#updateADDRESS"
+                              
+                            ></i>
+                            <span
+                              class="fa fa-trash"
+                              aria-hidden="true"
+                              (click)="deleteaddress(c.CustAdd_ID)"
+                            ></span>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="feed-item-list" [hidden]="selectAddDel==false">
+              <div [hidden]>
+                <h5 class="font-size-22 mb-1"><b>Delivery Address</b></h5>
+                <div class="mb-3">
+                  <div class="row">
+                    <div class="col-lg-12 col-sm-6">
+                      <div data-bs-toggle="collapse" *ngFor="let c of address; let i = index">
+                        <label class="card-radio-label mb-0">
+                          <input
+                            type="radio"
+                            name="ShipServ_price"
+                            id="ShipServ_price_{{i}}"
+                            [value]="c.CustAdd_ID"
+                            [checked]="delCustAddID == c.CustAdd_ID"
+                            class="card-radio-input"
+                            (change)="onselectaddress(c.CustAdd_ID)"
+                          />
+                          <div class="card-radio text-truncate p-3">
+                            <span class="fs-14 mb-2 d-block">
+                              {{ c.Cust_fname }} {{ c.Cust_mname }} {{ c.Cust_lname }}
+                            </span>
+                            <span
+                              class="text-muted fw-normal text-wrap mb-1 d-block">
+                              {{ c.BuildingUnitStreet_No }}, {{ c.Barangay }}, {{ c.Town_City }}, {{ c.Province }}
+                            </span>
+                            <span class="text-muted fw-normal d-block">
+                              {{ c.Phoneno }}
+                            </span>
+                          </div>
+                        </label>
+                        <div class="edit-btn">
+                          <a>
+                            <i
+                              class="fa fa-pencil mx-3"
+                              aria-hidden="true"
+                              data-bs-toggle="modal"
+                              data-bs-target="#updateADDRESS">
+                            </i>
+                            <span
+                              class="fa fa-trash"
+                              aria-hidden="true"
+                              (click)="deleteaddress(c.CustAdd_ID)">
+                            </span>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+          </li>
+
+          
+        </div>
+      </div>
+        
+
+      <div class="modal-footer">
+        <button 
+          type="button" 
+          class="btn btn-secondary d-flex align-items-center " style="border-radius: 30px;"
+          data-bs-dismiss="modal" 
+          aria-label="Close the modal"
+        >
+          <i class="fa fa-times me-2"></i> Close
+        </button>
+        <button 
+          type="button" 
+          class="btn btn-primary d-flex align-items-center" style="border-radius: 30px;"
+          (click)="updateTransaction()" 
+          aria-label="Save changes to the transaction"
+        >
+          <i class="fa fa-save me-2"></i> Save Changes
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 
 
