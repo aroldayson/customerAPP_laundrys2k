@@ -1,8 +1,8 @@
-<div class="container-fluid border-container p-4" style="background-color: #fff; border-radius: 12px; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);">
+<div class="container-fluid border-container p-4" style="background-color: #fff; border-radius: 12px; margin-top: 20px;">
   <!-- Search Bar -->
   <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
     <!-- Search Bar -->
-    <div class="input-group rounded mx-auto" style="max-width: 450px;">
+    <div class="input-group rounded" style="max-width: 450px;">
       <input
         type="search"
         class="form-control search-input"
@@ -19,11 +19,11 @@
     <div class="filter-buttons d-flex flex-wrap">
       <button class="btn btn-filter btn-all me-2 mb-2" [class.active-filter]="currentFilter === 'All'" (click)="filterStatus('All')">All</button>
       <button class="btn btn-filter btn-pending me-2 mb-2" [class.active-filter]="currentFilter === 'Pending'" (click)="filterStatus('Pending')">Pending</button>
-      <button class="btn btn-filter btn-recieve me-2 mb-2" [class.active-filter]="currentFilter === 'Recieve'" (click)="filterStatus('Recieve')">Recieve</button>
+      <button class="btn btn-filter btn-recieve me-2 mb-2" [class.active-filter]="currentFilter === 'received'" (click)="filterStatus('received')">Recieve</button>
       <button class="btn btn-filter btn-washing me-2 mb-2" [class.active-filter]="currentFilter === 'Washing'" (click)="filterStatus('Washing')">Washing</button>
       <button class="btn btn-filter btn-folding me-2 mb-2" [class.active-filter]="currentFilter === 'Folding'" (click)="filterStatus('Folding')">Folding</button>
       <button class="btn btn-filter btn-release me-2 mb-2" [class.active-filter]="currentFilter === 'for Release'" (click)="filterStatus('for Release')">For Release</button>
-      <button class="btn btn-filter btn-complete me-2 mb-2" [class.active-filter]="currentFilter === 'Completed'" (click)="filterStatus('Completed')">Completed</button>
+      <button class="btn btn-filter btn-complete me-2 mb-2" [class.active-filter]="currentFilter === 'completed'" (click)="filterStatus('completed')">Completed</button>
       <button class="btn btn-filter btn-cancelled mb-2" [class.active-filter]="currentFilter === 'Cancelled'" (click)="filterStatus('Cancelled')">Cancelled</button>
     </div>
   </div>
@@ -44,19 +44,24 @@
       </thead>
       <tbody>
         @for (h of filteredHist; track h) {
-        <tr>
+        <tr (click)="viewItem(h.Transac_ID)">
           <td>{{ h.trans_tracking_number }}</td>
-          <td>{{ h.Transac_date }}</td>
-          <td>
-            <span class="badge" 
-                  [class.bg-warning]="h.Transac_status === 'Pending'"
-                  [class.bg-info]="h.Transac_status === 'for Release'"
-                  [class.bg-success]="h.Transac_status === 'Completed'"
-                  [class.bg-danger]="h.Transac_status === 'Cancelled'">
-              {{ h.Transac_status }}
+          <td>{{ h.Transac_datetime |  date:'MM/dd/yyyy' }}</td>
+          <td class="text-center">
+            <span class="badge"
+                  [ngClass]="{
+                    'status-pending': h.latest_transac_status === 'pending',
+                    'status-received': h.latest_transac_status === 'received',
+                    'status-washing': h.latest_transac_status === 'washing',
+                    'status-folding': h.latest_transac_status === 'folding',
+                    'status-forRelease': h.latest_transac_status === 'forRelease',
+                    'status-completed': h.latest_transac_status === 'completed',
+                    'status-cancel': h.latest_transac_status === 'cancel'
+                  }">
+              {{ h.latest_transac_status }}
             </span>
-          </td>
-          <td>{{ h.service }}</td>
+          </td>          
+          <td>{{ h.Addservice_name }}</td>
           <td>{{ h.Mode_of_Payment }}</td>
           <td class="text-right">{{ h.payment_amount }}</td>
         </tr>

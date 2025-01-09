@@ -33,7 +33,6 @@
                     <form [formGroup]="laundryForm" (ngSubmit)="addToList()">
                       <div>
                         <div class="row">
-                          <!-- Laundry Category Dropdown -->
                           <div class="col-lg-4">
                             <label class="form-label" for="laundry-category"
                               >Laundry Type</label
@@ -58,7 +57,6 @@
                             </div>
                           </div>
 
-                          <!-- Quantity Input -->
                           <div class="col-md">
                             <div class="mb-3">
                               <label class="form-label" for="quantity"
@@ -99,7 +97,6 @@
                             </p>
                           </div>
 
-                          <!-- Add to List Button -->
                           <div class="col-md">
                             <div class="mb-3">
                               <label class="form-label d-flex" for="add-to-list"
@@ -120,7 +117,6 @@
                       </div>
                     </form>
 
-                    <!-- Laundry List Table -->
                     <div class="mb-3">
                       <table
                         class="table table-bordered"
@@ -153,9 +149,6 @@
                         </tbody>
                       </table>
                     </div>
-
-                    <!-- Services Form -->
-                    <!-- <form [formGroup]="servicesForm"> -->
                       <div class="row mb-4">
                         <div class="row mb-4 px-3" *ngIf="showservices !== false">
                           <div class="col-md-6">
@@ -192,57 +185,65 @@
             <li class="checkout-item" >
               <div class="avatar checkout-icon p-1" [hidden]="selectAddPick==false">
                 <div class="avatar-title rounded-circle">
-                  <i
-                    class="fa fa-truck text-white font-size-20"
-                    aria-hidden="true"
-                  ></i>
+                  <i class="fa fa-truck text-white font-size-20" aria-hidden="true"></i>
                 </div>
               </div>
               
               <div class="feed-item-list" [hidden]="selectAddPick==false">
                 <div [hidden]>
                   <div class="d-flex align-items-center justify-content-between mb-2">
-                    <h5 class="font-size-22 mb-0 text-underline "><b>Shipping Address</b></h5>
+                    <h5 class="font-size-22 mb-0 text-underline"><b>Shipping Address</b></h5>
+                    
+                    <!-- Hide the Add New Address button if the number of addresses is 2 -->
                     <button
                       data-bs-toggle="modal"
                       data-bs-target="#editADDRESS"
                       class="btn btn-add"
+                      [disabled]="address.length >= 2" 
                     >
                       Add new Address
                     </button>
-                  </div>                  
+                  </div>
+              
                   <div class="mb-3">
                     <div class="row">
                       <div class="col-lg-12 col-sm-6">
-                        <div data-bs-toggle="collapse" *ngFor="let c of address" >
+                        <div data-bs-toggle="collapse" *ngFor="let c of address; let i = index" [hidden]="i >= 2"> <!-- Limit to 2 addresses -->
                           <label class="card-radio-label mb-0">
                             <input
                               type="radio"
-                              name="ShipServ_prices" 
-                              id="ShipServ_prices" 
-                              [value]="c.CustAdd_ID" [checked]="c.isDefault"
+                              name="ShipServ_prices"
+                              id="ShipServ_prices"
+                              [value]="c.CustAdd_ID"
+                              [checked]="c.isDefault || i === 0"
                               class="card-radio-input"
-                              checked=""
                             />
                             <div class="card-radio text-truncate p-3">
-    
-                              <span class="fs-14 mb-2 d-block"
-                                >{{ c.Cust_fname }} {{ c.Cust_mname }} {{ c.Cust_lname }}</span
-                              >
-                              <span
-                                class="text-muted fw-normal text-wrap mb-1 d-block"
-                                >{{c.BuildingUnitStreet_No}}, {{c.Barangay}}, {{c.Town_City}}, {{c.Province}}</span
-                              >
-                              <span class="text-muted fw-normal d-block"
-                                >{{c.Phoneno}}</span
-                              >
+                              <span class="fs-14 mb-2 d-block">
+                                {{ c.Cust_fname }} {{ c.Cust_mname }} {{ c.Cust_lname }}
+                              </span>
+                              <span class="text-muted fw-normal text-wrap mb-1 d-block">
+                                {{ c.BuildingUnitStreet_No }}, {{ c.Barangay }}, {{ c.Town_City }},
+                                {{ c.Province }}
+                              </span>
+                              <span class="text-muted fw-normal d-block">{{ c.Phoneno }}</span>
                             </div>
                           </label>
                           <div class="edit-btn">
-                          <a>
-                            <i class="fa fa-pencil" aria-hidden="true"></i>
-                            <i class="fa fa-trash" aria-hidden="true" (click)="deleteaddress(c.CustAdd_ID)"></i>
-                          </a>
+                            <a>
+                              <i
+                                class="fa fa-pencil mx-3"
+                                aria-hidden="true"
+                                data-bs-toggle="modal"
+                                data-bs-target="#updateADDRESS"
+                                (click)="openEditModal(c.CustAdd_ID)"
+                              ></i>
+                              <span
+                                class="fa fa-trash"
+                                aria-hidden="true"
+                                (click)="deleteaddress(c.CustAdd_ID)"
+                              ></span>
+                            </a>
                           </div>
                         </div>
                       </div>
@@ -250,32 +251,25 @@
                   </div>
                 </div>
               </div>
+              
 
               <div class="feed-item-list" [hidden]="selectAddDel==false">
                 <div [hidden]>
                   <h5 class="font-size-22 mb-1"><b>Delivery Address</b></h5>
-                 <!-- <button
-                    class="btn btn-add mb-2"
-                    [disabled]="isNextStepDisabled"
-                  >
-                    Add new Address
-                  </button> -->
                   <div class="mb-3">
                     <div class="row">
                       <div class="col-lg-12 col-sm-6">
-                        <div data-bs-toggle="collapse" *ngFor="let c of address" >
+                        <div data-bs-toggle="collapse" *ngFor="let c of address; let i = index" >
                           <label class="card-radio-label mb-0">
                             <input
-                              type="radio" 
-                              name="ShipServ_price" 
-                              id="ShipServ_price_{{c.CustAdd_ID}}"
-                              [value]="c.CustAdd_ID" 
-                              [checked]="c.isDefault"
-                              (change)="selectAddress(c)"
+                              type="radio"
+                              name="ShipServ_price"
+                              id="ShipServ_price"
+                              [value]="c.CustAdd_ID"
+                              [checked]="c.isDefault || i === 0"
                               class="card-radio-input"
                             />
                             <div class="card-radio text-truncate p-3">
-                              <!-- <span class="fs-14 mb-4 d-block">Address 1</span> -->
                               <span class="fs-14 mb-2 d-block"
                                 >{{ c.Cust_fname }} {{ c.Cust_mname }} {{ c.Cust_lname }}</span
                               >
@@ -289,10 +283,10 @@
                             </div>
                           </label>
                           <div class="edit-btn">
-                          <a >
-                            <i class="fa fa-pencil" aria-hidden="true"></i>
-                            <i class="fa fa-trash" aria-hidden="true" (click)="deleteaddress(c.CustAdd_ID)"></i>
-                          </a>
+                            <a >
+                              <i class="fa fa-pencil mx-3" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#updateADDRESS" (click)="openEditModal(c.CustAdd_ID)"></i>
+                              <span class="fa fa-trash" aria-hidden="true" (click)="deleteaddress(c.CustAdd_ID)"></span>
+                            </a>
                           </div>
                         </div>
                       </div>
@@ -318,39 +312,14 @@
           <div class="table-responsive">
             <table class="table table-centered mb-0 table-nowrap">
               <thead>
-                <!-- <tr>
-                  <th class="border-top-0" style="width: 110px" scope="col">
-                    Laundry
-                  </th>
-                  <th class="border-top-0" scope="col">Quantity</th>
-                  <th class="border-top-0" scope="col">Price</th>
-                </tr> -->
               </thead>
               <tbody>
-                <!-- @for (item of laundrylist; track item.category) {
-                <tr>
-                  <td>
-                    <h5 class="font-size-16 text-truncate">
-                      <a href="#" class="text-dark">{{ item.Category }}</a>
-                    </h5>
-                  </td>
-                  <td><p class="text-muted mb-0 mt-1">{{ item.Qty }}</p></td>
-                  <td>{{ item.Price | currency:'PHP':'symbol':'1.2-2' }}</td>
-                </tr>
-                } -->
-
                 <tr>
                   <td colspan="2">
                     <h5 class="font-size-14 m-0">Sub Total :</h5>
                   </td>
                   <td>{{ calculateSubTotal() | currency:'PHP':'symbol':'1.2-2' }}</td>
                 </tr>
-                <!-- <tr>
-                  <td colspan="2">
-                    <h5 class="font-size-14 m-0">Discount :</h5>
-                  </td>
-                  <td>{{ discount | currency:'PHP':'symbol':'1.2-2' }}</td>
-                </tr> -->
 
                 <tr *ngIf="selectedServices.includes('Rush-Job')">
                   <td colspan="3" class="text-muted">
@@ -394,8 +363,8 @@
       <div class="modal-body">
         <div class="card" style="max-width: 600px;">
           <div class="card-body">
-            <form [formGroup]="addaddress" (ngSubmit)="newaddress()">         
-              <!-- Phone Number -->
+            <form [formGroup]="addaddress" (ngSubmit)="newaddress()">
+              <!-- Phone Number and Town/City -->
               <div class="row mb-3">
                 <div class="col-md-6">
                   <label for="phoneNumber" class="form-label">Phone Number</label>
@@ -410,74 +379,214 @@
                     Please enter a valid phone number (10-12 digits).
                   </small>
                 </div>
-
-                <div class="col-md-6">
-                  <label for="barangay" class="form-label">Barangay</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="barangay"
-                    formControlName="Barangay"
-                    placeholder="Barangay"
-                  />
-                  <small *ngIf="addaddress.get('Barangay')?.touched && addaddress.get('Barangay')?.invalid" class="text-danger">
-                    This field is required.
-                  </small>
-                </div>
-              </div>
-
-
-              <!-- Town City -->
-              <div class="row mb-3">
+            
                 <div class="col-md-6">
                   <label for="townCity" class="form-label">Town/City</label>
-                  <input
-                    type="text"
+                  <select
                     class="form-control"
                     id="townCity"
                     formControlName="Town_City"
-                    placeholder="Town/City"
-                  />
+                    (change)="onTownCityChange()"
+                  >
+                    <option value="" selected >Select Town/City</option>
+                    <option *ngFor="let town of towns" [value]="town">{{ town }}</option>
+                  </select>
                   <small *ngIf="addaddress.get('Town_City')?.touched && addaddress.get('Town_City')?.invalid" class="text-danger">
                     This field is required.
                   </small>
                 </div>
-       
+              </div>
+            
+              <!-- Barangay and Province -->
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label for="barangay" class="form-label">Barangay</label>
+                  <select
+                    class="form-control"
+                    id="barangay"
+                    formControlName="Barangay"
+                    [attr.disabled]="!addaddress.get('Town_City')?.value ? true : null"
+                  >
+                    <option value="" selected>Select Barangay</option>
+                    <option *ngFor="let barangaysInSison of barangaysInSison" [value]="barangaysInSison">
+                      {{ barangaysInSison }}
+                    </option>
+                  </select>                
+                  <small *ngIf="addaddress.get('Barangay')?.touched && addaddress.get('Barangay')?.invalid" class="text-danger">
+                    This field is required.
+                  </small>
+                </div>
+            
                 <div class="col-md-6">
                   <label for="province" class="form-label">Province</label>
-                  <input
-                    type="text"
+                  <select
                     class="form-control"
                     id="province"
                     formControlName="Province"
-                    placeholder="Province"
-                  />
+                    [attr.disabled]="!addaddress.get('Town_City')?.value ? true : null"
+                  >
+                    <option value="" disabled>Select Province</option>
+                    <option *ngFor="let barangaysInRosario of barangaysInRosario" [value]="barangaysInRosario">
+                      {{ barangaysInRosario }}
+                    </option>
+                  </select>
                   <small *ngIf="addaddress.get('Province')?.touched && addaddress.get('Province')?.invalid" class="text-danger">
                     This field is required.
                   </small>
                 </div>
               </div>
-
-              <!-- Street/Building No. -->
+            
+              <!-- Building/Street -->
               <div class="row mb-3">
-                <div class="col-md">
-                  <label for="buildingNoStreet" class="form-label">Street/Building No.</label>
-                  <input
-                    type="text"
+                <div class="col-md-12">
+                  <label for="buildingNoStreet" class="form-label">Building No./Street</label>
+                  <input type="text"  class="form-control" formControlName="BuildingUnitStreet_No"   [attr.disabled]="!addaddress.get('Town_City')?.value ? true : null">
+                  <!-- <select
                     class="form-control"
                     id="buildingNoStreet"
                     formControlName="BuildingUnitStreet_No"
-                    placeholder="Street/Building No."
-                  />
+                    [attr.disabled]="!addaddress.get('Town_City')?.value ? true : null"
+                  >
+                    <option value="" disabled>Select Building No./Street</option>
+                    <option *ngFor="let barangaysInPugo of barangaysInPugo" [value]="barangaysInPugo">
+                      {{ barangaysInPugo }}
+                    </option>
+                  </select> -->
                   <small *ngIf="addaddress.get('BuildingUnitStreet_No')?.touched && addaddress.get('BuildingUnitStreet_No')?.invalid" class="text-danger">
                     This field is required.
                   </small>
                 </div>
               </div>
-
+            
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Save Address</button>
+              </div>
+            </form>
+            
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="updateADDRESS" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Update Address</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="card" style="max-width: 600px;">
+          <div class="card-body">
+            <form [formGroup]="editaddress" (ngSubmit)="updateAddress()">
+              <!-- Phone Number and Town/City -->
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label for="phoneNumber" class="form-label">Phone Number</label>
+                  <input
+                    type="hidden"
+                    class="form-control"
+                    id="CustAdd_ID"
+                    formControlName="CustAdd_ID"
+                    placeholder="CustAdd_ID"
+                  />
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="phoneNumber"
+                    formControlName="Phoneno"
+                    placeholder="Phone Number"
+                  />
+                  <small *ngIf="editaddress.get('Phoneno')?.touched && editaddress.get('Phoneno')?.invalid" class="text-danger">
+                    Please enter a valid phone number (10-12 digits).
+                  </small>
+                </div>
+            
+                <div class="col-md-6">
+                  <label for="townCity" class="form-label">Town/City</label>
+                  <select
+                    class="form-control"
+                    id="townCity"
+                    formControlName="Town_City"
+                    (change)="onTownCityChange()"
+                  >
+                    <option value="" selected >Select Town/City</option>
+                    <option *ngFor="let town of towns" [value]="town">{{ town }}</option>
+                  </select>
+                  <small *ngIf="editaddress.get('Town_City')?.touched && editaddress.get('Town_City')?.invalid" class="text-danger">
+                    This field is required.
+                  </small>
+                </div>
+              </div>
+            
+              <!-- Barangay and Province -->
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label for="barangay" class="form-label">Barangay</label>
+                  <select
+                    class="form-control"
+                    id="barangay"
+                    formControlName="Barangay"
+                    [attr.disabled]="!editaddress.get('Town_City')?.value ? true : null"
+                  >
+                    <option value="" selected>Select Barangay</option>
+                    <option *ngFor="let barangaysInSison of barangaysInSison" [value]="barangaysInSison">
+                      {{ barangaysInSison }}
+                    </option>
+                  </select>                
+                  <small *ngIf="editaddress.get('Barangay')?.touched && editaddress.get('Barangay')?.invalid" class="text-danger">
+                    This field is required.
+                  </small>
+                </div>
+            
+                <div class="col-md-6">
+                  <label for="province" class="form-label">Province</label>
+                  <select
+                    class="form-control"
+                    id="province"
+                    formControlName="Province"
+                    [attr.disabled]="!editaddress.get('Town_City')?.value ? true : null"
+                  >
+                    <option value="" disabled>Select Province</option>
+                    <option *ngFor="let barangaysInRosario of barangaysInRosario" [value]="barangaysInRosario">
+                      {{ barangaysInRosario }}
+                    </option>
+                  </select>
+                  <small *ngIf="editaddress.get('Province')?.touched && editaddress.get('Province')?.invalid" class="text-danger">
+                    This field is required.
+                  </small>
+                </div>
+              </div>
+            
+              <!-- Building/Street -->
+              <div class="row mb-3">
+                <div class="col-md-12">
+                  <input type="text" class="form-control" formControlName="BuildingUnitStreet_No"   [attr.disabled]="!addaddress.get('Town_City')?.value ? true : null">
+                  <!-- <label for="buildingNoStreet" class="form-label">Building No./Street</label>
+                  <select
+                    class="form-control"
+                    id="buildingNoStreet"
+                    formControlName="BuildingUnitStreet_No"
+                    [attr.disabled]="!editaddress.get('Town_City')?.value ? true : null"
+                  >
+                    <option value="" disabled>Select Building No./Street</option>
+                    <option *ngFor="let barangaysInPugo of barangaysInPugo" [value]="barangaysInPugo">
+                      {{ barangaysInPugo }}
+                    </option>
+                  </select> -->
+                  <small *ngIf="editaddress.get('BuildingUnitStreet_No')?.touched && editaddress.get('BuildingUnitStreet_No')?.invalid" class="text-danger">
+                    This field is required.
+                  </small>
+                </div>
+              </div>
+              
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Update Address</button>
               </div>
             </form>
           </div>
@@ -486,4 +595,5 @@
     </div>
   </div>
 </div>
+
 

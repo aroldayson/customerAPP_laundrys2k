@@ -194,22 +194,25 @@
       
                   <!-- Email Field -->
                   <div class="mb-3">
-                    <label class="small mb-1" for="email">Email Address</label>
-                    <input 
-                      type="email" 
-                      class="form-control" 
-                      id="email" 
-                      formControlName="Cust_email" 
-                      readonly>
+                   
                   </div>
       
                   <!-- Password Field -->
                   <div class="row gx-3 mb-3">
                     <div class="col-md-6">
+                      <label class="small mb-1" for="email">Email Address</label>
+                      <input 
+                        type="email" 
+                        class="form-control" 
+                        id="email" 
+                        formControlName="Cust_email" 
+                        readonly>
+                    </div>
+                    <div class="col-md-6">
                       <label class="small mb-1" for="password">Password</label>
                       <div class="position-relative">
                         <input 
-                          type="{{ showPassword ? 'text' : 'password' }}" 
+                          type="{{ showPassword ? 'password' : 'text' }}" 
                           class="form-control password-input" 
                           id="password" 
                           formControlName="Cust_password">
@@ -219,16 +222,7 @@
                         </i>
                       </div>
                     </div>
-                    <div class="col-md-6">
-                      <label class="small mb-1" for="password">Address</label>
-                      <div class="position-relative">
-                        <input 
-                          type="address" 
-                          class="form-control" 
-                          id="adress" 
-                          formControlName="Cust_address">
-                      </div>
-                    </div>
+                    
                   </div>
                   
       

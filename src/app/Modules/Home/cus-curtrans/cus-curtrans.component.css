@@ -720,9 +720,9 @@ thead th {
   color: #fff;
 }
 
-thead th:hover {
+/* thead th:hover {
   color: #ffbb33;
-}
+} */
 
 tbody tr {
   transition: background-color 0.3s ease;
@@ -757,7 +757,7 @@ td {
   color: #000000; 
 }
 
-.status.recieve {
+.status.recieved {
   background-color: #FFD84D; 
   color: #000000; 
 }
@@ -783,6 +783,16 @@ td {
   color: #000000; 
 }
 
+
+.table-row {
+  cursor: pointer; 
+  transition: background-color 0.3s ease, color 0.3s ease; 
+}
+
+.table-row:hover {
+  background-color: #f2f2f2; 
+  color: #007bff;
+}
 
 
 .status.shipped {

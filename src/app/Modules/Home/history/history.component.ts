@@ -21,7 +21,7 @@ export class HistoryComponent implements OnInit {
   transacDates: string[] = [];
   currentDate: string | null = null;
   getDet: any[] = [];
-  Transac_ID: string | null = null;
+  // Transac_ID: string | null = null;
   statuses: string[] = [];
   details: any;
   customer = localStorage.getItem('Cust_ID');
@@ -44,11 +44,12 @@ export class HistoryComponent implements OnInit {
   totalserviceprice: any;
   payments: any;
   paymentss: any;
+  Transac_ID = localStorage.getItem('trans_ID');
 
   constructor(private http: HttpClient, private service: MyServiceService) {}
 
   ngOnInit(): void {
-    this.Transac_ID = localStorage.getItem('trans_ID');
+    // this.Transac_ID = localStorage.getItem('trans_ID');
   
     // Fetch customer details
     this.service.getcustomer(this.customer).subscribe((result: any) => {
@@ -58,6 +59,7 @@ export class HistoryComponent implements OnInit {
   
     // Format current date
     this.currentDate = this.formatDate(new Date());
+    // this.gettrack();
   
     // Fetch transaction details if Transac_ID exists
     if (this.Transac_ID) {
@@ -79,32 +81,27 @@ export class HistoryComponent implements OnInit {
           this.totalserviceprice = result[0].totalserviceprice
           this.transacDate = result[0].services[0].trans_date   
           this.estimatedate = result[0].services[0].estimated_date   
-          this.paymentss = result[0].payments[0].Amount        
+          this.paymentss = result[0].payments      
           console.log(result,this.getDet,this.servicearray2,this.servicearray,this.paymentss)
   
-          // Ensure transaction details are available
           if (this.getDet.length > 0) {
             const statuses: string[] = [];
             const transacDates: string[] = [];
-  
-            // Sort transaction details by datetime in descending order
+
             const sortedTransactions = this.getDet[0].Transac_status.sort((a: any) => {
               return new Date(a.TransacStatus_datetime).getTime()
             });
   
-            // Process each sorted transaction to capture all the dates and statuses
             sortedTransactions.forEach((transac: any) => {
               const status = transac.TransacStatus_name;
               const transacDate = transac.TransacStatus_datetime;
-  
-              // Add status and datetime to the arrays
+
               if (status) {
-                statuses.push(status.toLowerCase()); // Ensure the status is in lowercase
-                this.updateCurrentStep(status.toLowerCase()); // Update the current step automatically
+                statuses.push(status.toLowerCase());
+                this.updateCurrentStep(status.toLowerCase());
               }
   
               if (transacDate) {
-                // Format and push each transaction date into the array
                 transacDates.push(this.formatDateString(transacDate));
               } else {
                 transacDates.push('No transaction date available');
@@ -114,15 +111,12 @@ export class HistoryComponent implements OnInit {
             this.statuses = statuses;
             this.transacDates = transacDates;
   
-            // Get the latest (last step) transaction date from the sorted list
             const latestTransactionDate = sortedTransactions.length > 0 ? sortedTransactions[0].TransacStatus_datetime : null;
   
-            // Format and display the latest date in the console
             if (latestTransactionDate) {
               const formattedLatestDate = this.formatDateString(latestTransactionDate);
               console.log('Latest transaction date:', formattedLatestDate);
   
-              // Here, you can display the latest transaction date in your template or component
               this.latestTransactionDate = formattedLatestDate;
             } else {
               console.log('No transaction date available');
@@ -135,22 +129,29 @@ export class HistoryComponent implements OnInit {
       );
     }
   }
-  
-  
-  
-  
+
+  getColor(i: number): string {
+    if (i === 0) return '#FFA94D';  // Green for first step
+    if (i === 1) return '#FFD84D';  // Orange for second step
+    if (i === 2) return '#4FC3F7';  // Blue for third step
+    if (i === 3) return '#B39DDB';  // Purple for fourth step
+    if (i === 4) return '#FFEB3B';  // Blue-green for fifth step
+    if (i === 5) return '#7CB342';  // Red for sixth step
+    return '#4e73df';  
+  }
   
 
+  
   // Update the current step based on status
   updateCurrentStep(status: string): void {
     const stepIndex = this.steps.findIndex(step => step.toLowerCase() === status.toLowerCase());
     if (stepIndex >= 0) {
       this.currentStep = stepIndex;
       this.progressPercent = (this.currentStep / (this.steps.length + 1)) * 100;
-      this.currentStep = stepIndex; // Update the current step when status matches
-      this.checkAndShowDateForCurrentStep(stepIndex); // Ensure the current step date is updated
+      this.currentStep = stepIndex; 
+      this.checkAndShowDateForCurrentStep(stepIndex); 
     }
-    console.log('Updated current step:', this.currentStep); // Optional: Debugging log
+    console.log('Updated current step:', this.currentStep); 
   }
 
   // Ensure current step's transaction date is available
@@ -186,12 +187,18 @@ export class HistoryComponent implements OnInit {
   }
 
   // Handle click on a specific step
+  // tracking(stepIndex: number): void {
+  //   if (stepIndex >= 0 && stepIndex < this.steps.length) {
+  //     this.currentStep = stepIndex; // Update the current step
+  //     console.log("Current step updated:", this.currentStep);
+  //   }
+  // }
   tracking(stepIndex: number): void {
     if (stepIndex >= 0 && stepIndex < this.steps.length) {
-      this.currentStep = stepIndex; // Update the current step
+      this.currentStep = stepIndex;
+      console.log("Current step updated:", this.currentStep); // Add a console log to check if currentStep is updated correctly
     }
   }
-
   // Handle file selection and image preview
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -220,7 +227,7 @@ export class HistoryComponent implements OnInit {
 
       this.http
         .post(
-          `http://10.0.118.62:8000/api/upload/${this.cust_id.id}`,
+          `http://localhost:8000/api/upload/${this.cust_id.id}`,
           formData
         )
         .subscribe(

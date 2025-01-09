@@ -622,23 +622,56 @@ export class CusCurtransComponent implements OnInit{
     return totalQty;
   }
   
-  updateStatus(id: any){
-    this.user.updateStatus(id).subscribe(
-      (response: any) => {
-        // location.reload();
-        console.log('Update successful', response);
-        Swal.fire('Success!', 'Laundry Category Price details dalete successfully.', 'success').then(() => {
-          // location.reload(); 
-          this.fetchtransactions();
+  updateStatus(id: any) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to cancel this laundry order?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, cancel it!',
+      cancelButtonText: 'No, keep it',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // User confirmed the cancellation
+        this.user.updateStatus(id).subscribe(
+          (response: any) => {
+            console.log('Update successful', response);
+            Swal.fire({
+              title: 'Cancelled!',
+              text: 'The laundry order has been cancelled successfully.',
+              icon: 'success',
+              showConfirmButton: false,
+              timer: 1500, // Automatically closes after 1.5 seconds
+            }).then(() => {
+              this.fetchtransactions(); // Refresh transactions
+            });
+            this.route.navigate(['/main/cusmainhome/homemain/cuscurtrans']);
+          },
+          (error) => {
+            console.error('Update failed', error);
+            Swal.fire({
+              title: 'Error!',
+              text: 'There was an error cancelling the laundry order.',
+              icon: 'error',
+              showConfirmButton: false,
+              timer: 1500, // Automatically closes after 1.5 seconds
+            });
+          }
+        );
+      } else {
+        // User cancelled the action
+        Swal.fire({
+          title: 'Cancelled',
+          text: 'The laundry order was not cancelled.',
+          icon: 'info',
+          showConfirmButton: false,
+          timer: 1500, // Automatically closes after 1.5 seconds
         });
-        this.route.navigate(['/main/cusmainhome/homemain/cuscurtrans']);
-      },
-      error => {
-        console.error('Update failed', error);
-        Swal.fire('Error!', 'There was an error updating the category.', 'error');
       }
-    );
-  }
+    });
+  }  
 
   cancelItem(id: any){
     console.log(id);

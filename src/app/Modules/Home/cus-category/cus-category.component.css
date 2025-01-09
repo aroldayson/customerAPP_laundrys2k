@@ -148,7 +148,7 @@
     display: block
 }
 
-.edit-btn {
+/* .edit-btn {
     width: 35px;
     height: 35px;
     line-height: 40px;
@@ -156,7 +156,7 @@
     position: absolute;
     right: 25px;
     margin-top: -50px
-}
+} */
 
 .card-radio-input {
     display: none
@@ -218,7 +218,7 @@ label{
   color: #fff;
 }
 .edit-btn {
-      width: 35px;
+      width: 80px;
       height: 35px;
       line-height: 40px;
       text-align: center;
@@ -226,9 +226,12 @@ label{
       right: 25px;
       margin-top: -50px;
   }
-  .edit-btn i {
-    /* color: #ff746c; */
-  }
+.edit-btn i {
+    color: #1308f3;
+}
+.edit-btn span {
+    color: #fc0d00;
+}
 .edit-btn i:hover{
   /* color: #e8443b; */
 }
@@ -243,17 +246,24 @@ label{
 .text-muted {
     font-style: italic;
     color: rgb(255, 211, 65);
-  }
-  .styled-heading {
-    margin: auto;
-    color: #ffbb33;
-    letter-spacing: .4em;
-    font-size: 3em;
-    text-shadow: 0 1px #5998e2, -1px 0 #307ed8, -1px 2px #5998e2, -2px 1px #307ed8,
-      -2px 3px #5998e2, -3px 2px #307ed8, -3px 4px #5998e2, -4px 3px #307ed8,
-      -4px 5px #5998e2, -5px 4px #307ed8, -5px 6px #5998e2, -6px 5px #307ed8,
-      -6px 7px #5998e2, -7px 6px #307ed8, -7px 8px #5998e2, -8px 7px #307ed8;
-    text-align: center;
-  }
+}
+
+.styled-heading {
+margin: auto;
+color: #ffbb33;
+letter-spacing: .4em;
+font-size: 3em;
+text-shadow: 0 1px #5998e2, -1px 0 #307ed8, -1px 2px #5998e2, -2px 1px #307ed8,
+    -2px 3px #5998e2, -3px 2px #307ed8, -3px 4px #5998e2, -4px 3px #307ed8,
+    -4px 5px #5998e2, -5px 4px #307ed8, -5px 6px #5998e2, -6px 5px #307ed8,
+    -6px 7px #5998e2, -7px 6px #307ed8, -7px 8px #5998e2, -8px 7px #307ed8;
+text-align: center;
+}
+
+.custom-disabled:disabled {
+color: black; /* Text color remains black */
+background-color: #e9ecef; /* Optional: Keeps the Bootstrap disabled background */
+opacity: 1; /* Ensures the text is fully visible */
+}
   
   

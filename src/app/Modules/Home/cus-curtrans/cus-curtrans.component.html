@@ -1,11 +1,6 @@
-
-
-
-
-
 <div class="header">
   <h1>S2K Laundry</h1>
-  <p><span style="color: #15304f;">Welcome back </span><span style="color: #ffffff;text-shadow: 2px 2px 5px #15304f;">{{cust_name}}</span></p>
+  <p><span style="color: #15304f;">Welcome </span><span style="color: #ffffff;text-shadow: 2px 2px 5px #15304f;">{{cust_name}}</span></p>
   <button class="btn btn-new mb-2" (click)="gentrack()">NEW TRANSACTION</button>
 </div>
 
@@ -17,225 +12,117 @@
         Transactions
       </h3>
     </div>
-  </div>
-
-  <!-- <div class="search-container mb-4">
-    <input
-      type="text"
-      id="searchInput"
-      [(ngModel)]="keyword"
-      autocomplete="off"
-      placeholder="Search Transactions..."
-      class="search-input form-control shadow-lg rounded-pill py-2 px-4"
-    />
-  </div> -->
-      <!-- <div class="col"> -->
-        <!-- <div class="table-responsive" style="max-width: 100%;border-radius: 25px;"> -->
-          <main class="table" id="customers_table">
-            <section class="table__header">
-                <h1>Customer's Orders</h1>
-                <div class="input-group">
-                    <input type="search" placeholder="Search Data..." [(ngModel)]="keyword">
-                </div>
-            </section>
-            <section class="table__body">
-                <table>
-                    <thead>
-                        <tr>
-                            <th> Tracking Number </th>
-                            <th> Transaction Date </th>
-                            <th> Estimated Date </th>
-                            <th> Status </th>
-                            <th> Price </th>
-                            <th> Action </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                      @for (item of trans | searchFilter: keyword ; track item.trans_ID) {
-                        <tr>
-                            <td (click)="viewItem(item.trans_ID)"> {{item.track_num}} </td>
-                            <td>{{item.trans_date | date:'MM/dd/yyyy'}}</td>
-                            <td>{{item.estimated_date | date:'MM/dd/yyyy'}}</td>
-                            <td>
-                              <p *ngIf="item.trans_stat === 'pending'" class="status pending">Pending</p>
-                              <p *ngIf="item.trans_stat === 'receive'" class="status release">Recieve</p>
-                              <p *ngIf="item.trans_stat === 'washing'" class="status washing">Washing</p>
-                              <p *ngIf="item.trans_stat === 'folding'" class="status folding">Folding</p>
-                              <p *ngIf="item.trans_stat === 'forRelease'" class="status release">For Release</p>
-                            </td>
-                            
-                            <td>  
-                              {{item.calculatedTotalPrice | currency:'PHP':'symbol':'1.2-2'}} 
-                              <i class="fa fa-info-circle text-info ms-1"
-                                data-bs-toggle="tooltip" 
-                                data-bs-placement="left"
-                                title="Total price may vary based on additional services and weight.">
-                              </i>
-                            </td>
-                            <td> 
-                              <button class="btn btn-edit me-2"
-                                [disabled]="item.trans_stat.toLowerCase() !== 'pending'"
-                                (click)="showDetails(item.track_num, item, item.trans_ID)">
-                                <i class="fa fa-pencil" aria-hidden="true"></i> 
-                              </button>
-                              <button class="btn btn-delete"
-                              [disabled]="item.trans_stat.toLowerCase() !== 'pending'"
-                              (click)="updateStatus(item.trans_ID)">
-                                <i class="fas fa-trash-alt me-1"></i> 
-                              </button>                    
-                            </td>
-                        </tr>
-                      }
-                        <!-- <tr>
-                            <td> S2K-D5221000017 </td>
-                            <td> 01/09/2025 </td>
-                            <td> Kathmandu </td>
-                            <td>
-                                <p class="status cancelled">Cancelled</p>
-                            </td>
-                            <td> 27 Aug, 2023 </td>
-                            <td> 
-                              <button class="btn btn-edit me-2">
-                                <i class="fa fa-pencil" aria-hidden="true"></i> 
-                              </button>
-                              <button class="btn btn-delete">
-                                <i class="fas fa-trash-alt me-1"></i> 
-                              </button>      
-                            </td>
-                        </tr>
-                        <tr>
-                            <td> S2K-D5221000018 </td>
-                            <td> 01/10/2025 </td>
-                            <td> Tokyo </td>
-                            <td>
-                                <p class="status shipped">Shipped</p>
-                            </td>
-                            <td> 14 Mar, 2023 </td>
-                            <td>
-                              <button class="btn btn-edit me-2">
-                                <i class="fa fa-pencil" aria-hidden="true"></i> 
-                              </button>
-                              <button class="btn btn-delete">
-                                <i class="fas fa-trash-alt me-1"></i> 
-                              </button>      
-                            </td>
-                        </tr> -->
-                    </tbody>
-                </table>
-            </section>
-          </main>
-          <!-- <table class="table table-hover d-none d-md-table">
-            <thead class="table-primary">
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Tracking num</th>
-                <th scope="col">Transaction Date</th>
-                <th scope="col">Estimated Date</th>
-                <th scope="col">Status</th>
-                <th scope="col">Price</th>
-                <th scope="col">Actions</th>
-              </tr>
+</div>
+  <main class="table" id="customers_table">
+    <section class="table__header">
+        <h1>Customer's Orders</h1>
+        <div class="input-group">
+            <input type="search" placeholder="Search Data..." [(ngModel)]="keyword">
+        </div>
+    </section>
+    <section class="table__body">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th> Tracking Number </th>
+                    <th> Transaction Date </th>
+                    <th> Estimated Date </th>
+                    <th> Status </th>
+                    <th> Price </th>
+                    <th> Action </th>
+                </tr>
             </thead>
             <tbody>
               @for (item of trans | searchFilter: keyword ; track item.trans_ID) {
-              <tr>
-                <td>{{item.trans_ID}}</td>
-                <td (click)="viewItem(item.trans_ID)">{{item.track_num}}</td>
-                <td>{{item.trans_date | date:'MM/dd/yyyy'}}</td>
-                <td>{{item.estimated_date | date:'MM/dd/yyyy'}}</td>
-                <td>
-                  <span 
-                    class="badge" 
-                    [ngClass]="{
-                      'bg-warning': item.trans_stat === 'Pending',
-                      'bg-success': item.trans_stat === 'Completed',
-                      'bg-secondary': item.trans_stat !== 'Pending' && item.trans_stat !== 'Completed'
-                    }">
-                    {{item.trans_stat}}
-                  </span>
-                </td>
-                <td>
-                  {{item.calculatedTotalPrice | currency:'PHP':'symbol':'1.2-2'}}
-                  <i class="fa fa-info-circle text-info ms-1"
-                     data-bs-toggle="tooltip" 
-                     data-bs-placement="left"
-                     title="Total price may vary based on additional services and weight.">
-                  </i>
-                </td>
-                <td>
-                  <button class="btn btn-sm btn-primary me-2" 
-                    [disabled]="item.trans_stat.toLowerCase() !== 'pending'"
-                    (click)="showDetails(item.track_num, item, item.trans_ID)">
-                    <i class="fa fa-pencil"></i>
-                  </button>
-                  <button class="btn btn-sm btn-danger"
-                    [disabled]="item.trans_stat.toLowerCase() !== 'pending'"
-                    (click)="updateStatus(item.trans_ID)">
-                    <i class="fa fa-trash"></i>
-                  </button>
-                </td>
-              </tr>
+                <tr class="table-row">
+                    <td (click)="viewItem(item.trans_ID)"> {{item.track_num}} </td>
+                    <td (click)="viewItem(item.trans_ID)">{{item.trans_date | date:'MM/dd/yyyy'}}</td>
+                    <td (click)="viewItem(item.trans_ID)">{{item.estimated_date | date:'MM/dd/yyyy'}}</td>
+                    <td>
+                      <p *ngIf="item.trans_stat === 'pending'" class="status pending">Pending</p>
+                      <p *ngIf="item.trans_stat === 'received'" class="status recieved">Recieved</p>
+                      <p *ngIf="item.trans_stat === 'washing'" class="status washing">Washing</p>
+                      <p *ngIf="item.trans_stat === 'folding'" class="status folding">Folding</p>
+                      <p *ngIf="item.trans_stat === 'forRelease'" class="status release">For Release</p>
+                    </td>
+                    
+                    <td>  
+                      {{item.calculatedTotalPrice | currency:'PHP':'symbol':'1.2-2'}} 
+                      <i class="fa fa-info-circle text-info ms-1"
+                        data-bs-toggle="tooltip" 
+                        data-bs-placement="left"
+                        title="Total price may vary based on additional services and weight.">
+                      </i>
+                    </td>
+                    <td> 
+                      <button class="btn btn-edit me-2"
+                        [disabled]="item.trans_stat.toLowerCase() !== 'pending'"
+                        (click)="showDetails(item.track_num, item, item.trans_ID)">
+                        <i class="fa fa-pencil" aria-hidden="true"></i> 
+                      </button>
+                      <button class="btn btn-delete"
+                      [disabled]="item.trans_stat.toLowerCase() !== 'pending'"
+                      (click)="updateStatus(item.trans_ID)">
+                        <i class="fas fa-trash-alt me-1"></i> 
+                      </button>                    
+                    </td>
+                </tr>
               }
             </tbody>
-          </table> -->
-        </div>
-        
-        <div class="d-md-none">
-          @for (item of trans | searchFilter: keyword ; track item.trans_ID) {
-          <div class="card mb-3 shadow-sm">
-            <div class="card-body">
-              <h5 class="card-title mb-2">
-                <strong>Tracking #:</strong> {{item.track_num}}
-              </h5>
-              <p class="card-text mb-2">
-                <strong>Item:</strong> {{item.Category}}<br>
-                <strong>Qty:</strong> {{item.totalQty}}<br>
-                <strong>Weight:</strong> {{item.totalWeight}} kg<br>
-                <strong>Transaction Date:</strong> {{item.trans_date | date:'MM/dd/yyyy'}}<br>
-                <strong>Estimated Date:</strong> {{item.estimated_date | date:'MM/dd/yyyy'}}<br>
-                <strong>Status:</strong> 
-                <span 
-                  class="badge"
-                  [ngClass]="{
-                    'bg-warning': item.trans_stat === 'Pending',
-                    'bg-success': item.trans_stat === 'Completed',
-                    'bg-secondary': item.trans_stat !== 'Pending' && item.trans_stat !== 'Completed'
-                  }">
-                  {{item.trans_stat}}
-                </span><br>
-                <strong>Price:</strong> {{item.totalprice | currency:'PHP':'symbol':'1.2-2'}}<br>
-                <strong>Estimated Price:</strong> {{item.calculatedTotalPrice | currency:'PHP':'symbol':'1.2-2'}}
-                <i class="fa fa-info-circle text-info ms-1"
-                   data-bs-toggle="tooltip" 
-                   data-bs-placement="right"
-                   title="Total price may vary based on additional services and weight.">
-                </i><br>
-                <strong>Service:</strong> {{item.Addservice_name}}
-              </p>
-              <div class="d-flex justify-content-start">
-                <button class="btn btn-sm btn-primary me-2"
-                  [disabled]="item.trans_stat.toLowerCase() !== 'pending'"
-                  (click)="showDetails(item.track_num, item, item.trans_ID); $event.stopPropagation()">
-                  <i class="fa fa-pencil"></i> Edit
-                </button>
-                <button class="btn btn-sm btn-danger"
-                  [disabled]="item.trans_stat.toLowerCase() !== 'pending'"
-                  (click)="updateStatus(item.trans_ID); $event.stopPropagation()">
-                  <i class="fa fa-trash"></i> Delete
-                </button>
-              </div>
-            </div>
-          </div>
-          }
-        </div>
-        
-      <!-- </div> -->
-    <!-- } -->
-  <!-- </div> -->
-
-<!-- </div> -->
-
-<!-- Modal -->
+        </table>
+    </section>
+  </main>
+</div>
+      
+<div class="d-md-none">
+  @for (item of trans | searchFilter: keyword ; track item.trans_ID) {
+  <div class="card mb-3 shadow-sm">
+    <div class="card-body">
+      <h5 class="card-title mb-2">
+        <strong>Tracking #:</strong> {{item.track_num}}
+      </h5>
+      <p class="card-text mb-2">
+        <strong>Item:</strong> {{item.Category}}<br>
+        <strong>Qty:</strong> {{item.totalQty}}<br>
+        <strong>Weight:</strong> {{item.totalWeight}} kg<br>
+        <strong>Transaction Date:</strong> {{item.trans_date | date:'MM/dd/yyyy'}}<br>
+        <strong>Estimated Date:</strong> {{item.estimated_date | date:'MM/dd/yyyy'}}<br>
+        <strong>Status:</strong> 
+        <span 
+          class="badge"
+          [ngClass]="{
+            'bg-warning': item.trans_stat === 'Pending',
+            'bg-success': item.trans_stat === 'Completed',
+            'bg-secondary': item.trans_stat !== 'Pending' && item.trans_stat !== 'Completed'
+          }">
+          {{item.trans_stat}}
+        </span><br>
+        <strong>Price:</strong> {{item.totalprice | currency:'PHP':'symbol':'1.2-2'}}<br>
+        <strong>Estimated Price:</strong> {{item.calculatedTotalPrice | currency:'PHP':'symbol':'1.2-2'}}
+        <i class="fa fa-info-circle text-info ms-1"
+            data-bs-toggle="tooltip" 
+            data-bs-placement="right"
+            title="Total price may vary based on additional services and weight.">
+        </i><br>
+        <strong>Service:</strong> {{item.Addservice_name}}
+      </p>
+      <div class="d-flex justify-content-start">
+        <button class="btn btn-sm btn-primary me-2"
+          [disabled]="item.trans_stat.toLowerCase() !== 'pending'"
+          (click)="showDetails(item.track_num, item, item.trans_ID); $event.stopPropagation()">
+          <i class="fa fa-pencil"></i> Edit
+        </button>
+        <button class="btn btn-sm btn-danger"
+          [disabled]="item.trans_stat.toLowerCase() !== 'pending'"
+          (click)="updateStatus(item.trans_ID); $event.stopPropagation()">
+          <i class="fa fa-trash"></i> Delete
+        </button>
+      </div>
+    </div>
+  </div>
+  }
+</div>
+      
 <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" #updateModal>
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content shadow-lg border-0 rounded-3">

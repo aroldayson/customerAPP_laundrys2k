@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { MyServiceService } from '../../../my-service.service';
 import Swal from 'sweetalert2';
@@ -35,6 +35,7 @@ export class CusCategoryComponent implements OnInit {
   selectAddDel: boolean = false;
   selectedPrice: number = 0;
   showmodaladdress: boolean = false;
+  Town_City: any;
 
   deliveryTown: string = '';
   deliveryBarangay: string = '';
@@ -66,6 +67,8 @@ export class CusCategoryComponent implements OnInit {
 
   showShippingAddress: boolean = false;
 
+  towns: string[] = ['Pugo', 'Sison', 'Rosario'];
+
   barangaysInSison: string[] = [
     "Amagbagan", "Artacho", "Asan Norte", "Asan Sur", "Bantay Insik", 
     "Bila", "Binmeckeg", "Bulaoen East", "Bulaoen West", "Cabaritan",
@@ -87,6 +90,8 @@ export class CusCategoryComponent implements OnInit {
 
   isNextStepDisabled: boolean = true;
 
+  
+
   newtransac = new FormGroup({
     CustAdd_ID: new FormControl<string | null>(null),
     AddService_price: new FormControl(null),
@@ -96,14 +101,82 @@ export class CusCategoryComponent implements OnInit {
     laundry: new FormControl(this.laundrylist),
     service: new FormControl<string[]>([]) 
   });
+
+  editaddress = new FormGroup({
+    CustAdd_ID: new FormControl(null),
+    Phoneno: new FormControl(null),
+    Town_City: new FormControl(null),
+    Barangay: new FormControl(null),
+    Province: new FormControl(null),
+    BuildingUnitStreet_No: new FormControl(null),
+  });
+
+  // editaddress = this.fb.group({
+  //   Phoneno: ['', [Validators.required, Validators.pattern(/^\d{10,12}$/)]],
+  //   Town_City: ['', Validators.required],
+  //   Barangay: ['', Validators.required],
+  //   Province: ['', Validators.required],
+  //   BuildingUnitStreet_No: ['', Validators.required],
+  // });
+  addressupdate: any;
  
 
-  editAddress = {
-    Province: '',
-    Town_City: '',
-    Barangay: '',
-    BuildingNo_Street: '',
-  };
+  // editAddress = {
+  //   Province: '',
+  //   Town_City: '',
+  //   Barangay: '',
+  //   BuildingNo_Street: '',
+  // };
+
+  openEditModal(address: any) {
+    console.log(address)
+    this.user.getaddress(address).subscribe((data: any) => {
+      this.addressupdate = data.data;
+      
+      // Update the form with the received data
+      this.editaddress.patchValue({
+        CustAdd_ID: data.data.CustAdd_ID || '',
+        Phoneno: data.data.Phoneno || '',
+        Town_City: data.data.Town_City || '',
+        Barangay: data.data.Barangay || '',
+        Province: data.data.Province || '',
+        BuildingUnitStreet_No: data.data.BuildingUnitStreet_No || '',
+      });
+      console.log(this.addressupdate);
+    });
+  }
+  
+  updateAddress() {
+    if (this.editaddress.valid) {
+      const updatedAddress = this.editaddress.value;
+      updatedAddress.CustAdd_ID = this.addressupdate.CustAdd_ID;
+  
+      this.user.updateaddress(updatedAddress).subscribe((data: any) => {
+        // Handle success
+        Swal.fire({
+          title: 'Success!',
+          text: 'Address updated successfully.',
+          icon: 'success',
+          showConfirmButton: false, 
+          timer: 1500, 
+        });
+        this.showaddress(this.addressupdate.CustAdd_ID); 
+        console.log(this.addressupdate.CustAdd_ID)
+      }, (error) => {
+        // Handle error
+        Swal.fire({
+          title: 'Error!',
+          text: 'Failed to update address.',
+          icon: 'error',
+          showConfirmButton: false, 
+          timer: 1500, 
+        });
+      });
+    }
+  }
+  
+  
+  
 
   inputElement: HTMLInputElement | null = null;
 
@@ -121,9 +194,11 @@ export class CusCategoryComponent implements OnInit {
     service: new FormControl('', Validators.required)
   });
 
+
   constructor(
     private route: Router,
-    private user: MyServiceService
+    private user: MyServiceService,
+    private fb: FormBuilder
   ) {}
 
   ngOnInit(): void {
@@ -132,15 +207,9 @@ export class CusCategoryComponent implements OnInit {
     this.fetchInitialData();
     const serviceControl = this.newtransac.get('service') as FormControl;
     this.getShippingAddress();
+    this.showaddress(this.addressupdate.CustAdd_ID); 
   }
 
-  // onServiceChange(selectedService: string): void {
-  //   if (selectedService === 'rush' || selectedService === 'pick' || selectedService === 'deliver') {
-  //     this.showShippingAddress = true;
-  //   } else {
-  //     this.showShippingAddress = false;
-  //   }
-  // }
   addaddress = new FormGroup({
     CustAdd_ID: new FormControl(null),
     Cust_ID: new FormControl(this.id.cuid),  
@@ -150,6 +219,19 @@ export class CusCategoryComponent implements OnInit {
     Town_City: new FormControl(null),
     Barangay: new FormControl(null)
   });
+
+  onTownCityChange() {
+    const townSelected = this.addaddress.get('Town_City')?.value;
+    if (townSelected) {
+      this.addaddress.get('Barangay')?.enable();
+      this.addaddress.get('Province')?.enable();
+      this.addaddress.get('BuildingUnitStreet_No')?.enable();
+    } else {
+      this.addaddress.get('Barangay')?.disable();
+      this.addaddress.get('Province')?.disable();
+      this.addaddress.get('BuildingUnitStreet_No')?.disable();
+    }
+  }
 
 
   public initializeForm(): void {
@@ -246,7 +328,7 @@ export class CusCategoryComponent implements OnInit {
         };
 
         this.laundrylist.push(newItem);
-        // this.updateTotalEstimatedPrice();
+
         this.laundryForm.reset({ quantity: 1 });
         this.selectedPrice = 0;
       }
@@ -267,6 +349,9 @@ export class CusCategoryComponent implements OnInit {
       if (res && res.length > 0) {
         this.address = res;
   
+        // Filter to get the default address
+        this.address = this.address.filter((addr: any) => addr.CustAdd_status === 'default');
+    
         const selectedAddress = this.address[0];
         this.addaddress.patchValue({
           CustAdd_ID: selectedAddress.CustAdd_ID,
@@ -381,14 +466,52 @@ export class CusCategoryComponent implements OnInit {
     });
   }
 
-  deleteaddress(id: any)
-  {
-    console.log(id);
-    this.post.deleteaddress(id).subscribe((result: any) => {
-      this.showaddress(this.id.cuid)
-      console.log("Success");
+  deleteaddress(id: any) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to delete this address?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, cancel!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        console.log(id);
+        this.post.deleteaddress(id).subscribe(
+          (response: any) => {
+            this.showaddress(this.id.cuid);
+            Swal.fire({
+              title: 'Deleted!',
+              text: 'The address has been deleted.',
+              icon: 'success',
+              showConfirmButton: false, // Removes the "OK" button
+              timer: 1500, // Automatically closes after 1.5 seconds
+            });
+          },
+          (error) => {
+            Swal.fire({
+              title: 'Error!',
+              text: 'An error occurred while deleting the address.',
+              icon: 'error',
+              showConfirmButton: false, // Removes the "OK" button
+              timer: 1500, // Automatically closes after 1.5 seconds
+            });
+          }
+        );
+      } else {
+        Swal.fire({
+          title: 'Cancelled',
+          text: 'The address was not deleted.',
+          icon: 'info',
+          showConfirmButton: false, // Removes the "OK" button
+          timer: 1500, // Automatically closes after 1.5 seconds
+        });
+      }      
     });
   }
+  
 
   insert() {
     const townElem = (document.getElementById("ShipServ_price") as HTMLSelectElement)?.value;
@@ -403,14 +526,15 @@ export class CusCategoryComponent implements OnInit {
         position: "center",
         icon: "warning",
         title: "Mangyaring magdagdag ng kahit isang item sa listahan bago mag-save!",
-        showConfirmButton: false,
+        showConfirmButton: false, // Removes the "OK" button
+        timer: 1500, // Automatically closes after 1.5 seconds
       });
       return;
     }
   
     // I-prepare ang transaction data
     this.newtransac.patchValue({
-      CustAdd_ID: (document.getElementById("ShipServ_prices") as HTMLSelectElement)?.value || null,
+      CustAdd_ID: townElems && townElem,
       AddService_price: this.total_estimated_price,
       Tracking_number: this.trackingNumber,
       laundry: this.laundrylist,
@@ -434,7 +558,8 @@ export class CusCategoryComponent implements OnInit {
             position: "center",
             icon: "success",
             title: "Transaction details and address added successfully!",
-            showConfirmButton: false,
+            showConfirmButton: false, // Removes the "OK" button
+            timer: 1500, // Automatically closes after 1.5 seconds
           }).then(() => {
             this.route.navigate(['/main/cusmainhome/homemain/cuscurtrans']);
             this.fetchtransactions();
@@ -446,7 +571,8 @@ export class CusCategoryComponent implements OnInit {
             icon: "error",
             title: "Error occurred while saving address data.",
             text: result?.message || "Unknown error",
-            showConfirmButton: false,
+            showConfirmButton: false, // Removes the "OK" button
+            timer: 1500, // Automatically closes after 1.5 seconds
           });
         }
       },
@@ -457,31 +583,48 @@ export class CusCategoryComponent implements OnInit {
           icon: "error",
           title: "Error occurred during saving transaction..",
           text: error.message || "Unknown error",
-          showConfirmButton: false,
+          showConfirmButton: false, // Removes the "OK" button
+          timer: 1500, // Automatically closes after 1.5 seconds
         });
       }
     );
   }
-  
 
-  newaddress(){
+  newaddress() {
     console.log(this.addaddress.value);
+  
     if (this.addaddress.valid) {
-      const addressData = this.addaddress.value;  // Make sure to use this.ddaddress
+      const addressData = this.addaddress.value; 
+  
       this.post.addAddress(addressData).subscribe(
         (response) => {
           console.log('Address saved successfully:', response);
-          this.addaddress.reset();  // Reset form after successful submission
-          this.showaddress(this.id.cuid)
+  
+          Swal.fire({
+            title: 'Success!',
+            text: 'Address saved successfully!',
+            icon: 'success',
+            showConfirmButton: false, // Removes the "OK" button
+            timer: 1500, // Automatically closes after 1.5 seconds
+          });
+          this.showaddress(this.id.cuid);
         },
         (error) => {
           console.error('Error saving address:', error);
+          Swal.fire({
+            title: 'Error!',
+            text: 'There was an issue saving the address.',
+            icon: 'error',
+            showConfirmButton: false, // Removes the "OK" button
+            timer: 1500, // Automatically closes after 1.5 seconds
+          });
         }
       );
     } else {
       console.log('Form is invalid');
     }
   }
+  
   selectAddress(selected: any): void {
     this.selectedAddress = selected.CustAdd_ID;
     // Get the ShipServ_price and add it to totalEstimatedPrice

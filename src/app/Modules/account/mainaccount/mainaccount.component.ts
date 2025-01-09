@@ -16,7 +16,7 @@ export class MainaccountComponent implements OnInit {
   selectedFile: File | null = null;
   previewUrl: string | ArrayBuffer | null = null;
   cusid: any;
-  showPassword: boolean = false;
+  showPassword: boolean = true;
 
   constructor(private myserv: MyServiceService) {}
 

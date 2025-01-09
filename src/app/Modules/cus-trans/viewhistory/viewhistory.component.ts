@@ -40,15 +40,15 @@ throw new Error('Method not implemented.');
         this.filteredHist = this.histf;
     } else if (status === 'Pending') {
         this.filteredHist = this.histf.filter(item => item.latest_transac_status === "pending");
-    } else if (status === 'Receive') {
-        this.filteredHist = this.histf.filter(item => item.latest_transac_status === "receive");
+    } else if (status === 'received') {
+        this.filteredHist = this.histf.filter(item => item.latest_transac_status === "received");
     } else if (status === 'Washing') {
         this.filteredHist = this.histf.filter(item => item.latest_transac_status === "washing");
     }else if (status === 'Folding') {
         this.filteredHist = this.histf.filter(item => item.latest_transac_status === "folding");
     }else if (status === 'for Release') {
         this.filteredHist = this.histf.filter(item => item.latest_transac_status === "forRelease");
-    }else if (status === 'Completed') {
+    }else if (status === 'completed') {
         this.filteredHist = this.histf.filter(item => item.latest_transac_status === "completed");
     }
     else if (status === 'Cancelled') {
@@ -75,10 +75,16 @@ throw new Error('Method not implemented.');
       this.updatePagination();
   }
 
-  viewItem(data: any): void {
-      this.post.getTransId(data).subscribe((result: any) => {
-          localStorage.setItem('temp_ID', data);
-          this.router.navigate(['/main/maintrans/maintrans/panel/historydetails']);
-      });
+//   viewItem(data: any): void {
+//       this.post.getTransId(data).subscribe((result: any) => {
+//           localStorage.setItem('temp_ID', data);
+//           this.router.navigate(['/main/maintrans/maintrans/panel/historydetails']);
+//       });
+//   }
+viewItem(data: any): void {
+    // Implement logic to view details of the item based on tracking number
+    console.log(data);
+    localStorage.setItem('trans_ID', data)
+    this.router.navigate(['/main/maintrans/maintrans/panel']);
   }
 }

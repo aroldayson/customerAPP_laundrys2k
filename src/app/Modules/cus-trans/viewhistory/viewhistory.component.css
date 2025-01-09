@@ -140,6 +140,7 @@
   padding: 40px 20px;
   font-family: 'Arial', sans-serif;
   text-align: center;
+  margin-top: 9%;
 }
 
 .footer-container {
@@ -279,6 +280,37 @@
   background-color: #BDBDBD; 
   color: #000000; 
 }
+
+.status-pending {
+  background-color: #FFA94D;  /* Light orange for pending */
+}
+
+.status-received {
+  background-color: #FFD84D; /* Yellow-orange for received */
+}
+
+.status-washing {
+  background-color: #4FC3F7;  /* Blue for washing */
+}
+
+.status-folding {
+  background-color: #B39DDB; 
+}
+
+.status-forRelease {
+  background-color: #FFEB3B;  /* Info color for forRelease */
+}
+
+.status-completed {
+  background-color: #7CB342; /* Green for completed */
+}
+
+.status-cancel {
+  background-color: #FF1744; /* Red for canceled */
+}
+
+
+
 .active-filter {
   background-color: #007bff !important;
   color: white !important;

@@ -135,6 +135,16 @@ export class MyServiceService {
     return this.http.get(`${this.Apiurl}gethis/${id}`)
   }
 
+  getaddress(data:any){
+    return this.http.get(`${this.Apiurl}fetchaddress/${data}`);
+  }
+
+  updateaddress(data: any){
+    return this.http.post(`${this.Apiurl}updateaddress`,data);
+    // return this.http.post(this.Apiurl + 'updateaddress' + data);
+  }
+
+
   getTrackingNo(){
     return this.http.get(this.Apiurl + 'getTrackingNo');
   }
@@ -175,7 +185,7 @@ export class MyServiceService {
   }
 
   deleteaddress(id:any):Observable<any>{
-    return this.http.delete(`${this.Apiurl}deleteaddress/${id}`);
+    return this.http.get(`${this.Apiurl}deleteaddress/${id}`);
   }
 
   addAddress(data: any): Observable<any> {
