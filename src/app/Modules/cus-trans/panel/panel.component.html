@@ -7,27 +7,27 @@
     </h3>
   </div>
 </div>
-<div class="row d-flex justify-content-center align-items-start h-100 mt-3 p-3">
+<div class="row d-flex justify-content-center align-items-start h-100 ">
   <!-- Main Content Column -->
   <div class="col-lg-9 col-md-12">
     <div class="card shadow-lg" style="border-radius: 15px; background-color: #f9f9f9;">
       <div class="card-header px-4 py-4" style="background-color: #4e73df; color: white; border-radius: 15px 15px 0 0;">
-        <h5 class="mb-0">Thank you customer, <span style="color: #f1c40f;"><strong>{{customer}}</strong></span>!</h5>
+        <h5 class="mb-0">Thank you customer, <span style="color: #f1c40f;"><strong>{{lastname}}</strong></span>!</h5>
       </div>
       
 
       <!-- Card Body Section -->
-      <div class="card-body p-4">
+      <div class="card-body">
         <!-- Tracking Number Section -->
-        <div *ngFor="let t of getDet; track t">
+        <!-- <div *ngFor="let t of getDet; track t">
           <div class="d-flex justify-content-between align-items-center mb-4">
-            <!-- <p class="lead fw-normal mb-0" style="color: #4e73df;"><strong>Tracking Number</strong></p> -->
-            <!-- <p class="lead fw-bold text-muted mb-0">{{ t.Tracking_number }}</p> -->
+            <p class="lead fw-normal mb-0" style="color: #4e73df;"><strong>Tracking Number</strong></p>
+            <p class="lead fw-bold text-muted mb-0">{{ t.Tracking_number }}</p>
           </div>
-        </div>
+        </div> -->
 
         <!-- Steps List with Icons -->
-        <div class="progress-track">
+        <!-- <div class="progress-track">
           <ul class="steps-list" style="list-style-type: none; padding-left: 0;">
             <li *ngFor="let step of steps; let i = index"
                 [ngClass]="{
@@ -59,25 +59,60 @@
                    style="position: relative; background-color: #e0f7fa; border-radius: 5px; opacity: 0.5;"></div>
             </li>
           </ul>
+        </div> -->
+        <div class="progress-track m-0">
+          <ul class="steps-list" style="list-style-type: none; padding-left: 0;">
+            <ng-container *ngFor="let step of filteredSteps; let i = index">
+              <li [ngClass]="{
+                    'active': i <= currentStep,
+                    'completed': transacDates[i] && i < currentStep,
+                    'disabled': i > currentStep
+                  }"
+                  class="step-item text-center"
+                  style="margin-bottom: 1px; position: relative; padding: 10px; transition: background-color 0.3s; display: flex; flex-direction: column;">
+                
+                <div class="step-icon" [ngStyle]="{ color: getColor(i) }" style="font-size: 24px;">
+                  <i [ngClass]="{
+                    'fa-check-circle': transacDates[i],
+                    'fa-circle': i === currentStep && !transacDates[i],
+                    'fa-circle-o': i > currentStep
+                  }" class="fa"></i>
+                </div>
+                
+                <div class="step-title" style="font-size: 16px; font-weight: 500; color: #555;">
+                  {{ step }}
+                </div> 
+                
+                <div class="step-date-container" *ngIf="i <= currentStep" style="margin-top: 5px; padding-top: 5px;">
+                  <p class="step-date" style="font-size: 14px; color: #888; margin: 0;">
+                    {{ transacDates[i] ? (transacDates[i] | date:'MMM dd, yyyy') : 'Date not available' }} <br>
+                    {{ transacDates[i] ? (transacDates[i] | date:'hh:mm:ss a') : 'Time not available' }}
+                  </p>
+                </div>
+                
+                <div *ngIf="i <= currentStep && transacDates[i]" 
+                     class="completed-indicator" 
+                     style="position: relative; background-color: #e0f7fa; border-radius: 5px; opacity: 0.5;"></div>
+              </li>
+            </ng-container>
+          </ul>
         </div>
-
-      <hr class="my-4">
+        
+    
+      <hr class="">
 
       <!-- Billing Information -->
-      <div class="row mb-4">
+      <div class="row">
         <div class="col-sm-6">
-          <h5 class="font-size-16">
-            <i class="fas fa-user me-2 icon-style" style="color: #5988e2;"></i>Billed To:
-          </h5>
-          <p><strong>Customer Name:</strong> {{customer}}</p>
-          <p class="text-muted mb-1">
-            <i class="fas fa-home me-2 icon-style" style="color: #5988e2;"></i>456 Neat Street, Laundryville, LV 12345
-          </p>
-          <p class="text-muted mb-1">
-            <i class="fas fa-envelope me-2 icon-style" style="color: #5988e2;"></i>johndoeexample.com
+          <h6 class="font-size-16">
+            <i class="fas fa-user me-2 icon-style" style="color: #5988e2;"></i>{{firstname}} {{middlename}} {{lastname}}
+          </h6>
+          <!-- <p><strong>Customer Name:</strong> {{firstname}} {{middlename}} {{lastname}}</p> -->
+          <p class="text-muted">
+            <i class="fas fa-envelope me-2 icon-style" style="color: #5988e2;"></i>{{email}}
           </p>
           <p class="text-muted">
-            <i class="fas fa-phone me-2 icon-style" style="color: #5988e2;"></i>001-234-5678
+            <i class="fas fa-phone me-2 icon-style" style="color: #5988e2;"></i>{{phoneno}}
           </p>
         </div>
         <div class="col-sm-6 text-sm-end">
@@ -88,36 +123,43 @@
       </div>
 
       <!-- Service Summary -->
-      <div class="py-2 mt-4">
-        <h5 class="font-size-16 mb-3">
+      <div class="py-2 ">
+        <h5 class="font-size-16 mb-1">
           <i class="fas fa-list-alt me-2 icon-style" style="color: #5988e2;"></i>Service Summary
         </h5>
         <div class="table-responsive">
-          <table class="table table-bordered">
-            <thead class="table-light">
+          <table class="table table-bordered white-background">
+            <thead class="table-light white-background">
               <tr>
                 <th>No.</th>
                 <th>Service</th>
                 <th>Quantity</th>
                 <th>Price</th>
-                <th class="text-end">Total</th>
+                <th class="text-end"></th>
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let d of details; let i = index track d">
-                <th scope="row">{{ i + 1 }}</th>
-                <td>
+              <tr class="white-background" *ngFor="let d of details; let i = index track d" >
+                <td class="white-background fw-bold" scope="row">{{ i + 1 }}</td>
+                <td class="white-background">
                   <h6 class="mb-0">
                     <i class="fas fa-tshirt me-2 icon-style"></i>{{ d.Category || 'N/A' }}
                   </h6>
-                  <!-- <small class="text-muted">Standard washing service</small> -->
                 </td>
-                <td><b>Qty:</b> {{ d.Qty }} | <b>Weight:</b> {{ d.Weight }} <b>kg</b></td>
-                <td class="text-right">{{ d.price | currency:' ':'symbol' }}</td>
-                <td class="text-end"></td>
+                <td class="white-background"><b>Qty:</b> {{ d.Qty }} | <b>Weight:</b> {{ d.Weight }} <b>kg</b></td>
+                <td class="text-right white-background">{{ d.price | currency:' ':'symbol' }}</td>
+                <td class="text-end white-background"></td>
               </tr>
-              <tr class="table-light">
-                <td colspan="4" class="text-end fw-bold">Sub Total</td>
+              <ng-container *ngIf="details.length === 0">
+                <tr class="white-background">
+                  <td colspan="5" class="text-center text-muted white-background">
+                    No service details available.
+                  </td>
+                </tr>
+              </ng-container>
+              
+              <tr class="table-light outline">
+                <td colspan="4" class="text-end fw-bold outline">Sub Total</td>
                 <td class="text-end fw-bold">{{total | currency:' ':'symbol' }}</td>
               </tr>
             </tbody>
@@ -126,94 +168,86 @@
       </div>
 
       <!-- Additional Charges -->
-      <div class="py-2 mt-4">
-        <h5 class="font-size-16 mb-3">
+      <div class="py-2">
+        <h5 class="font-size-16">
           <i class="fas fa-plus-circle me-2 icon-style" style="color: #5988e2;"></i>Additional Charges
         </h5>
         <div class="table-responsive">
-          <table class="table ">
-            <thead class="table-light">
-              <tr>
+          <table class="table white-background">
+            <thead class="table-light white-background">
+              <tr >
                 <th>No.</th>
                 <th>Service</th>
                 <th>Address</th>
                 <th>Price</th>
-                <th class="text-end">Total</th>
+                <th class="text-end"></th>
               </tr>
             </thead>
-            <tbody>
+            <tbody class="white-background">
               @for (servicearray of servicearray; track Transac_ID) {
-              <tr>
-                <th scope="row">{{ $index + 1 }}</th>
-                <td>
-                  <i class="fas fa-truck-fast me-2 icon-style"></i>{{servicearray.AddService_name}}
-                </td>
-                <td>
-                  <span *ngIf="servicearray.AddService_name !== 'Rush-Job'; else rushJob">
-                    {{ servicearray.FullAddress }}
-                  </span>
-                  <ng-template #rushJob>
-                    <span class="text-success font-weight-bold bg-light p-2 rounded">
-                      For rush jobs, it will multiply for the entire category you select.
-                    </span>                    
-                  </ng-template>
-                </td>                
-                <td class="text-right">{{servicearray.AddService_price | currency:' ':'symbol'}}</td>
-                <td class="text-end"></td>
-              </tr>
+                <tr class="white-background">
+                  <td scope="row" class="white-background fw-bold">{{ $index + 1 }}</td>
+                  <td class="white-background">
+                    <i class="fas fa-truck-fast me-2 icon-style"></i>{{ servicearray.AddService_name }}
+                  </td>
+                  <td class="white-background">
+                    <span *ngIf="servicearray.AddService_name !== 'Rush-Job'; else rushJob">
+                      {{ servicearray.FullAddress }}
+                    </span>
+                    <ng-template #rushJob>
+                      <span class="text-success font-weight-bold bg-light p-2 rounded">
+                        For rush jobs, it will multiply for the entire category you select.
+                      </span>
+                    </ng-template>
+                  </td>
+                  <td class="text-right white-background">
+                    {{ servicearray.AddService_price | currency:' ':'symbol' }}
+                  </td>
+                  <td class="text-end white-background"></td>
+                </tr>
               }
-              <!-- <tr>
-                <th scope="row">2</th>
-                <td>
-                  <i class="fas fa-spray-can me-2 icon-style"></i>Stain Removal
-                </td>
-                <td>Special stain treatment</td>
-                <td>5.00</td>
-                <td class="text-end">5.00</td>
-              </tr> -->
-              <tr class="table-light">
-                <td colspan="4" class="text-end fw-bold">Sub Total</td>
-                <td class="text-end fw-bold">{{totalserviceprice | currency:' ':'symbol'}}</td>
+              <ng-template #noDetails>
+                <tr class="white-background">
+                  <td colspan="5" class="text-center text-muted">
+                    No service details available.
+                  </td>
+                </tr>
+              </ng-template>
+              <tr class="table-light outline">
+                <td colspan="4" class="text-end fw-bold outline">Sub Total</td>
+                <td class="text-end fw-bold">{{ totalserviceprice | currency:' ':'symbol' }}</td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
-
+      <hr class="outline" >
       <!-- Grand Total -->
       <div class="py-2 mt-4">
         <div class="table-responsive">
-          <table class="table table-bordered">
-            <tbody>
-              <!-- <tr>
-                <td colspan="4" class="text-end">Discount</td>
-                <td class="text-end">10.00</td>
-              </tr> -->
-              <!-- <tr>
-                <td colspan="4" class="text-end">Tax</td>
-                <td class="text-end">5.00</td>
-              </tr> -->
-              <tr class="table-primary">
-                <td colspan="4" class="text-end fw-bold">
+          <table class="table table-bordered white-background">
+            <tbody class="white-background">
+              <tr class="white-background">
+                <td colspan="4" class="text-end fw-bold white-background">
                   <i class="fas fa-wallet me-2 icon-style"></i>Grand Total
                 </td>
-                <td class="text-end fw-bold">
+                <td class="text-end fw-bold white-background">
                   <h4 class="fw-semibold">{{total + totalserviceprice | currency:' ':'symbol'}}</h4>
                 </td>
               </tr>
-              <tr>
-                <td colspan="4" class="text-end">Amount Received:</td>
-                <td class="text-end">{{paymentss | currency:' ':'symbol' }}</td>
+              <tr class="white-background">
+                <td colspan="4" class="text-end white-background">Amount Received:</td>
+                <td class="text-end white-background">{{paymentss | currency:' ':'symbol' }}</td>
               </tr>
-              <tr>
-                <td colspan="4" class="text-end">Change:</td>
-                <td class="text-end">
+              <tr class="white-background">
+                <td colspan="4" class="text-end white-background">Change:</td>
+                <td class="text-end white-background">
                   {{ (paymentss != null && total != null) ? ((paymentss - total - totalserviceprice) > 0 ? (paymentss - total - totalserviceprice) : 0) : 0 | currency: ' ' : 'symbol'  }}
                 </td>
               </tr>
-              <tr>
-                <td colspan="4" class="text-end">Balance:</td>
-                <td class="text-end text-danger">
+              <tr class="white-background">
+                <td colspan="4" class="text-end white-background">Balance:</td>
+                <td class="text-end text-danger white-background">
                   {{ ((paymentss - total) - totalserviceprice) < 0 
                     ? (0 - ((paymentss - total) - totalserviceprice)) 
                     : 0 | currency:' ':'symbol':'1.2-2' }}
@@ -223,6 +257,8 @@
           </table>
         </div>
       </div>
+
+
       <div class="d-print-none mt-4 text-end">
         <button class="btn btn-success mx-2" onclick="window.print()">
           <i class="fas fa-print me-1 icon-style"></i> Print

@@ -5,6 +5,7 @@ import { Router, RouterLink } from '@angular/router';
 import { MyServiceService } from '../../../my-service.service';
 import Swal from 'sweetalert2';
 import { ChangeDetectorRef } from '@angular/core';
+import * as bootstrap from 'bootstrap';
 
 @Component({
   selector: 'app-cus-category',
@@ -77,6 +78,7 @@ export class CusCategoryComponent implements OnInit {
   shippingCost: number = 0;
 
   addressupdate: any;
+  
 
 
 
@@ -233,6 +235,14 @@ export class CusCategoryComponent implements OnInit {
     }
   }
 
+  showShipping(): void {
+    const modalElement = document.getElementById('shipping_address');
+    if (modalElement) {
+      const modal = new bootstrap.Modal(modalElement);
+      modal.show();
+    }
+  }
+
   public updateTotalEstimatedPrice(): void {
     let baseTotal = this.laundrylist.reduce((sum, item) => sum + item.Price, 0);
     
@@ -374,6 +384,11 @@ export class CusCategoryComponent implements OnInit {
       const selectedCategory = this.categ?.find(
         (c: any) => c.Categ_ID === parseInt(categoryValue!, 10)
       );
+
+      if (selectedCategory) {
+        this.selectedPrice = selectedCategory.Price;
+        this.showservices = true;
+      }
   
       if (selectedCategory) {
         const newItem = {
@@ -384,6 +399,7 @@ export class CusCategoryComponent implements OnInit {
           Tracking_number: this.trackingNumber,
           State: 'Pending'
         };
+        this.selectAddPick = false;
   
         this.laundrylist.push(newItem);
   
@@ -409,8 +425,13 @@ export class CusCategoryComponent implements OnInit {
       if (res && res.length > 0) {
         this.address = res;
   
-        // Filter to get the default address
         this.address = this.address.filter((addr: any) => addr.CustAdd_status === 'default');
+        const modalElement = document.getElementById('shipping_address');
+
+        if (modalElement) {
+          const modal = new bootstrap.Modal(modalElement);
+          modal.show();
+        }
     
         const selectedAddress = this.address[0];
         this.addaddress.patchValue({
@@ -425,7 +446,6 @@ export class CusCategoryComponent implements OnInit {
         console.log("No address found for the provided id");
       }
     }, (error) => {
-      // Handle error if the request fails
       console.error("Error fetching address:", error);
     });
   }
@@ -503,7 +523,7 @@ export class CusCategoryComponent implements OnInit {
     
     if (selectedCategory) {
       this.selectedPrice = selectedCategory.Price;
-      this.showservices = true;
+      // this.showservices = true;
     }
   }
 

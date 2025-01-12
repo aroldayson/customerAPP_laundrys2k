@@ -1,7 +1,13 @@
 <div class="header">
   <h1>S2K Laundry</h1>
   <p><span style="color: #15304f;">Welcome </span><span style="color: #ffffff;text-shadow: 2px 2px 5px #15304f;">{{cust_name}}</span></p>
-  <button class="btn btn-new mb-2" (click)="gentrack()">NEW TRANSACTION</button>
+  <div class="row">
+    <div class="col md">
+      <button class="btn btn-new mb-2" (click)="gentrack()">NEW TRANSACTION</button>
+      <button class="btn btn-new mb-2"  (click)="showStep()">STEP GUIDE</button>
+      <button class="btn btn-new mb-2"  (click)="showStep()">PRICE LIST</button>
+    </div>
+  </div>
 </div>
 
 <div class="container my-4">
@@ -129,13 +135,44 @@
   </div>
   }
 </div>
+
+<div class="modal fade" id="step" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title styled-heading mb-2">
+          <span class="laundry-icon">5</span> Easy Steps
+        </h2>
+      </div>
+      <div class="modal-body">
+        <p>
+          Experience the ultimate convenience in laundry care where quality service meets fresh scents, all with free detergent and fabric conditioner. 
+          Just with these 5 easy steps, we guarantee you a wonderful service.
+        </p>
+
+        <div class="steps">
+          <div class="step" *ngFor="let step of steps">
+            <div class="step-badge">{{ step.number }}</div>
+            <img [src]="step.image" [alt]="'Step ' + step.number" [ngStyle]="{ width: '100%', height: 'auto' }" />
+            <h3>{{ step.title }}</h3>
+            <p>{{ step.description }}</p>
+          </div>
+        </div>
+        <div class="end d-flex justify-content-end">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">CLOSE</button>
+        </div>        
+      </div>
+    </div>
+  </div>
+</div>
+
+
       
-<section class="steps-section">
+<!-- <div class="modal fade" id="step" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" #step>
   <h2 class="styled-heading mb-2"><span class="laundry-icon">5</span> Easy Steps</h2>
   <p>Experience the ultimate convenience in laundry care where quality service meets fresh scents, all with free detergent and fabric conditioner. Just with these 5 easy steps, we guarantee you a wonderful service.</p>
   
   <div class="steps">
-    <!-- Step 1 -->
     <div class="step">
       <div class="step-badge">1</div>
       <img src="assets/step1.png" alt="Step 1" [ngStyle]="{'width': '100%', 'height': 'auto'}">
@@ -143,7 +180,6 @@
       <p>Enter your laundry details and confirm your transaction online.</p>
     </div>
     
-    <!-- Step 2 -->
     <div class="step">
       <div class="step-badge">2</div>
       <img src="assets/step2.png" alt="Step 2">
@@ -151,7 +187,6 @@
       <p>We collect your laundry or you drop it off.</p>
     </div>
 
-    <!-- Step 3 -->
     <div class="step">
       <div class="step-badge">3</div>
       <img src="assets/step3.png" alt="Step 3">
@@ -159,7 +194,6 @@
       <p>Clothes are weighed and handled carefully.</p>
     </div>
 
-    <!-- Step 4 -->
     <div class="step">
       <div class="step-badge">4</div>
       <img src="assets/step4.png" alt="Step 4">
@@ -167,7 +201,6 @@
       <p>Professionally cleaned, pressed, and checked.</p>
     </div>
 
-    <!-- Step 5 -->
     <div class="step">
       <div class="step-badge">5</div>
       <img src="./assets/step5.png" alt="Step 5">
@@ -175,7 +208,7 @@
       <p>Fresh and clean, back to your doorstep or pickup point.</p>
     </div>
   </div>
-</section>
+</div> -->
 
 <footer class="footer">
   <div class="footer-container">

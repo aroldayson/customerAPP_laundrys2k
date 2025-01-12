@@ -45,6 +45,13 @@ export class HistoryComponent implements OnInit {
   payments: any;
   paymentss: any;
   Transac_ID = localStorage.getItem('trans_ID');
+  dataInterval: any;
+  lastname: any;
+  firstname: any;
+  middlename: any;
+  email: any;
+  phoneno: any;
+  filteredSteps: any;
 
   constructor(private http: HttpClient, private service: MyServiceService) {}
 
@@ -53,81 +60,161 @@ export class HistoryComponent implements OnInit {
   
     // Fetch customer details
     this.service.getcustomer(this.customer).subscribe((result: any) => {
-      this.customer = result.customerFirst.Cust_fname;
+      this.lastname = result.customerFirst.Cust_lname;
+      this.firstname = result.customerFirst.Cust_fname;
+      this.middlename = result.customerFirst.Cust_mname;
+      this.email = result.customerFirst.Cust_email;
+      this.phoneno = result.customerFirst.Cust_phoneno;
       console.log(this.customer);
     });
+
+    this. startInteraval();
   
     // Format current date
     this.currentDate = this.formatDate(new Date());
     // this.gettrack();
   
     // Fetch transaction details if Transac_ID exists
-    if (this.Transac_ID) {
-      this.service.getDetails(this.Transac_ID).subscribe(
-        (result: any) => {  
-          const price = result[0].total;
-          const serviceprice = result[0].totalserviceprice;
-          this.serviceprice = serviceprice;
-          this.price = price;
-          this.totalprice = price + serviceprice;
-          this.totalqty = result[0].totalqty;
-          this.servicearray = result[0].services;
-          this.servicearray2 = result[0].services[1].AddService_name;
-          this.getDet = result || [];
-          this.totalweight = result[0].totalweight;
-          this.details = result[0].details
-          this.total = result[0].total
-          this.track = result[0].Tracking_number 
-          this.totalserviceprice = result[0].totalserviceprice
-          this.transacDate = result[0].services[0].trans_date   
-          this.estimatedate = result[0].services[0].estimated_date   
-          this.paymentss = result[0].payments      
-          console.log(result,this.getDet,this.servicearray2,this.servicearray,this.paymentss)
+    // if (this.Transac_ID) {
+    //   this.service.getDetails(this.Transac_ID).subscribe(
+    //     (result: any) => {  
+    //       const price = result[0].total;
+    //       const serviceprice = result[0].totalserviceprice;
+    //       this.serviceprice = serviceprice;
+    //       this.price = price;
+    //       this.totalprice = price + serviceprice;
+    //       this.totalqty = result[0].totalqty;
+    //       this.servicearray = result[0].services;
+    //       this.servicearray2 = result[0].services[1].AddService_name;
+    //       this.getDet = result || [];
+    //       this.totalweight = result[0].totalweight;
+    //       this.details = result[0].details
+    //       this.total = result[0].total
+    //       this.track = result[0].Tracking_number 
+    //       this.totalserviceprice = result[0].totalserviceprice
+    //       this.transacDate = result[0].services[0].trans_date   
+    //       this.estimatedate = result[0].services[0].estimated_date   
+    //       this.paymentss = result[0].payments      
+    //       console.log(result,this.getDet,this.servicearray2,this.servicearray,this.paymentss)
   
-          if (this.getDet.length > 0) {
-            const statuses: string[] = [];
-            const transacDates: string[] = [];
+    //       if (this.getDet.length > 0) {
+    //         const statuses: string[] = [];
+    //         const transacDates: string[] = [];
 
-            const sortedTransactions = this.getDet[0].Transac_status.sort((a: any) => {
-              return new Date(a.TransacStatus_datetime).getTime()
-            });
+    //         const sortedTransactions = this.getDet[0].Transac_status.sort((a: any) => {
+    //           return new Date(a.TransacStatus_datetime).getTime()
+    //         });
   
-            sortedTransactions.forEach((transac: any) => {
-              const status = transac.TransacStatus_name;
-              const transacDate = transac.TransacStatus_datetime;
+    //         sortedTransactions.forEach((transac: any) => {
+    //           const status = transac.TransacStatus_name;
+    //           const transacDate = transac.TransacStatus_datetime;
 
-              if (status) {
-                statuses.push(status.toLowerCase());
-                this.updateCurrentStep(status.toLowerCase());
-              }
+    //           if (status) {
+    //             statuses.push(status.toLowerCase());
+    //             this.updateCurrentStep(status.toLowerCase());
+    //           }
   
-              if (transacDate) {
-                transacDates.push(this.formatDateString(transacDate));
+    //           if (transacDate) {
+    //             transacDates.push(this.formatDateString(transacDate));
+    //           } else {
+    //             transacDates.push('No transaction date available');
+    //           }
+    //         });
+  
+    //         this.statuses = statuses;
+    //         this.transacDates = transacDates;
+  
+    //         const latestTransactionDate = sortedTransactions.length > 0 ? sortedTransactions[0].TransacStatus_datetime : null;
+  
+    //         if (latestTransactionDate) {
+    //           const formattedLatestDate = this.formatDateString(latestTransactionDate);
+    //           console.log('Latest transaction date:', formattedLatestDate);
+  
+    //           this.latestTransactionDate = formattedLatestDate;
+    //         } else {
+    //           console.log('No transaction date available');
+    //         }
+    //       }
+    //     },
+    //     (error) => {
+    //       console.error('Error fetching transaction details:', error);
+    //     }
+    //   );
+    // }
+  }
+
+  startInteraval(){
+    this.dataInterval = setInterval(() => {
+      if (this.Transac_ID) {
+        this.service.getDetails(this.Transac_ID).subscribe(
+          (result: any) => {  
+            const price = result[0].total;
+            const serviceprice = result[0].totalserviceprice;
+            this.serviceprice = serviceprice;
+            this.price = price;
+            this.totalprice = price + serviceprice;
+            this.totalqty = result[0].totalqty;
+            this.servicearray = result[0].services;
+            this.servicearray2 = result[0].services[1].AddService_name;
+            this.getDet = result || [];
+            this.totalweight = result[0].totalweight;
+            this.details = result[0].details
+            this.total = result[0].total
+            this.track = result[0].Tracking_number 
+            this.totalserviceprice = result[0].totalserviceprice
+            this.transacDate = result[0].services[0].trans_date   
+            this.estimatedate = result[0].services[0].estimated_date   
+            this.paymentss = result[0].payments      
+            console.log(result,this.getDet,this.servicearray2,this.servicearray,this.paymentss)
+    
+            if (this.getDet.length > 0) {
+              const statuses: string[] = [];
+              const transacDates: string[] = [];
+  
+              const sortedTransactions = this.getDet[0].Transac_status.sort((a: any) => {
+                return new Date(a.TransacStatus_datetime).getTime()
+              });
+    
+              sortedTransactions.forEach((transac: any) => {
+                const status = transac.TransacStatus_name;
+                const transacDate = transac.TransacStatus_datetime;
+
+  
+                if (status) {
+                  statuses.push(status.toLowerCase());
+                  this.updateCurrentStep(status.toLowerCase());
+                }
+    
+                if (transacDate) {
+                  transacDates.push(this.formatDateString(transacDate));
+                } else {
+                  transacDates.push('No transaction date available');
+                }
+              });
+    
+              this.statuses = statuses;
+              this.transacDates = transacDates;
+    
+              const latestTransactionDate = sortedTransactions.length > 0 ? sortedTransactions[0].TransacStatus_datetime : null;
+    
+              if (latestTransactionDate) {
+                const formattedLatestDate = this.formatDateString(latestTransactionDate);
+                console.log('Latest transaction date:', formattedLatestDate);
+                this.latestTransactionDate = formattedLatestDate;
               } else {
-                transacDates.push('No transaction date available');
+                console.log('No transaction date available');
               }
-            });
-  
-            this.statuses = statuses;
-            this.transacDates = transacDates;
-  
-            const latestTransactionDate = sortedTransactions.length > 0 ? sortedTransactions[0].TransacStatus_datetime : null;
-  
-            if (latestTransactionDate) {
-              const formattedLatestDate = this.formatDateString(latestTransactionDate);
-              console.log('Latest transaction date:', formattedLatestDate);
-  
-              this.latestTransactionDate = formattedLatestDate;
-            } else {
-              console.log('No transaction date available');
             }
+          },
+          (error) => {
+            console.error('Error fetching transaction details:', error);
           }
-        },
-        (error) => {
-          console.error('Error fetching transaction details:', error);
-        }
-      );
-    }
+        );
+      }
+    this.customer;
+    this.getDet;
+    this.steps;
+    }, 5000);
   }
 
   getColor(i: number): string {
@@ -145,14 +232,31 @@ export class HistoryComponent implements OnInit {
   // Update the current step based on status
   updateCurrentStep(status: string): void {
     const stepIndex = this.steps.findIndex(step => step.toLowerCase() === status.toLowerCase());
+  
     if (stepIndex >= 0) {
       this.currentStep = stepIndex;
       this.progressPercent = (this.currentStep / (this.steps.length + 1)) * 100;
-      this.currentStep = stepIndex; 
-      this.checkAndShowDateForCurrentStep(stepIndex); 
+      this.checkAndShowDateForCurrentStep(stepIndex);
+  
+      const allSteps = ['pending','received','washing','folding','forrelease','completed']; 
+  
+      this.filteredSteps = this.steps.filter(step => 
+        allSteps.includes(step.toLowerCase())
+      );
+  
+      this.filteredSteps = this.filteredSteps.slice(0, stepIndex + 1);
+      
+      console.log('Updated current step:', this.currentStep);
+      console.log('Filtered steps:', this.filteredSteps);
+    } else {
+      this.filteredSteps = [];
+      console.log('Invalid step, no update to filtered steps');
     }
-    console.log('Updated current step:', this.currentStep); 
   }
+  
+
+  
+  
 
   // Ensure current step's transaction date is available
   checkAndShowDateForCurrentStep(stepIndex: number): void {

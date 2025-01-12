@@ -45,6 +45,12 @@ export class PanelComponent implements OnInit {
   payments: any;
   paymentss: any;
   Transac_ID = localStorage.getItem('trans_ID');
+  lastname: any;
+  firstname: any;
+  middlename: any;
+  email: any;
+  phoneno: any;
+  filteredSteps: string[] =['pending','received','washing','folding','forRelease','completed'];
 
   constructor(private myserv: MyServiceService) {}
 
@@ -52,6 +58,15 @@ export class PanelComponent implements OnInit {
     console.log('Transaction ID:', this.Transac_ID);
     console.log('HAHAHAHA')
     this.test()
+
+    this.myserv.getcustomer(this.customer).subscribe((result: any) => {
+      this.lastname = result.customerFirst.Cust_lname;
+      this.firstname = result.customerFirst.Cust_fname;
+      this.middlename = result.customerFirst.Cust_mname;
+      this.email = result.customerFirst.Cust_email;
+      this.phoneno = result.customerFirst.Cust_phoneno;
+      console.log(this.customer);
+    });
 
     if (this.Transac_ID) {
       this.myserv.getDetails(this.Transac_ID).subscribe(
@@ -182,9 +197,39 @@ export class PanelComponent implements OnInit {
     if (i === 5) return '#7CB342';  // Red for sixth step
     return '#4e73df';  
   }
+  // updateCurrentStep(status: string): void {
+  //   const stepIndex = this.steps.findIndex(step => step.toLowerCase() === status);
+  //   this.tracking(stepIndex >= 0 ? stepIndex : 0);
+  // }
   updateCurrentStep(status: string): void {
-    const stepIndex = this.steps.findIndex(step => step.toLowerCase() === status);
-    this.tracking(stepIndex >= 0 ? stepIndex : 0);
+    const stepIndex = this.steps.findIndex(step => step.toLowerCase() === status.toLowerCase());
+  
+    if (stepIndex >= 0) {
+      this.currentStep = stepIndex;
+      this.progressPercent = (this.currentStep / (this.steps.length + 1)) * 100;
+      this.checkAndShowDateForCurrentStep(stepIndex);
+  
+      const allSteps = ['pending','received','washing','folding','forrelease','completed']; 
+  
+      this.filteredSteps = this.steps.filter(step => 
+        allSteps.includes(step.toLowerCase())
+      );
+  
+      this.filteredSteps = this.filteredSteps.slice(0,stepIndex + 1);
+      
+      console.log('Updated current step:', this.currentStep);
+      console.log('Filtered steps:', this.filteredSteps);
+    } else {
+      this.filteredSteps = [];
+      console.log('Invalid step, no update to filtered steps');
+    }
+  }
+
+  checkAndShowDateForCurrentStep(stepIndex: number): void {
+    // Check if the transaction date for the current step is available
+    if (this.transacDates[stepIndex]) {
+      console.log('Date for current step:', this.transacDates[stepIndex]); // Debugging log
+    }
   }
 
 

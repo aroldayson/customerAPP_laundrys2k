@@ -1,13 +1,13 @@
 /* Styling for the progress bar */
 .progress {
   position: relative;
-  height: 20px;
+  /* height: 20px; */
   background-color: #e0e0e0;
   margin-bottom: 20px; /* Space between progress bar and steps */
 }
 
 .progress-bar {
-  height: 100%;
+  /* height: 100%; */
   background-color: rgb(109, 150, 238); /* Color of the progress bar */
   transition: width 0.3s ease-in-out;
 }
@@ -15,8 +15,8 @@
 /* Styling for steps */
 .steps-list {
   list-style-type: none;
-  padding: 0;
-  margin: 0;
+  /* padding: 0;
+  margin: 0; */
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -25,7 +25,7 @@
 .step-item {
   text-align: center;
   flex: 1; /* Ensures steps are evenly spaced */
-  margin-bottom: 15px;
+  /* margin-bottom: 15px; */
   padding: 0 10px; /* Adds space between each step */
   font-size: 16px;
 }
@@ -134,7 +134,7 @@
   }
 
   .card-body {
-    padding: 1.5rem;
+    /* padding: 1.5rem; */
   }
 
   .card-footer {
@@ -198,4 +198,33 @@
   font-size: 1em; /* Slightly larger icons */
   margin: 0 0.2em; /* Space between the icons and the heading */
 }
+.table-bordered td {
+  background-color: white;
+  outline-color: white;
+}
+.white-background tr{
+  background-color: white;
+  outline-color: white;
+  color: white;
+}
+.white-background {
+  background-color: white; /* White background for cells and rows */
+  border: 1px solid white; /* White border for the outline */
+}
 
+.table-light.white-background {
+  background-color: #f8f9fa; /* Light background for subtotals */
+  border: 1px solid white;
+}
+.outline {
+  background-color: #f8f9fa; /* Light background for visibility */
+  border-top: 2px solid #000000; /* Outline color */
+}
+
+.outline td {
+  border-top: 2px solid #000000; /* Ensure each cell has the same outline */
+}
+
+.fw-bold {
+  font-weight: bold; /* Maintain bold font for text */
+}

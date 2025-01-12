@@ -102,6 +102,8 @@ export class CusCurtransComponent implements OnInit{
 
   shipPrice : any = 0;
 
+  dataInterval: any;
+
   
   barangaysInSison: any[] = ["Amagbagan", "Artacho", "Asan Norte", "Asan Sur", "Bantay Insik", "Bila", "Binmeckeg", "Bulaoen East", "Bulaoen West", "Cabaritan", "Calunetan", "Camangaan", "Cauringan", "Dungon", "Esperanza", "Inmalog", "Killo", "Labayug", "Paldit", "Pindangan", "Pinmilapil", "Poblacion Central", "Poblacion Norte"]
 
@@ -110,6 +112,39 @@ export class CusCurtransComponent implements OnInit{
   barangaysInPugo = ["Maoasoas Norte", "Maoasoas Sur", "Tavora East", "Tavora Proper"];
 
   barangaysInPoz = ["Batakil", "Poblacion I"];
+
+  steps = [
+    {
+      number: 1,
+      image: 'assets/step1.png',
+      title: 'Place Your Transaction',
+      description: 'Enter your laundry details and confirm your transaction online.'
+    },
+    {
+      number: 2,
+      image: 'assets/step2.png',
+      title: 'We Pick It Up',
+      description: 'We collect your laundry or you drop it off.'
+    },
+    {
+      number: 3,
+      image: 'assets/step3.png',
+      title: 'We Process It',
+      description: 'Clothes are weighed and handled carefully.'
+    },
+    {
+      number: 4,
+      image: 'assets/step4.png',
+      title: 'We Clean It',
+      description: 'Professionally cleaned, pressed, and checked.'
+    },
+    {
+      number: 5,
+      image: 'assets/step5.png',
+      title: 'We Deliver It',
+      description: 'Fresh and clean, back to your doorstep or pickup point.'
+    }
+  ];
 
 
 
@@ -213,9 +248,20 @@ export class CusCurtransComponent implements OnInit{
     })
 
     this.fetchtransactions();
-
     this.getShippingAddress();
+    this.startInteraval();
   }
+
+  startInteraval(){
+    this.dataInterval = setInterval(() => {
+      this.fetchtransactions();
+      this.getShippingAddress();
+      this.categ;
+      this.trans;
+      this.cust_name;
+    }, 5000);
+  }
+  
 
   deleteaddress(id: any)
   {
@@ -499,6 +545,14 @@ export class CusCurtransComponent implements OnInit{
           }
         );
       }
+    }
+  }
+
+  showStep(): void {
+    const modalElement = document.getElementById('step');
+    if (modalElement) {
+      const modal = new bootstrap.Modal(modalElement);
+      modal.show();
     }
   }
 

@@ -198,4 +198,33 @@
   font-size: 1em; /* Slightly larger icons */
   margin: 0 0.2em; /* Space between the icons and the heading */
 }
+.table-bordered td {
+  background-color: white;
+  outline-color: white;
+}
+.white-background tr{
+  background-color: white;
+  outline-color: white;
+  color: white;
+}
+.white-background {
+  background-color: white; /* White background for cells and rows */
+  border: 1px solid white; /* White border for the outline */
+}
 
+.table-light.white-background {
+  background-color: #f8f9fa; /* Light background for subtotals */
+  border: 1px solid white;
+}
+.outline {
+  background-color: #f8f9fa; /* Light background for visibility */
+  border-top: 2px solid #000000; /* Outline color */
+}
+
+.outline td {
+  border-top: 2px solid #000000; /* Ensure each cell has the same outline */
+}
+
+.fw-bold {
+  font-weight: bold; /* Maintain bold font for text */
+}

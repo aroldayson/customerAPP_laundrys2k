@@ -9,7 +9,7 @@ export class MyServiceService {
   url = "http://localhost/CustomerS2K/";
   Apiurl="http://localhost:8000/api/";
   // Apiurl="http://192.168.1.14 :8000/api/";
-  // Apiurl="http://10.0.118.64:8000/api/";
+  // Apiurl="http://192.168.1.4:8000/api/";
 
 
   public post: any[] = [];
@@ -54,7 +54,7 @@ export class MyServiceService {
   //   return this.http.post(this.url + 's2klogin.php',JSON.stringify(log));
   // }
   login(data: any){
-    return this.http.post(this.Apiurl + 'login',data);
+    return this.http.post(this.Apiurl + 'loginsss',data);
   }
 
   logout(headers: any){
@@ -149,6 +149,8 @@ export class MyServiceService {
     return this.http.post(`${this.Apiurl}updateaddress/${custId}`,request);
   }
   
+
+
   getTrackingNo(){
     return this.http.get(this.Apiurl + 'getTrackingNo');
   }

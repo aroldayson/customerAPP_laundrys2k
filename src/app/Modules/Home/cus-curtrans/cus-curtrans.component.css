@@ -123,8 +123,8 @@
 } */
 
 .btn-edit{
-  background-color: #5998e2;
-  color: white;
+  /* background-color: #5998e2; */
+  color: rgb(0, 0, 0);
   border-radius: 30px;
   transition: all 0.3s ease;
 }
@@ -134,8 +134,8 @@
 }
 
 .btn-delete{
-  background-color: #ff746c;
-  color: white;
+  /* background-color: #ff746c; */
+  color: rgb(0, 0, 0);
   border-radius: 30px;
   transition: all 0.3s ease;
 }
@@ -597,7 +597,7 @@
 .laundry-icon {
   color: #ffbb33; /* Matching the heading text color */
   font-size: 1em; /* Slightly larger icons */
-  margin: 0 0.2em; /* Space between the icons and the heading */
+  margin: 0 0.2em;
 }
 
 /* MAIN */
@@ -811,14 +811,14 @@ td {
 }
 
 .btn-edit {
-  background-color: #5988e2; /* Primary button color */
-  color: #fff;
+  /* background-color: #5988e2;  */
+  /* color: #fff; */
   border-radius: 10px; /* Rounded corners */
 }
 
 .btn-delete {
-  background-color: #f44336; /* Danger button color */
-  color: #fff;
+  /* background-color: #f44336; */
+  /* color: #000000; */
   border-radius: 10px; /* Rounded corners */
 }
 
@@ -828,7 +828,7 @@ td {
 }
 
 .btn-edit i, .btn-delete i {
-  margin-right: 0.5rem; /* Spacing between icon and text */
+  /* margin-right: 0.5rem; */
 }
 
 /* Responsive Design */
@@ -1072,7 +1072,7 @@ color: #fff;
     margin-top: -50px;
 }
 .edit-btn i {
-  color: #1308f3;
+  /* color: #1308f3; */
 }
 .edit-btn span {
   color: #fc0d00;
