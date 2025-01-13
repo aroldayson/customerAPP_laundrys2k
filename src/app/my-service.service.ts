@@ -32,8 +32,8 @@ export class MyServiceService {
     console.log(data);
     return this.http.post(this.Apiurl + 'addtrans', data);
   }
-  updatetrans(data: any){
-    return this.http.get(`${this.Apiurl}cancelTrans/${data}`)
+  updatetrans(data: any) {
+      return this.http.put(`${this.Apiurl}updateTrans/${data.id}`, data);
   }
   updateStatus(data: any){
     return this.http.get(`${this.Apiurl}updateStatus/${data}`)
@@ -109,9 +109,16 @@ export class MyServiceService {
     return this.http.get(`${this.Apiurl}displayDet/${data}`);
   }
 
-  updatetransac(data: any){
+  updatetransac(data: any, id: any){
     return this.http.post(`${this.Apiurl}updatetrans/`, data);
   }
+
+  addcateg(data: any){
+    return this.http.post(`${this.Apiurl}addcateg`,data);
+  }
+  deleteCateg(TransacDet_ID: number) {
+    return this.http.delete(`${this.Apiurl}deleteCateg/${TransacDet_ID}`);
+  }  
 
   displayTransac(data:any):Observable<any>{
     return this.http.get(`${this.Apiurl}getDetails/${data}`);

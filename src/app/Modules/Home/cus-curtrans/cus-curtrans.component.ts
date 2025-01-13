@@ -454,7 +454,7 @@ export class CusCurtransComponent implements OnInit{
       // Handle updates
       if (updates.length > 0) {
         pendingRequests++;  // Increment the counter for pending requests
-        this.post.updatetransac({ updates }).subscribe(
+        this.post.updatetransac(updates, '79').subscribe(
           (result: any) => {
             console.log('Update result:', result);
             this.fetchtransactions();
@@ -474,7 +474,7 @@ export class CusCurtransComponent implements OnInit{
       // Send addservices to the server only once
       if (addservices.length > 0) {
         pendingRequests++;  // Increment the counter for pending requests
-        this.post.updatetransac({ addservices }).subscribe(
+        this.post.updatetransac(addservices,79).subscribe(
           (result: any) => {
             console.log('Services result:', result);
             this.fetchtransactions();
@@ -564,14 +564,17 @@ export class CusCurtransComponent implements OnInit{
   }
 
   showDetails(Tracking_number: any, transaction: any, transId: any) {
+    console.log(transId);
+    localStorage.setItem('Transacid', transId)
+    this.route.navigate(['/main/cusmainhome/homemain/updatetrans']);
+
     this.selectedservices = {
       rush: false,
       pick: false,
       deliver: false,
     };
   
-    // First, set selectedTransaction based on the passed transaction
-    this.selectedTransaction = { ...transaction }; // Create a copy of the transaction
+    this.selectedTransaction = { ...transaction };
     this.service = this.selectedTransaction.Addservice_name;
   
     console.log('Selected transaction:', this.selectedTransaction);
@@ -922,6 +925,7 @@ export class CusCurtransComponent implements OnInit{
     );
     
   }
+  
 
   getTownValue(selectedValue: any): void{
     this.townAddress = selectedValue.target.value;

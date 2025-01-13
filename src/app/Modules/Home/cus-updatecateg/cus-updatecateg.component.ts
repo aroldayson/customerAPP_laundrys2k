@@ -8,13 +8,13 @@ import { ChangeDetectorRef } from '@angular/core';
 import * as bootstrap from 'bootstrap';
 
 @Component({
-  selector: 'app-cus-category',
+  selector: 'app-cus-updatecateg',
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink],
-  templateUrl: './cus-category.component.html',
-  styleUrl: './cus-category.component.css'
+  templateUrl: './cus-updatecateg.component.html',
+  styleUrl: './cus-updatecateg.component.css'
 })
-export class CusCategoryComponent implements OnInit {
+export class CusUpdatecategComponent implements OnInit {
   private post = inject(MyServiceService);
   categ: any[] = [];
   trans: any;
@@ -66,11 +66,14 @@ export class CusCategoryComponent implements OnInit {
   id = { cuid: localStorage.getItem('Cust_ID') };
   testid = localStorage.getItem('Cust_ID');
 
+  tranid = { id: localStorage.getItem('Transacid') };
+
   laundrylist: any[] = [];
   // addservices: any[] = [];
 
   showShippingAddress: boolean = false;
   quantity_counts: boolean = false;
+  addtolist: boolean = false;
 
   editingItem: any = null;
 
@@ -82,6 +85,37 @@ export class CusCategoryComponent implements OnInit {
 
   addressupdate: any;
   selectedCategoryMessage: string | null = null;
+
+  newlist: any[] = [];
+
+  statuses: string[] = [];
+  details: any;
+  customer = localStorage.getItem('Cust_ID');
+  price:any;
+  totalprice:any;
+  totalweight:any;
+  totalqty:any;
+  servicename:any;
+  serviceprice:any;
+  servicearray: any;
+  servicearray2:string[] = [];
+  currentStep: number = 0;  // Update this dynamically based on user progress (e.g., using a value from your logic)
+  // progressPercent: number = (this.currentStep / (this.steps.length - 1)) * 100; // Calculate progress percentage
+  serviceArray: any;
+  latestTransactionDate:any;
+  total: any;
+  track: any;
+  transacDate: any;
+  estimatedate: any;
+  totalserviceprice: any;
+  payments: any;
+  paymentss: any;
+  Transac_ID = localStorage.getItem('trans_ID');
+  lastname: any;
+  firstname: any;
+  middlename: any;
+  email: any;
+  phoneno: any;
   
 
 
@@ -138,9 +172,11 @@ export class CusCategoryComponent implements OnInit {
 
   selectedPriceCateg: any;
   count: void | undefined;
-  price: any;
+
   selectedCateg: any;
   townElem: any;
+  getDet: any;
+  updatedTransac: any;
 
 
   openEditModal(address: any) {
@@ -159,6 +195,10 @@ export class CusCategoryComponent implements OnInit {
       });
       console.log(this.addressupdate);
     });
+  }
+
+  showlist(){
+    this.addtolist = true;
   }
   
   updateAddress() {
@@ -216,13 +256,90 @@ export class CusCategoryComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.gentrack();
-    this.initializeForm();
+    // this.gentrack();
+    // this.initializeForm();
     this.fetchInitialData();
-    const serviceControl = this.newtransac.get('service') as FormControl;
-    this.getShippingAddress();
-    this.shippingaddress(this.addressupdate.CustAdd_ID); 
+    console.log(this.details)
+    // const serviceControl = this.newtransac.get('service') as FormControl;
+    // this.getShippingAddress();
+    // this.shippingaddress(this.addressupdate.CustAdd_ID); 
+
+    if (this.tranid) {
+      this.user.getDetails(this.tranid.id).subscribe(
+        (result: any) => {  
+          const price = result[0].total;
+          const serviceprice = result[0].totalserviceprice;
+          this.serviceprice = serviceprice;
+          this.price = price;
+          this.totalprice = price + serviceprice;
+          this.totalqty = result[0].totalqty;
+          this.servicearray = result[0].services;
+          this.servicearray2 = result[0].services[1].AddService_name;
+          this.getDet = result || [];
+          this.totalweight = result[0].totalweight;
+          this.details = result[0].details
+          this.total = result[0].total
+          this.track = result[0].Tracking_number 
+          this.totalserviceprice = result[0].totalserviceprice
+          this.transacDate = result[0].services[0].trans_date   
+          this.estimatedate = result[0].services[0].estimated_date   
+          this.paymentss = result[0].payments      
+          console.log(result,this.getDet,this.servicearray2,this.servicearray)
+        },
+        (error) => {
+          console.error('Error fetching transaction details:', error);
+        }
+      );
+    }
+    this.checkbox(this.servicearray2);
   }
+  isServiceSelected(service: string): boolean {
+    return this.servicearray.some((a: any) => a.AddService_name === service);
+  }
+  checkbox(event: any){
+    const checkbox = event.target as HTMLInputElement;
+    const isChecked = checkbox.checked;
+
+    const value = this.servicearray?.AddService_name;
+    
+    if (value === 'Rush-Job') {
+      this.isRushJob = isChecked;
+    } else if (value === 'PickUp-Service') {
+      this.isPickUpService = isChecked;
+    } else if (value === 'Delivery-Service') {
+      this.isDeliveryService = isChecked;
+    }
+  }
+
+  // listtransaction(){
+  //   if (this.tranid) {
+  //     this.user.getDetails(this.tranid).subscribe(
+  //       (result: any) => {  
+  //         const price = result[0].total;
+  //         const serviceprice = result[0].totalserviceprice;
+  //         this.serviceprice = serviceprice;
+  //         this.price = price;
+  //         this.totalprice = price + serviceprice;
+  //         this.totalqty = result[0].totalqty;
+  //         this.servicearray = result[0].services;
+  //         this.servicearray2 = result[0].services[1].AddService_name;
+  //         this.getDet = result || [];
+  //         this.totalweight = result[0].totalweight;
+  //         this.details = result[0].details
+  //         this.total = result[0].total
+  //         this.track = result[0].Tracking_number 
+  //         this.totalserviceprice = result[0].totalserviceprice
+  //         this.transacDate = result[0].services[0].trans_date   
+  //         this.estimatedate = result[0].services[0].estimated_date   
+  //         this.paymentss = result[0].payments      
+  //         console.log(result,this.getDet,this.servicearray2,this.servicearray,this.paymentss)
+  //       },
+  //       (error) => {
+  //         console.error('Error fetching transaction details:', error);
+  //       }
+  //     );
+  //   }
+  // }
 
   addaddress = new FormGroup({
     CustAdd_ID: new FormControl(null),
@@ -317,7 +434,6 @@ export class CusCategoryComponent implements OnInit {
           (service: any) => service !== value
         );
   
-        // If no services remain, remove the entire entry
         if (existingEntry.services.length === 0) {
           this.selectedServices = this.selectedServices.filter(
             (item) => item.CustAdd_ID !== selectedAddress.CustAdd_ID
@@ -536,37 +652,35 @@ export class CusCategoryComponent implements OnInit {
     // return this.laundrylist.reduce((total, item) => {
     //   return total + parseFloat(item.Price.toString());
     // }, 0);
-    let subtotal = this.laundrylist.reduce((total, item) => {
-      return total + parseFloat(item.Price.toString());
+    let subtotal = this.servicearray.reduce((total:any, item:any) => {
+      return total + parseFloat(item.AddService_price.toString());
     }, 0);
 
-    if (this.isRushJob) {
-      subtotal *= 2; // Double the subtotal for rush job
-    }
+    // if (this.isRushJob) {
+    //   subtotal *= 2; // Double the subtotal for rush job
+    // }
 
     return subtotal;
   }
 
   calculateTotals(): number {
-    return this.calculateSubTotals() - this.discount + this.shippingCharge;
+    return this.calculateSubTotals() + this.calculateSubTotal()
   }
 
   calculateSubTotals(): number {
     // return this.laundrylist.reduce((total, item) => {
     //   return total + parseFloat(item.Price.toString());
     // }, 0);
-    let subtotal = this.laundrylist.reduce((total, item) => {
+    let subtotal = this.getUniqueCategories().reduce((total:any, item:any) => {
       return total + parseFloat(item.Price.toString());
     }, 0);
 
-    // if (this.isRushJob) {
-    //   subtotal *= 2; 
-    // }
+    if (this.isRushJob) {
+      subtotal *= 2; 
+    }
 
     return subtotal;
   }
-
- 
 
   edit(item: any): void {
     this.editingItem = this.editingItem === item ? null : item;
@@ -649,19 +763,31 @@ export class CusCategoryComponent implements OnInit {
 
   getUniqueCategories(): any[] {
     const uniqueCategories = new Set<string>();
-    return this.laundrylist.filter((item) => {
+    
+    return this.details.filter((item: any) => {
       if (uniqueCategories.has(item.Category)) {
         return false;
       } else {
         uniqueCategories.add(item.Category);
         return true;
       }
+    }).map((item: any) => {
+      // Return an object containing the Category and its associated Price
+      // const categoryPrice = this.categ.find((c: any) => c.Category == item.Categ_ID);
+      const categoryPrice = this.categ.find((c: any) => c.Category === item.Category)?.Price;
+      // console.log(categoryPrice)
+      return {
+        Category: item.Category,
+        Qty: item.Qty,
+        Price: categoryPrice
+      };
     });
-  } 
+  }
+ 
 
   getUniqueAddress() {
     const uniqueIDs = new Set<number>();
-    return this.selectedServices.filter((address) => {
+    return this.servicearray.filter((address: any) => {
       if (uniqueIDs.has(address.CustAdd_ID)) {
         return false;
       } else {
@@ -670,15 +796,15 @@ export class CusCategoryComponent implements OnInit {
       }
     });
   }
-  
 
   addToList(): void {
+
     if (this.laundryForm.invalid) return;
   
     const categoryValue = this.laundryForm.value.category;
     const quantityValue = this.laundryForm.value.quantity ?? 1;
  
-    const uniqueCategories = new Set(this.laundrylist.map(item => item.Category));
+    const uniqueCategories = new Set(this.details.map((item: { Category: any; }) => item.Category));
     const selectedCategory = this.categ?.find(
       (c: any) => c.Categ_ID === parseInt(categoryValue!, 10)
     );
@@ -724,22 +850,100 @@ export class CusCategoryComponent implements OnInit {
       Category: selectedCategory.Category,
       Qty: quantityValue,
       Price: finalPrices,
-      Tracking_number: this.trackingNumber,
+      Transac_ID: this.details[0].Transac_ID,
       State: 'Pending',
     };
   
-    this.laundrylist.push(newItem);
-    this.selectAddPick = false;
+    this.details.push(newItem);
+    this.newlist.push(newItem);
+    console.log(this.newlist)
+    // this.selectAddPick = false;
     
     this.laundryForm.reset({ quantity: 1 });
     this.selectedPrice = 0;
-    this.showservices = true;
+    // this.showservices = true;
     this.quantity_counts = false;
+    this.addtolist = false;
   
     if (this.laundrylist.length > 0 && this.laundryForm.get('service')?.value?.length) {
       this.isNextStepDisabled = false;
+      this.addtolist = false;
     }
   }
+
+  // addNewCategory() {
+
+  //   const categoryValue = this.laundryForm.value.category;
+  //   const quantityValue = this.laundryForm.value.quantity ?? 1;
+  //   const selectedCategory = this.categ?.find(
+  //     (c: any) => c.Categ_ID === parseInt(categoryValue!, 10)
+  //   );
+    
+  //   // Validate input values before proceeding
+  //   if (!categoryValue || !categoryValue || !categoryValue) {
+  //     Swal.fire({
+  //       position: "center",
+  //       icon: "warning",
+  //       title: "Please fill in all fields before adding a category.",
+  //       showConfirmButton: true,
+  //     });
+  //     return;
+  //   }
+  
+  //   // Create a new item for the category
+  //   if (!selectedCategory) return; 
+
+  //   this.selectedPriceCateg = selectedCategory.Item_per_kg; 
+  //   this.selectedCateg = selectedCategory.Price;
+
+  //   const quantityValues = this.laundryForm.value.quantity ?? 1; 
+
+  //   const itemPerKg = selectedCategory.Item_per_kg;
+  //   const basePrice = selectedCategory.Price; 
+
+  //   if (quantityValue < itemPerKg) {
+  //     this.selectedCategoryMessage = `The minimum weight is ${itemPerKg} kg for ${selectedCategory.Category}.`;
+  //     this.laundryForm.get('quantity')?.setValue(itemPerKg); 
+  //   }
+
+  //   const additionalWeight = Math.max(0, quantityValue - itemPerKg);
+
+  //   const additionalPrice = Math.ceil(additionalWeight / itemPerKg) * basePrice;
+
+  //   const finalPrices = basePrice + additionalPrice;
+
+  //   this.selectedPrice = finalPrices;
+  //   this.selectedCategoryMessage = `${itemPerKg} kg is the minimum for ${selectedCategory.Category}. Total price: ${finalPrices}.`;
+
+  
+  //   const newItem = {
+  //     Categ_ID: categoryValue,
+  //     Category: selectedCategory.Category,
+  //     Qty: quantityValue,
+  //     Price: finalPrices,
+  //     Tracking_number: this.trackingNumber,
+  //     State: 'Pending',
+  //   };
+  
+  //   // Add the new item to the list
+  //   // this.details.push(newItem);
+  //   this.newlist.push(newItem);
+  
+  //   // Optionally clear the input fields after adding
+  //   // categoryValue = null;
+  //   // this.newQuantityValue = null;
+  //   // this.newPriceValue = null;
+  
+  //   Swal.fire({
+  //     position: "center",
+  //     icon: "success",
+  //     title: "New category added successfully!",
+  //     showConfirmButton: true,
+  //   });
+  
+  //   console.log("Updated details:", this.details);
+  // }
+  
   
 
   getLaundryPrice(event: Event): void {
@@ -769,12 +973,7 @@ export class CusCategoryComponent implements OnInit {
       this.quantity_counts = false;
       this.laundryForm.get('quantity')?.clearValidators();
     }
-    
-    
-    
-
-    this.laundryForm.get('quantity')?.updateValueAndValidity();
-    
+    this.laundryForm.get('quantity')?.updateValueAndValidity(); 
   }
 
   close(): void {
@@ -782,12 +981,40 @@ export class CusCategoryComponent implements OnInit {
   }
 
   removeFromList(item: any): void {
-    const index = this.laundrylist.indexOf(item);
-    if (index !== -1) {
-      this.laundrylist.splice(index, 1);
-      // this.updateTotalEstimatedPrice();
+    const index = this.details.indexOf(item);
+    if (index !== 1) {
+      this.details.splice(index, 1);
+      const id = this.details[0].TransacDet_ID;
+      console.log(id)
+      this.post.deleteCateg(id).subscribe(
+        (result: any) => {
+          console.log("Transaction API Response:", result)
+          if (result) {
+            Swal.fire({
+              position: "center",
+              title: 'Deleted!',
+              text: 'The Category has been deleted.',
+              icon: 'success',
+              showConfirmButton: false, // Removes the "OK" button
+              timer: 1500,
+            }).then(() => {
+              this.route.navigate(['/main/cusmainhome/homemain/updatetrans']);
+              this.fetchtransactions();
+            });
+          } else {
+            console.error("Unknown error:", result);
+            Swal.fire({
+              position: "center",
+              icon: "error",
+              title: "Error occurred while saving address data.",
+              text: result?.message || "Unknown error",
+              showConfirmButton: false,
+              timer: 1500, 
+            });
+          }
+        })
     }
-  }
+  }  
 
   fetchtransactions() {
     this.post.display(this.id.cuid).subscribe((data: any) => {
@@ -846,24 +1073,76 @@ export class CusCategoryComponent implements OnInit {
     });
   }
 
+  addcateg(){
+    this.post.addcateg(this.newlist).subscribe(
+        (result: any) => {
+          console.log("Transaction API Response:", result)
+          if (result) {
+            Swal.fire({
+              position: "center",
+              icon: "success",
+              title: "Update successfully!",
+              showConfirmButton: false, 
+              timer: 1500, 
+            }).then(() => {
+              this.route.navigate(['/main/cusmainhome/homemain/cuscurtrans']);
+              this.fetchtransactions();
+
+            });
+          } else {
+            console.error("Unknown error:", result);
+            Swal.fire({
+              position: "center",
+              icon: "error",
+              title: "Error occurred while saving address data.",
+              text: result?.message || "Unknown error",
+              showConfirmButton: false,
+              timer: 1500, 
+            });
+          }
+        })
+  }
+  // deleteCateg(){
+  //   this.post.deleteCateg(this.removeFromList).subscribe(
+  //   (result: any) => {
+  //     console.log("Transaction API Response:", result)
+  //     if (result) {
+  //       Swal.fire({
+  //         position: "center",
+  //         icon: "success",
+  //         title: "Update successfully!",
+  //         showConfirmButton: false, 
+  //         timer: 1500, 
+  //       }).then(() => {
+  //         this.route.navigate(['/main/cusmainhome/homemain/cuscurtrans']);
+  //         this.fetchtransactions();
+  //       });
+  //     } else {
+  //       console.error("Unknown error:", result);
+  //       Swal.fire({
+  //         position: "center",
+  //         icon: "error",
+  //         title: "Error occurred while saving address data.",
+  //         text: result?.message || "Unknown error",
+  //         showConfirmButton: false,
+  //         timer: 1500, 
+  //       });
+  //     }
+  //   })
+  // }
+
+
   insert() {
-    // const townElem = (document.getElementById("ShipServ_price") as HTMLSelectElement)?.value;
-    // console.log("Piniling Barangay sa Delivery", townElem);
-  
-    // const townElems = (document.getElementById("ShipServ_prices") as HTMLSelectElement)?.value;
-    // console.log("Piniling Barangay sa Pickup", townElems);
-  
-    // Suriin kung may mga item sa laundry list
-    if (this.laundrylist.length === 0) {
-      Swal.fire({
-        position: "center",
-        icon: "warning",
-        title: "Mangyaring magdagdag ng kahit isang item sa listahan bago mag-save!",
-        showConfirmButton: false, // Removes the "OK" button
-        timer: 1500, // Automatically closes after 1.5 seconds
-      });
-      return;
-    }
+    // if (this.laundrylist.length === 0) {
+    //   Swal.fire({
+    //     position: "center",
+    //     icon: "warning",
+    //     title: "Mangyaring magdagdag ng kahit isang item sa listahan bago mag-save!",
+    //     showConfirmButton: false, // Removes the "OK" button
+    //     timer: 1500, 
+    //   });
+    //   return;
+    // }
 
     const uniqueAddresses = this.getUniqueAddress();
     const firstUniqueCustAddID = uniqueAddresses.length > 0 ? String(uniqueAddresses[0].CustAdd_ID) : null;
@@ -873,36 +1152,32 @@ export class CusCategoryComponent implements OnInit {
     const selectedServices = this.selectedServices.filter(service =>
       validServices.includes(service.AddService_name)
     );
-  
-    // I-prepare ang transaction data
+
     this.newtransac.patchValue({
       CustAdd_ID: firstUniqueCustAddID,
       Cust_ID: this.id.cuid,
       AddService_price: this.total_estimated_price ? this.total_estimated_price : 0,
-      Tracking_number: this.trackingNumber,
+      Tracking_number: this.track,
       laundry: this.laundrylist,
-      service: this.selectedServices
+      service: this.selectedServices && this.selectedServices.length > 0 ? this.selectedServices : null
     });
     
     const formData = this.newtransac.value;
   
-    // I-log ang form data para sa debugging
     console.log("Transaction Form Data:", formData);
     console.log(formData);
   
-    // Tumawag sa API para mag-insert ng transaction data
-    this.post.addtrans(formData).subscribe(
+    this.post.updatetransac(FormDataEvent,this.tranid.id).subscribe(
       (result: any) => {
         console.log("Transaction API Response:", result);
   
         if (result && result.Transaction) {
-          // Kung walang address na isusunod, magpatuloy lamang sa transaction
           Swal.fire({
             position: "center",
             icon: "success",
             title: "Transaction details and address added successfully!",
-            showConfirmButton: false, // Removes the "OK" button
-            timer: 1500, // Automatically closes after 1.5 seconds
+            showConfirmButton: false, 
+            timer: 1500, 
           }).then(() => {
             this.route.navigate(['/main/cusmainhome/homemain/cuscurtrans']);
             this.fetchtransactions();
@@ -914,8 +1189,8 @@ export class CusCategoryComponent implements OnInit {
             icon: "error",
             title: "Error occurred while saving address data.",
             text: result?.message || "Unknown error",
-            showConfirmButton: false, // Removes the "OK" button
-            timer: 1500, // Automatically closes after 1.5 seconds
+            showConfirmButton: false,
+            timer: 1500, 
           });
         }
       },
@@ -932,6 +1207,161 @@ export class CusCategoryComponent implements OnInit {
       }
     );
   }
+
+
+  // updateTransaction() {
+  //   // if (this.selectedTransaction && this.selectedTransaction.details) {
+  //     // let hasErrorOccurred = false;
+  //     // let pendingRequests = 0;  // To track the number of pending requests
+  
+  //     // const updates: any[] = [];
+  //     // const newEntries: any[] = [];
+  //     // const addservices: any[] = [];
+  //     // const removedServicess: string[] = [];
+  //     // const transacStatus = this.selectedTransaction.Transac_status || 'Pending';
+  
+  //     // // Use a Set to ensure unique services
+  //     // const uniqueServices = new Set();
+  
+  //     // // Prepare data for updates, new additions, and deletions
+  //     // this.selectedTransaction.details.forEach((detail: any) => {
+  //     //   if (detail.TransacDet_ID) {
+  //     //     // Prepare update for transaction details
+  //     //     updates.push({
+  //     //       TransacDet_ID: detail.TransacDet_ID,
+  //     //       Categ_ID: detail.Categ_ID,
+  //     //       Qty: detail.Qty,
+  //     //       Transac_status: transacStatus,
+  //     //       Transac_ID: this.selectedTransaction.trans_ID,
+  //     //     });
+  
+  //     //     // Add services to the Set (to ensure uniqueness)
+  //     //     this.servicesUpd.forEach((service: any) => {
+  //     //       uniqueServices.add(service);
+  //     //     });
+  //     //   } else {
+  //     //     // Handle new entries
+  //     //     newEntries.push({
+  //     //       Categ_ID: detail.Categ_ID,
+  //     //       Qty: detail.Qty,
+  //     //       Tracking_Number: this.selectedTransaction.track_num
+  //     //     });
+  //     //   }
+  //     // });
+  
+  //     // // Convert Set to array for addservices
+  //     // uniqueServices.forEach((service: any) => {
+  //     //   addservices.push({
+  //     //     Transac_ID: this.selectedTransaction.trans_ID,
+  //     //     Addservices_name: service
+  //     //   });
+  //     // });
+  
+  //     // // Function to check if all requests have completed
+  //     // const checkAllRequestsCompleted = () => {
+  //     //   pendingRequests--;
+  //     //   if (pendingRequests === 0) {
+  //     //     if (!hasErrorOccurred) {
+  //     //       this.closeModal();  // Close the modal only if no errors occurred
+  //     //     }
+  //     //   }
+  //     // }
+  
+  //     // Handle updates
+  //     // if (updates.length > 0) {
+  //     //   pendingRequests++;  // Increment the counter for pending requests
+  //       // this.post.updatetransac(this.details).subscribe(
+  //       //   (result: any) => {
+  //       //     console.log('Update result:', result);
+  //       //     this.fetchtransactions();
+  //       //     // checkAllRequestsCompleted();
+  //       //   },
+  //       //   (error: any) => {
+  //       //     console.error('Error in updating transaction:', error);
+  //       //     if (error.status === 422) {
+  //       //       // this.errormessage = 'Fill the Fields';
+  //       //     }
+  //       //     hasErrorOccurred = true;  // Mark that an error occurred
+  //       //     // checkAllRequestsCompleted();
+  //       //   }
+  //       // )
+      
+  
+  //     // Send addservices to the server only once
+  //     // if (addservices.length > 0) {
+  //       // pendingRequests++;  // Increment the counter for pending requests
+  //       // this.post.updatetransac(this.servicearray).subscribe(
+  //       //   (result: any) => {
+  //       //     console.log('Services result:', result);
+  //       //     this.fetchtransactions();
+  //       //     // checkAllRequestsCompleted();
+  //       //   },
+  //       //   (error: any) => {
+  //       //     console.error('Error in updating services:', error);
+  //       //     if (error.status === 422) {
+  //       //       // this.errormessage = 'Fill the Fields';
+  //       //     }
+  //       //     hasErrorOccurred = true;  // Mark that an error occurred
+  //       //     // checkAllRequestsCompleted();
+  //       //   }
+  //       // );
+  //     // }
+  
+  //     // Send new entries to the server only once
+  //     // if (newEntries.length > 0) {
+  //     //   pendingRequests++;  // Increment the counter for pending requests
+  //     //   this.post.insertNewDetails(newEntries).subscribe(
+  //     //     (result: any) => {
+  //     //       console.log('Insert result:', result);
+  //     //       this.fetchtransactions();
+  //     //       checkAllRequestsCompleted();
+  //     //     },
+  //     //     (error: any) => {
+  //     //       console.error('Error in inserting new details:', error);
+  //     //       if (error.status === 422) {
+  //     //         this.errormessage = 'Fill the Fields';
+  //     //       }
+  //     //       hasErrorOccurred = true;  // Mark that an error occurred
+  //     //       checkAllRequestsCompleted();
+  //     //     }
+  //     //   );
+  //     // }
+  
+  //     // Handle removal of services
+  //     // if (this.removedServices.length > 0) {
+  //     //   pendingRequests++;  // Increment the counter for pending requests
+  //     //   this.post.removeServices(this.selectedTransaction.trans_ID, this.removedServices).subscribe(
+  //     //     (result: any) => {
+  //     //       console.log('Deleted result:', result);
+  //     //       this.fetchtransactions();
+  //     //       checkAllRequestsCompleted();
+  //     //     },
+  //     //     (error: any) => {
+  //     //       console.error('Error in removing services:', error);
+  //     //       hasErrorOccurred = true;  // Mark that an error occurred
+  //     //       checkAllRequestsCompleted();
+  //     //     }
+  //     //   );
+  //     // }
+  
+  //     // Handle deleted entries
+  //     // if (this.deletedDetails.length > 0) {
+  //     //   pendingRequests++;  // Increment the counter for pending requests
+  //     //   this.post.deleteDetails(this.deletedDetails).subscribe(
+  //     //     (result: any) => {
+  //     //       console.log('Deleted result:', result);
+  //     //       this.fetchtransactions();
+  //     //       checkAllRequestsCompleted();
+  //     //     },
+  //     //     (error: any) => {
+  //     //       console.error('Error in deleting details:', error);
+  //     //       hasErrorOccurred = true;  // Mark that an error occurred
+  //     //       checkAllRequestsCompleted();
+  //     //     }
+  //     //   );
+  //     // }
+  //   // }
+  // }
 
   newaddress() {
     console.log(this.addaddress.value);
@@ -983,4 +1413,83 @@ export class CusCategoryComponent implements OnInit {
   //     console.log(this.townAddresses);
   //   });
   // }
+  update() {
+    // Ensure the form data is properly patched before making the API call
+    const categories = this.laundrylist.map(item => item.Categ_ID);
+    const quantities = this.laundrylist.map(item => item.Qty);
+    const tracknum = this.track;
+  
+    // Check if there are any items in the list
+    if (categories.length === 0 || quantities.length === 0) {
+      Swal.fire({
+        position: "center",
+        icon: "warning",
+        title: "Please add at least one item to the list before updating!",
+        showConfirmButton: true,
+      });
+      return;
+    }
+  
+    // Patch the form data
+    this.updatedTransac.patchValue({
+      Categ_ID: categories,
+      Qty: quantities,
+    });
+  
+    // Log the patched value to verify
+    console.log("Patched Transaction Data:", this.updatedTransac.value);
+  
+    // Debugging: Validate the data before making the API call
+    if (!this.updatedTransac.value.Tracking_number || !this.updatedTransac.value.Cust_ID) {
+      console.error('Missing required fields:', this.updatedTransac.value);
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "Missing required fields! Please check the form data.",
+        showConfirmButton: true,
+      });
+      return;
+    }
+  
+    // Make the API call with validated data
+    this.post.updatetransac(this.updatedTransac.value, this.tranid.id).subscribe(
+      (result: any) => {
+        // Check if the response is successful
+        if (result && result.message === 'Transaction details updated successfully') {
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Transaction details updated successfully!",
+            showConfirmButton: true,
+          }).then(() => {
+            // Redirect to the desired route after success
+            this.route.navigate(['/main/cusmainhome/homemain/cuscurtrans']);
+            this.fetchtransactions(); // Refresh the transaction list
+          });
+        } else {
+          console.error('Unexpected response:', result);
+          Swal.fire({
+            position: "center",
+            icon: "error",
+            title: "Error occurred during updating: " + (result.message || 'Unknown error'),
+            showConfirmButton: true,
+          });
+        }
+      },
+      (error) => {
+        // Log the error to see the exact issue
+        console.error('API Error:', error);
+  
+        // Show detailed error message in the alert
+        Swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: "An error occurred while updating. Please try again.",
+          text: error.message || 'No additional error details provided by the server',
+          showConfirmButton: true,
+        });
+      }
+    );
+  }
+  
 }

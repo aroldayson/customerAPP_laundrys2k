@@ -189,16 +189,16 @@
                 </div>
               </div>
             </li>
-            <li class="checkout-item" >
+            <li class="checkout-item mx-5 px-5" >
               <div class="avatar checkout-icon p-1" [hidden]="showservices==false">
-                <div class="avatar-title rounded-circle">
+                <!-- <div class="avatar-title rounded-circle">
                   <i class="fa fa-plus text-white font-size-20" aria-hidden="true"></i>
-                </div>
+                </div> -->
               </div>
 
               <div class="row mb-4">
                 <div class="row mb-4 px-3" *ngIf="showservices !== false">
-                  <div class="col-md-8">
+                  <div class="col-md-12">
                     <div class="d-flex align-items-center">
                       <!-- Label -->
                       <label for="services" class="form-label me-4">Additional Services</label>
@@ -225,7 +225,7 @@
                             (change)="handleServiceSelection($event, selectedAddress)" 
                             id="pickUp-service-checkbox"
                           />
-                          <label class="form-check-label" for="pickUp-service-checkbox">Pick-up</label>
+                          <label class="form-check-label" for="pickUp-service-checkbox">Pick-Up</label>
                         </div>
                         <!-- Delivery -->
                         <div class="form-check d-flex align-items-center">
@@ -476,6 +476,9 @@
             </table>
           </div>
           <div class="text-end mt-4">
+            <button type="button" class="btn btn-primary mx-3"  [routerLink]="['/main/cusmainhome/homemain/cuscurtrans']">
+              Cancel
+            </button>
             <button type="submit" class="btn btn-primary"  (click)="insert()">
               Submit Order
             </button>
