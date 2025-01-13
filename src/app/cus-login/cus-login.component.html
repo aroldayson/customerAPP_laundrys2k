@@ -13,10 +13,35 @@
         <input type="text" id="username" class="fadeIn second" name="username" placeholder="Enter Username" formControlName="email" />
         <div id="nousername" class="text-danger mt-2 mb-3" style="display: none"></div>
 
-        <input type="password" id="password" class="fadeIn third" name="password" placeholder="Enter Password" formControlName="password" />
-        <div id="nopassword" class="text-danger mt-2 mb-3" style="display: none"></div>
+        <!-- <input type="password" id="password" class="fadeIn third" name="password" placeholder="Enter Password" formControlName="password" />
+        <div id="nopassword" class="text-danger mt-2 mb-3" style="display: none"></div> -->
 
-        <input type="submit" class="fadeIn fourth btn" value="Log In" />
+        <div style="position: relative; width: 100%">
+          <input
+            [type]="showPassword ? 'password' : 'text'"
+            id="password"
+            class="fadeIn third password-input"
+            name="password"
+            placeholder="Enter Password"
+            formControlName="password" 
+          />
+          <i
+            (click)="togglePasswordVisibility()"
+            class="fa {{
+              showPassword ? 'fa-eye-slash' : 'fa-eye'
+            }} password-toggle-icon"
+          ></i>
+        </div>
+        <!-- <input type="submit" class="fadeIn fourth btn" value="Log In" /> -->
+        <div class="subLoad">
+          <button type="submit" class="fadeIn fourth mt-3 btn btn-primary" [disabled]="!loginForm.valid || load == true" id="btnSub">
+              <span *ngIf="!load">Log In</span>
+              
+              <div class="spinner-border spinner-border-sm" style="color: currentColor;" *ngIf="load">
+                  <span class="visually-hidden">Loading...</span>
+              </div>
+          </button>
+        </div>
       </form>
 
       <!-- Add the "Sign Up" button below -->

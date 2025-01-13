@@ -11,7 +11,7 @@
 }
 
 .modal-header {
-  background-color: #5988e2;
+  /* background-color: #5988e2; */
   color: #fff;
   padding: 1rem;
 }
@@ -153,7 +153,8 @@
 /* .btn-additem:hover{
 
 } */
-.btn-new{
+/* Base Button Style */
+.btn-new {
   background-color: #5998e2;
   border: 2px solid white;
   text-decoration: none;
@@ -165,10 +166,36 @@
   transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
 }
 
-.btn-new:hover{
+.btn-new:hover {
   background-color: #307ed8;
   border: 2px solid white;
 }
+
+/* Specific Button Colors */
+.btn-transaction {
+  background-color: #28a745; /* Green */
+}
+
+.btn-transaction:hover {
+  background-color: #218838; /* Darker Green */
+}
+
+.btn-step {
+  background-color: #ffc107; /* Yellow */
+}
+
+.btn-step:hover {
+  background-color: #e0a800; /* Darker Yellow */
+}
+
+.btn-price {
+  background-color: #dc3545; /* Red */
+}
+
+.btn-price:hover {
+  background-color: #c82333; /* Darker Red */
+}
+
 
 /* Header Styles */
 .header {
@@ -1110,6 +1137,28 @@ color: black; /* Text color remains black */
 background-color: #e9ecef; /* Optional: Keeps the Bootstrap disabled background */
 opacity: 1; /* Ensures the text is fully visible */
 }
+
+
+/* Optional: Style scrollbars for a polished look */
+.table-responsive {
+  overflow-x: auto;
+  max-height: 40vh;
+}
+
+.table-responsive::-webkit-scrollbar {
+  height: 8px;
+  max-height: 90vh;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+  background-color: #6c757d;
+  border-radius: 4px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+  background-color: #495057;
+}
+
 
 
 

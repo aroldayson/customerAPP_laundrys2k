@@ -3,14 +3,20 @@
   <p><span style="color: #15304f;">Welcome </span><span style="color: #ffffff;text-shadow: 2px 2px 5px #15304f;">{{cust_name}}</span></p>
   <div class="row">
     <div class="col md">
-      <button class="btn btn-new mb-2" (click)="gentrack()">NEW TRANSACTION</button>
-      <button class="btn btn-new mb-2"  (click)="showStep()">STEP GUIDE</button>
-      <button class="btn btn-new mb-2"  (click)="showStep()">PRICE LIST</button>
+      <button class="btn btn-new btn-transaction mb-2" (click)="gentrack()">
+        <i class="fas fa-plus-circle"></i> NEW TRANSACTION
+      </button>
+      <button class="btn btn-new btn-step mb-2" (click)="showStep()">
+        <i class="fas fa-info-circle"></i> STEP GUIDE
+      </button>
+      <button class="btn btn-new btn-price mb-2" (click)="showPricelist()">
+        <i class="fas fa-tags"></i> PRICE LIST
+      </button>      
     </div>
   </div>
 </div>
 
-<div class="container my-4">
+<div class="mb-3 mt-3">
   <div class="row mb-3">
     <div class="col-12">
       <h3 class="text-center styled-heading">
@@ -18,7 +24,7 @@
         Transactions
       </h3>
     </div>
-</div>
+  </div>
   <main class="table" id="customers_table">
     <section class="table__header">
         <h1>Customer's Orders</h1>
@@ -68,12 +74,12 @@
                       </i>
                     </td>
                     <td> 
-                      <button class="btn btn-edit me-2"
+                      <button class="btn btn-outline-primary me-2"
                         [disabled]="item.trans_stat.toLowerCase() !== 'pending'"
                         (click)="showDetails(item.track_num, item, item.trans_ID)">
                         <i class="fa fa-pencil" aria-hidden="true"></i> 
                       </button>
-                      <button class="btn btn-delete"
+                      <button class="btn btn-outline-danger"
                       [disabled]="item.trans_stat.toLowerCase() !== 'pending'"
                       (click)="updateStatus(item.trans_ID)">
                         <i class="fas fa-trash-alt me-1"></i> 
@@ -899,6 +905,48 @@
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="priceList" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"#priceList>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title styled-heading mb-2">
+          <span class="laundry-icon"><i class="fa-solid fa-tags"></i></span>Price List
+        </h2>
+       
+      </div>
+      <div class="modal-body">
+        <div class="modal-body">
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th>Quantity</th>
+                  <th>Minimum Weight</th>
+                  <th>Price</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for(p of categ; track p.categ) {
+                  <tr>
+                    <td>{{ p.Category }}</td>
+                    <td>{{ p.Item_per_kg }}</td>
+                    <td>{{ p.Minimum_weight }}</td>
+                    <td>{{ p.Price | currency:' ':'symbol' }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>  
+          <div class="end d-flex justify-content-end">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">CLOSE</button>
+          </div>        
+        </div>
+    </div>
+  </div>
+</div>
+
 
 
 

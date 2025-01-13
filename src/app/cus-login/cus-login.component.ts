@@ -15,6 +15,13 @@ import Swal from 'sweetalert2';
 export class CusLoginComponent implements OnInit{
   constructor(private myserv: MyServiceService, private route: Router){}
   
+  showPassword: boolean = true;
+  load: boolean = false;
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
+
   loginForm =new FormGroup({
     email: new FormControl(null),
     password: new FormControl(null),
@@ -37,7 +44,16 @@ export class CusLoginComponent implements OnInit{
 //         }
 //       })}
 
+  simulateLoading() {
+    this.load = true;
+    setTimeout(() => {
+      this.load = false;
+    }, 3000);
+  }
+
+
   login() {
+    this.simulateLoading();
     console.log(this.loginForm.value);
     if (this.loginForm.valid) {
       this.myserv.login(this.loginForm.value).subscribe(
@@ -52,7 +68,7 @@ export class CusLoginComponent implements OnInit{
               timerProgressBar: true,
               showConfirmButton: false
             });
-
+            this.load = false;
             // Store the token in localStorage
             localStorage.setItem('token', result.token);
             localStorage.setItem('Cust_ID', result.user.Cust_ID); 
@@ -66,6 +82,7 @@ export class CusLoginComponent implements OnInit{
               text: 'Login was unsuccessful. Please try again.',
               showConfirmButton: true
             });
+            this.load = false;
           }
           console.log(result);
         },

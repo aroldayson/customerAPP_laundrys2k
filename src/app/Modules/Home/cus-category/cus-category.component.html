@@ -1,4 +1,4 @@
-<div class="container">
+<div class="">
   <div class="row mb-3 mt-2">
     <div class="col-12">
       <h3 class="text-center styled-heading">
@@ -30,7 +30,7 @@
                     {{ trackingNumber }}
                   </h4>
                   <div class="mb-3">
-                    <form [formGroup]="laundryForm" (ngSubmit)="addToList()">
+                    <form [formGroup]="laundryForm" (ngSubmit)="addToList()" >
                       <div>
                         <div class="row">
                           <div class="col-lg-4">
@@ -50,14 +50,12 @@
                               </option>
                             </select>
 
-
-
                             <div *ngIf="laundryForm.get('category')?.touched && laundryForm.get('category')?.invalid" class="text-danger">
                               <small *ngIf="laundryForm.get('category')?.errors?.['required']">Laundry type is required</small>
                             </div>
                           </div>
 
-                          <div class="col-md">
+                          <div class="col-md" [hidden]="!quantity_counts==true">
                             <div class="mb-3">
                               <label class="form-label" for="quantity"
                                 >Quantity/Counts</label
@@ -76,31 +74,11 @@
                                 <small *ngIf="laundryForm.get('quantity')?.errors?.['required']">Quantity is required</small>
                                 <small *ngIf="laundryForm.get('quantity')?.errors?.['min']">Quantity must be at least 1</small>
                               </div>
-                            </div>
-                          </div>
-
-                          <div class="col-md">
-                            <div class="mb-3">
-                              <label class="form-label" for="quantity"
-                                >Kgs</label
-                              >
-                              <input
-                                type="number"
-                                step="1"
-                                min="0"
-                                class="form-control"
-                                id="quantity"
-                                formControlName="quantity"
-                                placeholder="Enter count"
-                                aria-label="Enter count"
-                              />
-                              <div *ngIf="laundryForm.get('quantity')?.touched && laundryForm.get('quantity')?.invalid" class="text-danger">
-                                <small *ngIf="laundryForm.get('quantity')?.errors?.['required']">Quantity is required</small>
-                                <small *ngIf="laundryForm.get('quantity')?.errors?.['min']">Quantity must be at least 1</small>
+                              <div *ngIf="selectedCategoryMessage" class="alert alert-info">
+                                {{ selectedCategoryMessage }}
                               </div>
                             </div>
                           </div>
-                          
 
                           <div
                             class="col-md mb-3"
@@ -140,7 +118,7 @@
                       </div>
                     </form>
 
-                    <div class="mb-3">
+                    <div class="mb-3"  [hidden]="showservices==false">
                       <table
                         class="table table-bordered"
                         id="added-laundry-table"
@@ -149,29 +127,12 @@
                           <tr>
                             <th>Category</th>
                             <th>Qty</th>
-                            <th>Kgs</th>
+                            <!-- <th>Kgs</th> -->
                             <th>Estimated <br>Laundry Price</th>
                             <th>Actions</th>
                           </tr>
                         </thead>
                         <tbody>
-                          <!-- @for (l of laundrylist; track l.category) {
-                          <tr>
-                            <td>
-                              <span >{{ l.Category }}</span>
-                            </td>
-                            <td>{{ l.Qty }}</td>
-                            <td class="text-right"id="price">{{ l.Price | currency: ' ':'symbol':'1.2-2' }}</td>
-                            <td class="text-right">
-                              <button
-                                class="btn btn-sm btn-outline-danger " 
-                                (click)="removeFromList(l)"
-                              >
-                                <i class="fa fa-trash"></i>
-                              </button>
-                            </td>
-                          </tr>
-                          } -->
                           <tr *ngFor="let l of getUniqueCategories()">
                             <td>{{ l.Category }}</td>
                             <td class="text-center">
@@ -189,27 +150,14 @@
                                 <span class="edit-mode-trigger">
                                   {{ l.Qty }}
                                 </span>
-                              </ng-template>
-                              
+                                <i 
+                                  class="fa fa-info-circle text-info ms-1"
+                                  data-bs-toggle="tooltip"
+                                  data-bs-placement="left"
+                                  [attr.title]="'The minimum weight is 1 kg for ' + l.Category + ' Adjusted to minimum weight.'">
+                                </i>
+                              </ng-template>                              
                             </td>  
-                            <td class="text-center">
-                              <ng-container *ngIf="editingItem === l; else viewMode">
-                                <input
-                                  type="number"
-                                  [value]="l.Qty"
-                                  class="form-control form-control-sm"
-                                  id="Qty"
-                                  (change)="saveQty(l,l.Qty)"
-                                  min="1"
-                                />
-                              </ng-container>
-                              <ng-template #viewMode>
-                                <span class="edit-mode-trigger">
-                                  {{ l.Qty }}
-                                </span>
-                              </ng-template>
-                              
-                            </td>                            
                             <td class="text-right" id="price">
                               {{ l.Price | currency: ' ':'symbol':'1.2-2' }}
                             </td>
@@ -227,13 +175,12 @@
                                 <i class="fa fa-trash"></i>
                               </button>
                             </td>
-                          </tr>
-                                               
+                          </tr>               
                         </tbody>
                         <tfoot>
                           <tr class="table-light outline">
-                            <td colspan="3" class="text-end fw-bold outline">Sub Total</td>
-                            <td class="text-end fw-bold">100</td>
+                            <td colspan="2" class="text-end fw-bold outline">Sub Total</td>
+                            <td class="text-end fw-bold">{{calculateSubTotals() | currency: ' ':'symbol':'1.2-2' }}</td>
                           </tr> 
                         </tfoot>
                       </table>
@@ -280,31 +227,57 @@
 
               <div class="row mb-4">
                 <div class="row mb-4 px-3" *ngIf="showservices !== false">
-                  <div class="col-md-6">
-                    <label for="services" class="form-label">Additional Services</label>
-                    <p>Pick your choice/s of services here.</p>
-                    <div class="d-flex gap-3">
-                      <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="Rush-Job" (change)="onCheckboxChange($event)"  id="rush-job-checkbox">
-                        <label class="form-check-label" for="rush">Rush Jobs</label>  
-                      </div>
-                      <div class="form-check">
-                        <!-- <input class="form-check-input" type="checkbox" value="PickUp-Service"  (click)="showaddress(id.cuid)" (change)="onCheckboxChange($event)" id="pickUp-service-checkbox"> -->
-                        <input class="form-check-input" type="checkbox" value="PickUp-Service" (click)="showShipping()"  (click)="showaddress(id.cuid)" (change)="onCheckboxChange($event)" id="pickUp-service-checkbox" >
-                        <label class="form-check-label" for="pick">Pick-up</label>
-                      </div>
-                      <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="Delivery-Service" (click)="showaddress(id.cuid)"  (change)="onCheckboxChange($event)">
-                        <label class="form-check-label" for="deliver" >Delivery</label>
+                  <div class="col-md-8">
+                    <div class="d-flex align-items-center">
+                      <!-- Label -->
+                      <label for="services" class="form-label me-4">Additional Services</label>
+                      <!-- Checkboxes in a single line -->
+                      <div class="d-flex align-items-center gap-4">
+                        <!-- Rush Jobs -->
+                        <div class="form-check d-flex align-items-center">
+                          <input 
+                            class="form-check-input me-2" 
+                            type="checkbox" 
+                            value="Rush-Job" 
+                            (change)="handleServiceSelection($event, selectedAddress)" 
+                            id="rush-job-checkbox"
+                          />
+                          <label class="form-check-label" for="rush-job-checkbox">Rush Jobs</label>
+                        </div>
+                        <!-- Pick-Up -->
+                        <div class="form-check d-flex align-items-center">
+                          <input 
+                            class="form-check-input me-2" 
+                            type="checkbox" 
+                            value="PickUp-Service" 
+                            (click)="shippingaddress(id.cuid)" 
+                            (change)="handleServiceSelection($event, selectedAddress)" 
+                            id="pickUp-service-checkbox"
+                          />
+                          <label class="form-check-label" for="pickUp-service-checkbox">Pick-up</label>
+                        </div>
+                        <!-- Delivery -->
+                        <div class="form-check d-flex align-items-center">
+                          <input 
+                            class="form-check-input me-2" 
+                            type="checkbox" 
+                            value="Delivery-Service" 
+                            (click)="deliveryaddress(id.cuid)" 
+                            (change)="handleServiceSelection($event, selectedAddress)" 
+                            id="delivery-service-checkbox"
+                          />
+                          <label class="form-check-label" for="delivery-service-checkbox">Delivery</label>
+                        </div>
                       </div>
                     </div>
                   </div>
-                  <div class="col-md-6 mt-5 text-end">
+                  
+                  <!-- <div class="col-md-6 mt-5 text-end">
                     <label for="amount" class="form-label">Estimated Amount</label>
                     <p class="text-success fw-bold">
                       {{ total_estimated_price | currency: ' ':'symbol':'1.2-2' }}
                     </p>
-                  </div>
+                  </div> -->
                 </div>
               </div>
 
@@ -317,164 +290,180 @@
                     <tr>
                       <th class="text-left">Service</th>
                       <th>Address</th>
-                      <!-- <th>Price</th> -->
                       <th>Price</th>
                       <th>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr *ngFor="let l of getUniqueCategories()">
-                      <td>{{ l.Category }}</td>
-                      <td class="text-center">
-                        <ng-container *ngIf="editingItem === l; else viewMode">
-                          <input
-                            type="number"
-                            [value]="l.Qty"
-                            class="form-control form-control-sm"
-                            id="Qty"
-                            (change)="saveQty(l,l.Qty)"
-                            min="1"
-                          />
-                        </ng-container>
-                        <ng-template #viewMode>
-                          <span class="edit-mode-trigger">
-                            {{ l.Qty }}
-                          </span>
-                        </ng-template>
-                        
-                      </td>                            
+                    <tr *ngFor="let a of getUniqueAddress()">
+                      <td>{{ a.AddService_name }}</td>
+                      <td class="text-left">{{ a.address }}</td>
                       <td class="text-right" id="price">
-                        {{ l.Price | currency: ' ':'symbol':'1.2-2' }}
+                        {{ a.AddService_price | currency: ' ' : 'symbol' : '1.2-2' }}  
                       </td>
                       <td class="text-center">
                         <button
                           class="btn btn-sm btn-outline-primary mx-3"
-                          (click)="edit(l)"
+                          (click)="shippingaddress(id.cuid)"
                         >
-                          <i class="fa" [ngClass]="editingItem === l ? 'fa-check' : 'fa-pencil'"></i>
+                          <i class="fa" [ngClass]="editingItem === a ? 'fa-check' : 'fa-pencil'"></i>
                         </button>
                         <button
                           class="btn btn-sm btn-outline-danger"
-                          (click)="removeFromList(l)"
+                          (click)="removeFromList(a)"
                         >
                           <i class="fa fa-trash"></i>
                         </button>
                       </td>
-                    </tr>
-                                             
+                    </tr>                   
                   </tbody>
+                  <tfoot>
+                    <tr class="table-light outline">
+                      <td colspan="2" class="text-end fw-bold outline">Sub Total</td>
+                      <td class="text-end fw-bold">240.00</td>
+                    </tr> 
+                  </tfoot>
                 </table>
               </div>
               
               <!-- <div class="feed-item-list" [hidden]="selectAddPick==false"> -->
-                <div class="modal fade" id="shipping_address" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                  <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title font-size-22 text-underline">
-                          <b>Shipping Address</b>
-                        </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <div class="modal fade" id="shipping_address" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title font-size-22 text-underline">
+                        <b>Shipping Address</b>
+                      </h5>
+                      <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+                    </div>
+                    <div class="modal-body">
+                      <div class="d-flex align-items-center justify-content-between mb-3">
+                        <button
+                          data-bs-toggle="modal"
+                          data-bs-target="#editADDRESS"
+                          class="btn btn-add"
+                          [disabled]="address.length >= 2"
+                        >
+                          Add New Address
+                        </button>
                       </div>
-                      <div class="modal-body">
-                        <div class="d-flex align-items-center justify-content-between mb-3">
-                          <button
-                            data-bs-toggle="modal"
-                            data-bs-target="#editADDRESS"
-                            class="btn btn-add"
-                            [disabled]="address.length >= 2"
-                          >
-                            Add New Address
-                          </button>
-                        </div>
-                
-                        <div class="row">
-                          <div class="col-12" *ngFor="let c of address; let i = index">
-                            <div class="card mb-3" *ngIf="i < 2"> <!-- Limit to 2 addresses -->
-                              <div class="card-body">
-                                <label class="card-radio-label">
-                                  <input
-                                    type="radio"
-                                    name="ShipServ_prices"
-                                    [value]="c.CustAdd_ID"
-                                    [checked]="c.isDefault || i === 0"
-                                    class="form-check-input"
-                                    (click)="showaddress(c.CustAdd_ID)"
-                                  />
-                                  <div class="card-radio text-truncate p-3">
-                                    <span class="fs-14 mb-2 d-block">
-                                      {{ c.Cust_fname }} {{ c.Cust_mname }} {{ c.Cust_lname }}
-                                    </span>
-                                    <span class="text-muted fw-normal text-wrap mb-1 d-block">
-                                      {{ c.BuildingUnitStreet_No }}, {{ c.Barangay }}, {{ c.Town_City }}, {{ c.Province }}
-                                    </span>
-                                    <span class="text-muted fw-normal d-block">{{ c.Phoneno }}</span>
-                                  </div>
-                                </label>
-                                <div class="edit-btn mt-2">
-                                  <a>
-                                    <i
-                                      class="fa fa-pencil mx-3"
-                                      aria-hidden="true"
-                                      data-bs-toggle="modal"
-                                      data-bs-target="#updateADDRESS"
-                                      (click)="openEditModal(c.CustAdd_ID)"
-                                    ></i>
-                                    <i
-                                      class="fa fa-trash"
-                                      aria-hidden="true"
-                                      (click)="deleteaddress(c.CustAdd_ID)"
-                                    ></i>
-                                  </a>
+              
+                      <div class="row">
+                        <div class="col-12 " *ngFor="let c of address; let i = index">
+                          <div class="card mb-3" *ngIf="i < 2"> <!-- Limit to 2 addresses -->
+                            <div class="card-body d-flex flex-column">
+                              <label class="card-radio-label d-flex align-items-center mx-3">
+                                <input
+                                  type="radio"
+                                  name="ShipServ_prices"
+                                  id="ShipServ_prices"
+                                  class="form-check-input"
+                                  (change)="addToTable($event,c)"  
+                                />
+                              </label>
+                                <div class="card-radio text-truncate ">
+                                  <span class="fs-14 mb-2 d-block">
+                                    {{ c.Cust_fname }} {{ c.Cust_mname }} {{ c.Cust_lname }}
+                                  </span>
+                                  <span class="text-muted fw-normal text-wrap mb-1 d-block">
+                                    {{ c.BuildingUnitStreet_No }}, {{ c.Barangay }}, {{ c.Town_City }}, {{ c.Province }}
+                                  </span>
+                                  <span class="text-muted fw-normal d-block">{{ c.Phoneno }}</span>
                                 </div>
+                            
+                              <div class="edit-btn text-end mt-2 mt-md-0">
+                                <!-- Align buttons to the right, stacked on small screens, inline on larger screens -->
+                                <a class="d-inline-block">
+                                  <i
+                                    class="fa fa-pencil mx-2"
+                                    aria-hidden="true"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#updateADDRESS"
+                                    (click)="openEditModal(c.CustAdd_ID)"
+                                  ></i>
+                                  <i
+                                    class="fa fa-trash"
+                                    aria-hidden="true"
+                                    (click)="deleteaddress(c.CustAdd_ID)"
+                                  ></i>
+                                </a>
                               </div>
-                            </div>
+                            </div>                            
                           </div>
                         </div>
                       </div>
+                      
                     </div>
                   </div>
                 </div>
-              
+              </div>
 
-              <div class="feed-item-list" [hidden]="selectAddDel==false">
-                <div [hidden]>
-                  <h5 class="font-size-22 mb-1"><b>Delivery Address</b></h5>
-                  <div class="mb-3">
-                    <div class="row">
-                      <div class="col-lg-12 col-sm-6">
-                        <div data-bs-toggle="collapse" *ngFor="let c of address; let i = index" >
-                          <label class="card-radio-label mb-0">
-                            <input
-                              type="radio"
-                              name="ShipServ_price"
-                              id="ShipServ_price"
-                              [value]="c.CustAdd_ID"
-                              [checked]="c.isDefault || i === 0"
-                              class="card-radio-input"
-                              (click)="showaddress(c.CustAdd_ID )"
-                            />
-                            <div class="card-radio text-truncate p-3">
-                              <span class="fs-14 mb-2 d-block"
-                                >{{ c.Cust_fname }} {{ c.Cust_mname }} {{ c.Cust_lname }}</span
-                              >
-                              <span
-                                class="text-muted fw-normal text-wrap mb-1 d-block"
-                                >{{c.BuildingUnitStreet_No}}, {{c.Barangay}}, {{c.Town_City}}, {{c.Province}}</span
-                              >
-                              <span class="text-muted fw-normal d-block"
-                                >{{c.Phoneno}}</span
-                              >
-                            </div>
-                          </label>
-                          <div class="edit-btn">
-                            <a >
-                              <i class="fa fa-pencil mx-3" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#updateADDRESS" (click)="openEditModal(c.CustAdd_ID)"></i>
-                              <span class="fa fa-trash" aria-hidden="true" (click)="deleteaddress(c.CustAdd_ID)"></span>
-                            </a>
+              <div class="modal fade" id="delivery_address" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title font-size-22 text-underline">
+                        <b>Delivery Address</b>
+                      </h5>
+                      <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+                    </div>
+                    <div class="modal-body">
+                      <div class="d-flex align-items-center justify-content-between mb-3">
+                        <button
+                          data-bs-toggle="modal"
+                          data-bs-target="#editADDRESS"
+                          class="btn btn-add"
+                          [disabled]="address.length >= 2"
+                        >
+                          Add New Address
+                        </button>
+                      </div>
+              
+                      <div class="row">
+                        <div class="col-12 " *ngFor="let c of address; let i = index">
+                          <div class="card mb-3" *ngIf="i < 2"> <!-- Limit to 2 addresses -->
+                            <div class="card-body d-flex flex-column">
+                              <label class="card-radio-label d-flex align-items-center mx-3">
+                                <input
+                                  type="radio"
+                                  name="ShipServ_price"
+                                  id="ShipServ_price"
+                                  class="form-check-input"
+                                  (change)="addToTable($event,c)"  
+                                />
+                              </label>
+                                <div class="card-radio text-truncate ">
+                                  <span class="fs-14 mb-2 d-block">
+                                    {{ c.Cust_fname }} {{ c.Cust_mname }} {{ c.Cust_lname }}
+                                  </span>
+                                  <span class="text-muted fw-normal text-wrap mb-1 d-block">
+                                    {{ c.BuildingUnitStreet_No }}, {{ c.Barangay }}, {{ c.Town_City }}, {{ c.Province }}
+                                  </span>
+                                  <span class="text-muted fw-normal d-block">{{ c.Phoneno }}</span>
+                                </div>
+                            
+                              <div class="edit-btn text-end mt-2 mt-md-0">
+                                <!-- Align buttons to the right, stacked on small screens, inline on larger screens -->
+                                <a class="d-inline-block">
+                                  <i
+                                    class="fa fa-pencil mx-2"
+                                    aria-hidden="true"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#updateADDRESS"
+                                    (click)="openEditModal(c.CustAdd_ID)"
+                                  ></i>
+                                  <i
+                                    class="fa fa-trash"
+                                    aria-hidden="true"
+                                    (click)="deleteaddress(c.CustAdd_ID)"
+                                  ></i>
+                                </a>
+                              </div>
+                            </div>                            
                           </div>
                         </div>
                       </div>
+                      
                     </div>
                   </div>
                 </div>
@@ -780,3 +769,4 @@
     </div>
   </div>
 </div>
+

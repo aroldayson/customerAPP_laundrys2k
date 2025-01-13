@@ -21,7 +21,7 @@ export class CusCategoryComponent implements OnInit {
   trackingNumber: any;
   customerdata: any;
   laundry: any;
-  selectedServices: string[] = [];  
+  selectedServices: any[] = [];  
   l_price: number = 0;
   l_min_weight: number = 0;
   total_estimated_price: any ;
@@ -65,9 +65,12 @@ export class CusCategoryComponent implements OnInit {
 
   id = { cuid: localStorage.getItem('Cust_ID') };
   testid = localStorage.getItem('Cust_ID');
+
   laundrylist: any[] = [];
+  // addservices: any[] = [];
 
   showShippingAddress: boolean = false;
+  quantity_counts: boolean = false;
 
   editingItem: any = null;
 
@@ -78,9 +81,15 @@ export class CusCategoryComponent implements OnInit {
   shippingCost: number = 0;
 
   addressupdate: any;
+  selectedCategoryMessage: string | null = null;
   
 
 
+  // addservices = [
+  //   { services: 'Rush Job', address: 'Rush Job added to the transaction', Price: 140},
+  //   { services: 'PickUp-Service', address: 'Jeca Residence, Asan Norte, Rosario, Pangasinan', Price: 50 },
+  //   { services: 'Delivery-Service', address: 'Kilo, Amagbagan, Pugo, La Union', Price: 50 }
+  // ];
 
   barangaysInSison: string[] = [
     "Amagbagan", "Artacho", "Asan Norte", "Asan Sur", "Bantay Insik", 
@@ -127,6 +136,12 @@ export class CusCategoryComponent implements OnInit {
     BuildingUnitStreet_No: new FormControl(null),
   });
 
+  selectedPriceCateg: any;
+  count: void | undefined;
+  price: any;
+  selectedCateg: any;
+  townElem: any;
+
 
   openEditModal(address: any) {
     console.log(address)
@@ -152,7 +167,6 @@ export class CusCategoryComponent implements OnInit {
       updatedAddress.CustAdd_ID = this.addressupdate.CustAdd_ID;
   
       this.user.updateaddress(updatedAddress).subscribe((data: any) => {
-        // Handle success
         Swal.fire({
           title: 'Success!',
           text: 'Address updated successfully.',
@@ -160,7 +174,13 @@ export class CusCategoryComponent implements OnInit {
           showConfirmButton: false, 
           timer: 1500, 
         });
-        this.showaddress(this.addressupdate.CustAdd_ID); 
+        const modalElement = document.getElementById('shipping_address');
+
+        if (modalElement) {
+          const modal = new bootstrap.Modal(modalElement);
+          modal.show();
+        }
+        this.shippingaddress(this.addressupdate.CustAdd_ID); 
         console.log(this.addressupdate.CustAdd_ID)
       }, (error) => {
         // Handle error
@@ -177,12 +197,14 @@ export class CusCategoryComponent implements OnInit {
   
   laundryForm = new FormGroup({
     category: new FormControl('', Validators.required),
-    quantity: new FormControl(1, [Validators.required, Validators.min(1)]),
+    quantity: new FormControl(0),
     service: new FormControl('')
   });
 
   servicesForm = new FormGroup({
-    service: new FormControl('', Validators.required)
+    service: new FormControl('', Validators.required),
+    address: new FormControl('', Validators.required),
+    price: new FormControl('', Validators.required)
   });
 
 
@@ -199,7 +221,7 @@ export class CusCategoryComponent implements OnInit {
     this.fetchInitialData();
     const serviceControl = this.newtransac.get('service') as FormControl;
     this.getShippingAddress();
-    this.showaddress(this.addressupdate.CustAdd_ID); 
+    this.shippingaddress(this.addressupdate.CustAdd_ID); 
   }
 
   addaddress = new FormGroup({
@@ -229,7 +251,7 @@ export class CusCategoryComponent implements OnInit {
   public initializeForm(): void {
     const serviceControl = this.newtransac.get('service') as FormControl;
     if (serviceControl) {
-      serviceControl.valueChanges.subscribe((selectedServices: string[]) => {
+      serviceControl.valueChanges.subscribe((selectedServices: any[]) => {
         this.selectedServices = selectedServices;
       });
     }
@@ -242,6 +264,224 @@ export class CusCategoryComponent implements OnInit {
       modal.show();
     }
   }
+
+  addToTable(event: any, selectedAddress: any) {
+    const serviceArray = this.newtransac.get('service') as FormControl<string[]>;
+    const latestService = serviceArray.value?.slice(-1)[0];
+    if (!selectedAddress) {
+      console.error('No address selected');
+      return;
+    }
+  
+    // Retrieve the current checkbox status
+    const checkbox = event.target as HTMLInputElement;
+    const value = checkbox.value;
+    const isChecked = checkbox.checked;
+  
+    // Update service states based on the checkbox value
+    if (value === 'Rush-Job') {
+      this.isRushJob = isChecked;
+    } else if (value === 'PickUp-Service') {
+      this.isPickUpService = isChecked;
+    } else if (value === 'Delivery-Service') {
+      this.isDeliveryService = isChecked;
+    }
+  
+    // Check if the address already exists in the table
+    const existingEntry = this.selectedServices.find(
+      (item) => item.CustAdd_ID === selectedAddress.CustAdd_ID
+    );
+  
+    if (isChecked) {
+      // Add the service to the table
+      if (!existingEntry) {
+        // Create a new entry if it doesn't exist
+        const newEntry = {
+          AddService_name: latestService, // Add the selected service
+          CustAdd_ID: selectedAddress.CustAdd_ID,
+          address: `${selectedAddress.BuildingUnitStreet_No}, ${selectedAddress.Barangay}, ${selectedAddress.Town_City}, ${selectedAddress.Province}`,
+          AddService_price: selectedAddress.ShipServ_price, // Use the price from the address
+        };
+  
+        this.selectedServices.push(newEntry);
+      } else {
+        // Update existing entry with the new service
+        if (!existingEntry.services.includes(value)) {
+          existingEntry.services.push(value);
+        }
+      }
+    } else {
+      // Remove the service from the table if unchecked
+      if (existingEntry) {
+        // existingEntry.services = existingEntry.services.filter(
+        //   (service) => service !== value
+        // );
+  
+        // If no services remain, remove the entire entry
+        if (existingEntry.services.length === 0) {
+          this.selectedServices = this.selectedServices.filter(
+            (item) => item.CustAdd_ID !== selectedAddress.CustAdd_ID
+          );
+        }
+      }
+    }
+  
+    // Log the updated table contents
+    console.log('Updated table contents:', this.selectedServices);
+  }
+  
+  
+  shippingaddress(id: any) {
+    this.post.showaddress(id).subscribe(
+      (res: any) => {
+        console.log(res);
+        console.log(id);
+  
+        if (res && res.length > 0) {
+          this.address = res.filter(
+            (addr: any) => addr.CustAdd_status === 'default'
+          );
+  
+          const modalElement = document.getElementById('shipping_address');
+          if (modalElement) {
+            const modal = new bootstrap.Modal(modalElement);
+            modal.show();
+          }
+  
+          const selectedAddress = this.address[0];
+          if (selectedAddress) {
+            console.log('Default address selected:', selectedAddress);
+            this.addToTable(modalElement,selectedAddress);
+            this.selectedServices.push(selectedAddress);
+          }
+  
+          this.addaddress.patchValue({
+            CustAdd_ID: selectedAddress.CustAdd_ID,
+            Province: selectedAddress.Province,
+            Phoneno: selectedAddress.Phoneno,
+            BuildingUnitStreet_No: selectedAddress.BuildingUnitStreet_No,
+            Town_City: selectedAddress.Town_City,
+            Barangay: selectedAddress.Barangay,
+          });
+        } else {
+          console.log('No address found for the provided id');
+        }
+      },
+      (error) => {
+        console.error('Error fetching address:', error);
+      }
+    );
+  }
+  
+  deliveryaddress(id: any) {
+    this.post.showaddress(id).subscribe((res: any) => {
+      console.log(res);
+      console.log(id);
+  
+      if (res && res.length > 0) {
+        this.address = res;
+        this.address = this.address.filter(
+          (addr: any) => addr.CustAdd_status === 'default'
+        );
+  
+        const modalElement = document.getElementById('delivery_address');
+        if (modalElement) {
+          const modal = new bootstrap.Modal(modalElement);
+          modal.show();
+        }
+  
+        const selectedAddress = this.address[0];
+  
+        if (selectedAddress) {
+          console.log('Default address selected:', selectedAddress);
+          this.addToTable(modalElement,selectedAddress);
+        }
+  
+        this.addaddress.patchValue({
+          CustAdd_ID: selectedAddress.CustAdd_ID,
+          Province: selectedAddress.Province,
+          Phoneno: selectedAddress.Phoneno,
+          BuildingUnitStreet_No: selectedAddress.BuildingUnitStreet_No,
+          Town_City: selectedAddress.Town_City,
+          Barangay: selectedAddress.Barangay,
+        });
+      } else {
+        console.log('No address found for the provided id');
+      }
+    }, (error) => {
+      console.error('Error fetching address:', error);
+    });
+  }
+  
+  
+  handleServiceSelection(event: any, selectedAddress: any) {
+    const serviceArray = this.newtransac.get('service') as FormControl<string[]>;
+    const checkbox = event.target as HTMLInputElement;
+    const value = checkbox.value;
+    const isChecked = checkbox.checked;
+  
+    // Handle service-specific logic
+    if (value === 'Rush-Job') {
+      this.isRushJob = isChecked;
+    } else if (value === 'PickUp-Service') {
+      this.isPickUpService = isChecked;
+    } else if (value === 'Delivery-Service') {
+      this.isDeliveryService = isChecked;
+    }
+  
+    // Recalculate total price based on selected services
+    const basePrice = this.laundrylist.reduce((acc: number, item: any) => acc + item.Price, 0);
+    this.total_estimated_price = basePrice;
+  
+    if (this.isRushJob) {
+      this.total_estimated_price *= 2; // Double the price for rush job
+    }
+  
+    // Calculate shipping charge based on services
+    let shippingCharge = 0;
+    if (this.isPickUpService) {
+      shippingCharge += 50; // Pick-up fee
+    }
+  
+    if (this.isDeliveryService) {
+      shippingCharge += 50; // Delivery fee
+    }
+  
+    this.shippingCharge = shippingCharge; // Update shipping charge
+    this.total_estimated_price += this.shippingCharge; // Include shipping charge in the total price
+  
+    let selectedServicess: string[] = serviceArray.value;
+  
+    // Ensure the service value is unique (no duplicates)
+    if (isChecked) {
+      if (!selectedServicess.includes(value)) {
+        selectedServicess.push(value);
+      }
+    } else {
+      selectedServicess = selectedServicess.filter(service => service !== value);
+    }
+  
+    // Update service array
+    console.log('Updated selected services:', selectedServicess);
+  
+    // Handle address logic
+    if (!selectedAddress) {
+      console.error('No address selected');
+      return;
+    }
+  
+    const modalType = value === 'Delivery-Service' ? 'delivery_address' : 'shipping_address';
+    this.showAddressModal(selectedAddress, modalType);
+  }
+  
+  showAddressModal(selectedAddress: any, modalType: string) {
+    if (modalType === 'shipping_address') {
+      this.shippingaddress(selectedAddress.CustAdd_ID);
+    } else if (modalType === 'delivery_address') {
+      this.deliveryaddress(selectedAddress.CustAdd_ID);
+    }
+  }
+  
 
   public updateTotalEstimatedPrice(): void {
     let baseTotal = this.laundrylist.reduce((sum, item) => sum + item.Price, 0);
@@ -275,6 +515,7 @@ export class CusCategoryComponent implements OnInit {
     });
 
     this.getShippingAddress();
+    
   }
 
   gentrack(): void {
@@ -308,47 +549,106 @@ export class CusCategoryComponent implements OnInit {
     return subtotal;
   }
 
+  calculateTotals(): number {
+    return this.calculateSubTotals() - this.discount + this.shippingCharge;
+  }
+
+  calculateSubTotals(): number {
+    // return this.laundrylist.reduce((total, item) => {
+    //   return total + parseFloat(item.Price.toString());
+    // }, 0);
+    let subtotal = this.laundrylist.reduce((total, item) => {
+      return total + parseFloat(item.Price.toString());
+    }, 0);
+
+    // if (this.isRushJob) {
+    //   subtotal *= 2; 
+    // }
+
+    return subtotal;
+  }
+
  
 
   edit(item: any): void {
     this.editingItem = this.editingItem === item ? null : item;
-    console.log('Editing item:',item);
   }
   
   saveQty(item: any, newQty: any): void {
     if (newQty > 0) {
+        this.townElem = parseFloat((document.getElementById("Qty") as HTMLInputElement)?.value);
+        const categorys = item.Categ_ID;
+        const selectedCategory = this.categ.find((c: any) => c.Categ_ID == categorys);
 
-      const townElem = (document.getElementById("Qty") as HTMLSelectElement)?.value;
-      console.log("Piniling Barangay sa Delivery", townElem);
+        console.log("Piniling Barangay sa Delivery", this.townElem, item, categorys, selectedCategory);
 
-      const index = this.laundrylist.findIndex((i) => i.Categ_ID === item.Categ_ID);
-      if (index !== -1) {
-        this.laundrylist[index].Qty = townElem; 
-  
-        console.log('Updated item:', this.laundrylist[index]);
-      }
+        if (selectedCategory) {
+            const itemPerKg = selectedCategory.Item_per_kg;
+            const basePrice = selectedCategory.Price;
 
-      this.editingItem = null;
-  
-      Swal.fire({
-        icon: 'success',
-        title: 'Quantity Updated',
-        showConfirmButton: false,
-        timer: 1500,
-      });
-  
-      this.cdr.detectChanges();
+            // Pag-check kung ang timbang ay mas mababa sa minimum
+            if (this.townElem < itemPerKg) {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Minimum Weight Required',
+                    text: `The minimum weight is ${itemPerKg} kg for ${selectedCategory.Category}. Adjusted to minimum weight.`,
+                    showConfirmButton: false,
+                    timer: 1500,
+                });
+                this.townElem = itemPerKg;
+            }
+
+            const previousQty = item.Qty;
+            const previousPrice = item.Price;
+            let updatedPrice = 0;
+
+            // Pag-compute ng bagong presyo
+            if (this.townElem > 0) {
+                const newUnits = Math.ceil(this.townElem / itemPerKg);
+                const previousUnits = Math.ceil(previousQty / itemPerKg);
+
+                // Dagdag o bawas ng presyo batay sa buong unit ng itemPerKg
+                if (newUnits > previousUnits) {
+                    const additionalUnits = newUnits - previousUnits;
+                    updatedPrice = previousPrice + (additionalUnits * basePrice);
+                } else if (newUnits < previousUnits) {
+                    const reducedUnits = previousUnits - newUnits;
+                    updatedPrice = Math.max(0, previousPrice - (reducedUnits * basePrice));
+                } else {
+                    updatedPrice = previousPrice;
+                }
+            }
+
+            // I-update ang item sa laundrylist
+            const index = this.laundrylist.findIndex((i) => i.Categ_ID === item.Categ_ID);
+            if (index !== -1) {
+                this.laundrylist[index].Qty = this.townElem;
+                this.laundrylist[index].Price = updatedPrice;
+                console.log('Updated item:', this.laundrylist[index]);
+            }
+            this.editingItem = null;
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Quantity Updated',
+                showConfirmButton: false,
+                timer: 1500,
+            });
+
+            this.cdr.detectChanges();
+        } else {
+            console.warn('Selected category not found!');
+        }
     } else {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Invalid Quantity',
-        showConfirmButton: false,
-        timer: 1500,
-      });
+        Swal.fire({
+            icon: 'warning',
+            title: 'Invalid Quantity',
+            showConfirmButton: false,
+            timer: 1500,
+        });
     }
   }
-  
-  
+
   getUniqueCategories(): any[] {
     const uniqueCategories = new Set<string>();
     return this.laundrylist.filter((item) => {
@@ -359,172 +659,128 @@ export class CusCategoryComponent implements OnInit {
         return true;
       }
     });
-  }  
+  } 
 
-  addToList(): void {
-    if (this.laundryForm.valid) {
-      const categoryValue = this.laundryForm.value.category;
-      const quantityValue = this.laundryForm.value.quantity ?? 1;
-  
-      // Check if the category already exists in the uniqueCategories set
-      const uniqueCategories = new Set(this.laundrylist.map(item => item.Category));
-  
-      if (uniqueCategories.has(this.categ?.find(c => c.Categ_ID === parseInt(categoryValue!, 10))?.Category)) {
-        // Alert using SweetAlert2 for duplicate category
-        Swal.fire({
-          icon: 'warning',
-          title: 'Duplicate Category',
-          text: 'This category already exists in the list.',
-          showConfirmButton: false, // Removes the "OK" button
-          timer: 1500, // Automatically closes after 1.5 seconds
-        });
-        return;
-      }
-  
-      const selectedCategory = this.categ?.find(
-        (c: any) => c.Categ_ID === parseInt(categoryValue!, 10)
-      );
-
-      if (selectedCategory) {
-        this.selectedPrice = selectedCategory.Price;
-        this.showservices = true;
-      }
-  
-      if (selectedCategory) {
-        const newItem = {
-          Categ_ID: categoryValue,
-          Category: selectedCategory.Category,
-          Qty: quantityValue,
-          Price: selectedCategory.Price,
-          Tracking_number: this.trackingNumber,
-          State: 'Pending'
-        };
-        this.selectAddPick = false;
-  
-        this.laundrylist.push(newItem);
-  
-        // Reset the form fields
-        this.laundryForm.reset({ quantity: 1 });
-        this.selectedPrice = 0;
-      }
-  
-      const serviceValue = this.laundryForm.get('service')?.value || 0;
-      if (this.laundrylist.length > 0 && serviceValue && serviceValue.length > 0) {
-        this.isNextStepDisabled = false;
-      }
-    }
-  }
-  
-  
-
-  showaddress(id: any) {
-    this.post.showaddress(id).subscribe((res: any) => {
-      console.log(res);
-      console.log(id);
-  
-      if (res && res.length > 0) {
-        this.address = res;
-  
-        this.address = this.address.filter((addr: any) => addr.CustAdd_status === 'default');
-        const modalElement = document.getElementById('shipping_address');
-
-        if (modalElement) {
-          const modal = new bootstrap.Modal(modalElement);
-          modal.show();
-        }
-    
-        const selectedAddress = this.address[0];
-        this.addaddress.patchValue({
-          CustAdd_ID: selectedAddress.CustAdd_ID,
-          Province: selectedAddress.Province,
-          Phoneno: selectedAddress.Phoneno,
-          BuildingUnitStreet_No: selectedAddress.BuildingUnitStreet_No,
-          Town_City: selectedAddress.Town_City,
-          Barangay: selectedAddress.Barangay
-        });
+  getUniqueAddress() {
+    const uniqueIDs = new Set<number>();
+    return this.selectedServices.filter((address) => {
+      if (uniqueIDs.has(address.CustAdd_ID)) {
+        return false;
       } else {
-        console.log("No address found for the provided id");
+        uniqueIDs.add(address.CustAdd_ID);
+        return true;
       }
-    }, (error) => {
-      console.error("Error fetching address:", error);
     });
   }
+  
 
-  onCheckboxChange(event: any) {
-    const serviceArray = this.newtransac.get('service') as FormControl<string[]>;
-    const selServ = event.target.value;
-    const checkbox = event.target as HTMLInputElement;
-    const value = checkbox.value;
-    const checkboxValue = event.target.value;
-    const isChecked = event.target.checked;
+  addToList(): void {
+    if (this.laundryForm.invalid) return;
   
-    if (checkboxValue === "Rush-Job") {
-      this.isRushJob = isChecked;
-    } else if (checkboxValue === "PickUp-Service") {
-      this.isPickUpService = isChecked;
-    } else if (checkboxValue === "Delivery-Service") {
-      this.isDeliveryService = isChecked;
+    const categoryValue = this.laundryForm.value.category;
+    const quantityValue = this.laundryForm.value.quantity ?? 1;
+ 
+    const uniqueCategories = new Set(this.laundrylist.map(item => item.Category));
+    const selectedCategory = this.categ?.find(
+      (c: any) => c.Categ_ID === parseInt(categoryValue!, 10)
+    );
+  
+    if (uniqueCategories.has(selectedCategory?.Category)) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Duplicate Category',
+        text: 'This category already exists in the list.',
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      return;
     }
   
-    // Recalculate total price
-    const basePrice = this.laundrylist.reduce((acc: number, item: any) => acc + item.Price, 0);
-    this.total_estimated_price = basePrice;
-  
-    if (this.isRushJob) {
-      this.total_estimated_price *= 2; // Double the price for rush job
+    if (!selectedCategory) return; 
+
+    this.selectedPriceCateg = selectedCategory.Item_per_kg; 
+    this.selectedCateg = selectedCategory.Price;
+
+    const quantityValues = this.laundryForm.value.quantity ?? 1; 
+
+    const itemPerKg = selectedCategory.Item_per_kg;
+    const basePrice = selectedCategory.Price; 
+
+    if (quantityValue < itemPerKg) {
+      this.selectedCategoryMessage = `The minimum weight is ${itemPerKg} kg for ${selectedCategory.Category}.`;
+      this.laundryForm.get('quantity')?.setValue(itemPerKg); 
     }
+
+    const additionalWeight = Math.max(0, quantityValue - itemPerKg);
+
+    const additionalPrice = Math.ceil(additionalWeight / itemPerKg) * basePrice;
+
+    const finalPrices = basePrice + additionalPrice;
+
+    this.selectedPrice = finalPrices;
+    this.selectedCategoryMessage = `${itemPerKg} kg is the minimum for ${selectedCategory.Category}. Total price: ${finalPrices}.`;
+
   
-    // Calculate shipping charge based on services
-    let shippingCharge = 0;
-    if (this.isPickUpService) {
-      shippingCharge += 50; // Pick-up fee
+    const newItem = {
+      Categ_ID: categoryValue,
+      Category: selectedCategory.Category,
+      Qty: quantityValue,
+      Price: finalPrices,
+      Tracking_number: this.trackingNumber,
+      State: 'Pending',
+    };
+  
+    this.laundrylist.push(newItem);
+    this.selectAddPick = false;
+    
+    this.laundryForm.reset({ quantity: 1 });
+    this.selectedPrice = 0;
+    this.showservices = true;
+    this.quantity_counts = false;
+  
+    if (this.laundrylist.length > 0 && this.laundryForm.get('service')?.value?.length) {
+      this.isNextStepDisabled = false;
     }
-  
-    if (this.isDeliveryService) {
-      shippingCharge += 50; // Delivery fee
-    }
-  
-    this.shippingCharge = shippingCharge; // Update shipping charge
-  
-    // Include shipping charge in the total price
-    this.total_estimated_price += this.shippingCharge;
-  
-    if (value === 'PickUp-Service' || value === 'Delivery-Service') {
-      this.showmodaladdress = checkbox.checked;
-    }
-  
-    let selectedServices: string[] = serviceArray.value;
-    if (isChecked) {
-      selectedServices.push(value);
-      if (selServ === 'PickUp-Service') {
-        this.selectAddPick = true;
-        this.showmodaladdress = true;
-      } else if (selServ === 'Delivery-Service') {
-        this.selectAddDel = true;
-        this.showmodaladdress = true;
-      }
-    } else {
-      selectedServices = selectedServices.filter(service => service !== value);
-      if (selServ === 'PickUp-Service') {
-        this.selectAddPick = false;
-      } else if (selServ === 'Delivery-Service') {
-        this.selectAddDel = false;
-      }
-    }
-  
-    serviceArray.setValue(selectedServices);
-    console.log('Updated selected services:', selectedServices);
   }
   
+
   getLaundryPrice(event: Event): void {
     const select = event.target as HTMLSelectElement;
     const selectedCategID = select.value;
     const selectedCategory = this.categ.find((c: any) => c.Categ_ID == selectedCategID);
+
     
     if (selectedCategory) {
-      this.selectedPrice = selectedCategory.Price;
-      // this.showservices = true;
+      this.selectedPriceCateg = selectedCategory.Item_per_kg;
+      this.selectedCateg = selectedCategory.Price;
+      this.price = this.selectedPrice
+      const quantityValue = this.laundryForm.value.quantity ?? this.selectedPriceCateg;
+      
+      const adjustedItemPerKg = this.selectedPriceCateg < quantityValue ? this.selectedPriceCateg * 2 : this.selectedPriceCateg;
+    
+      const adjustedPrice = this.selectedCateg < adjustedItemPerKg ? selectedCategory.Price * 2 : selectedCategory.Price;
+    
+      this.selectedCategoryMessage = `${this.selectedPriceCateg} for ${selectedCategory.Category} are the minimum per kg.`;
+      this.laundryForm.get('quantity')?.setValue(this.selectedPriceCateg);
+      this.selectedPrice = adjustedPrice;
+      
+      this.quantity_counts = true;
+    } else {
+      this.selectedCategoryMessage = null;
+      this.selectedPrice = 0;
+      this.quantity_counts = false;
+      this.laundryForm.get('quantity')?.clearValidators();
     }
+    
+    
+    
+
+    this.laundryForm.get('quantity')?.updateValueAndValidity();
+    
+  }
+
+  close(): void {
+    this.quantity_counts = false;
   }
 
   removeFromList(item: any): void {
@@ -561,7 +817,7 @@ export class CusCategoryComponent implements OnInit {
         console.log(id);
         this.post.deleteaddress(id).subscribe(
           (response: any) => {
-            this.showaddress(this.id.cuid);
+            this.shippingaddress(this.id.cuid);
             Swal.fire({
               title: 'Deleted!',
               text: 'The address has been deleted.',
@@ -591,7 +847,6 @@ export class CusCategoryComponent implements OnInit {
       }      
     });
   }
-  
 
   insert() {
     const townElem = (document.getElementById("ShipServ_price") as HTMLSelectElement)?.value;
@@ -687,7 +942,7 @@ export class CusCategoryComponent implements OnInit {
             showConfirmButton: false, // Removes the "OK" button
             timer: 1500, // Automatically closes after 1.5 seconds
           });
-          this.showaddress(this.id.cuid);
+          this.shippingaddress(this.id.cuid);
         },
         (error) => {
           console.error('Error saving address:', error);

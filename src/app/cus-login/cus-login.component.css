@@ -204,4 +204,48 @@ section::after {
       padding: 20px;
     }
   }
+  .password-input {
+    background-color: #f6f6f6;
+    border: 2px solid #f6f6f6;
+    color: #0d0d0d;
+    padding: 15px 40px 15px 20px; /* Padding for icon space */
+    margin: 10px 0;
+    width: 100%; /* Full-width input */
+    border-radius: 5px;
+    transition: all 0.3s ease-in-out;
+    box-sizing: border-box;
+  }
   
+  .password-input:focus {
+    background-color: #fff;
+    border-bottom: 2px solid #3e5e89;
+  }
+  
+  /* Password Toggle Icon Inside Input */
+  .password-toggle-icon {
+    position: absolute;
+    top: 50%;
+    right: 65px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 18px;
+    color: #000;
+    z-index: 10;
+  }
+  .subLoad {
+    position: relative;
+  }
+
+  .loaderSpin {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-10%, -10%);
+    width: 10px !important;
+    height: 10px;
+    z-index: 2;
+    visibility: hidden; 
+  }
+  #btnSub:disabled{
+    opacity: 0.6;
+  }

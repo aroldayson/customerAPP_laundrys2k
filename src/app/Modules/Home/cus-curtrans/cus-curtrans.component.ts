@@ -19,6 +19,7 @@ import { SearchFilterPipe } from '../../../search-filter.pipe';
 
 export class CusCurtransComponent implements OnInit{
 
+
   post = inject(MyServiceService);
   categ: any;
   trans: any;
@@ -145,8 +146,6 @@ export class CusCurtransComponent implements OnInit{
       description: 'Fresh and clean, back to your doorstep or pickup point.'
     }
   ];
-
-
 
   copyToClipboard(trackNum: string): void {
     navigator.clipboard.writeText(trackNum).then(() => {
@@ -550,6 +549,14 @@ export class CusCurtransComponent implements OnInit{
 
   showStep(): void {
     const modalElement = document.getElementById('step');
+    if (modalElement) {
+      const modal = new bootstrap.Modal(modalElement);
+      modal.show();
+    }
+  }
+
+  showPricelist():void {
+    const modalElement = document.getElementById('priceList');
     if (modalElement) {
       const modal = new bootstrap.Modal(modalElement);
       modal.show();
