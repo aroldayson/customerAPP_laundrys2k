@@ -2,9 +2,9 @@
   <div class="row mb-3 mt-2">
     <div class="col-12">
       <h3 class="text-center styled-heading">
-        <i class="fas fa-tshirt laundry-icon"></i> <!-- T-shirt Icon -->
+        <i class="fas fa-tshirt laundry-icon"></i> 
         New Transaction
-        <i class="fas fa-washing-machine laundry-icon"></i> <!-- Washing Machine Icon -->
+        <i class="fas fa-washing-machine laundry-icon"></i> 
       </h3>
     </div>
   </div>
@@ -185,35 +185,6 @@
                         </tfoot>
                       </table>
                     </div>
-                      <!-- <div class="row mb-4">
-                        <div class="row mb-4 px-3" *ngIf="showservices !== false">
-                          <div class="col-md-6">
-                            <label for="services" class="form-label">Additional Services</label>
-                            <p>Pick your choice/s of services here.</p>
-                            <div class="d-flex gap-3">
-                              <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="Rush-Job" (change)="onCheckboxChange($event)"  id="rush-job-checkbox">
-                                <label class="form-check-label" for="rush">Rush Jobs</label>  
-                              </div>
-                              <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="PickUp-Service"  (click)="showaddress(id.cuid)" (change)="onCheckboxChange($event)" id="pickUp-service-checkbox">
-                                <label class="form-check-label" for="pick">Pick-up</label>
-                              </div>
-                              <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="Delivery-Service" (click)="showaddress(id.cuid)"  (change)="onCheckboxChange($event)">
-                                <label class="form-check-label" for="deliver" >Delivery</label>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-md-6 mt-5 text-end">
-                            <label for="amount" class="form-label">Estimated Amount</label>
-                            <p class="text-success fw-bold">
-                              {{ total_estimated_price | currency: ' ':'symbol':'1.2-2' }}
-                            </p>
-                          </div>
-                        </div>
-                      </div> -->
-                    <!-- </form> -->
                   </div>
                 </div>
               </div>
@@ -271,13 +242,6 @@
                       </div>
                     </div>
                   </div>
-                  
-                  <!-- <div class="col-md-6 mt-5 text-end">
-                    <label for="amount" class="form-label">Estimated Amount</label>
-                    <p class="text-success fw-bold">
-                      {{ total_estimated_price | currency: ' ':'symbol':'1.2-2' }}
-                    </p>
-                  </div> -->
                 </div>
               </div>
 
@@ -320,13 +284,12 @@
                   <tfoot>
                     <tr class="table-light outline">
                       <td colspan="2" class="text-end fw-bold outline">Sub Total</td>
-                      <td class="text-end fw-bold">240.00</td>
+                      <td class="text-end fw-bold">{{shippingCharge | currency:' ':'symbol':'1.2-2'}}</td>
                     </tr> 
                   </tfoot>
                 </table>
               </div>
               
-              <!-- <div class="feed-item-list" [hidden]="selectAddPick==false"> -->
               <div class="modal fade" id="shipping_address" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                   <div class="modal-content">
@@ -334,7 +297,6 @@
                       <h5 class="modal-title font-size-22 text-underline">
                         <b>Shipping Address</b>
                       </h5>
-                      <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
                     </div>
                     <div class="modal-body">
                       <div class="d-flex align-items-center justify-content-between mb-3">
@@ -350,7 +312,7 @@
               
                       <div class="row">
                         <div class="col-12 " *ngFor="let c of address; let i = index">
-                          <div class="card mb-3" *ngIf="i < 2"> <!-- Limit to 2 addresses -->
+                          <div class="card mb-3" *ngIf="i < 2"> 
                             <div class="card-body d-flex flex-column">
                               <label class="card-radio-label d-flex align-items-center mx-3">
                                 <input
@@ -372,7 +334,6 @@
                                 </div>
                             
                               <div class="edit-btn text-end mt-2 mt-md-0">
-                                <!-- Align buttons to the right, stacked on small screens, inline on larger screens -->
                                 <a class="d-inline-block">
                                   <i
                                     class="fa fa-pencil mx-2"
@@ -405,7 +366,6 @@
                       <h5 class="modal-title font-size-22 text-underline">
                         <b>Delivery Address</b>
                       </h5>
-                      <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
                     </div>
                     <div class="modal-body">
                       <div class="d-flex align-items-center justify-content-between mb-3">
@@ -421,7 +381,7 @@
               
                       <div class="row">
                         <div class="col-12 " *ngFor="let c of address; let i = index">
-                          <div class="card mb-3" *ngIf="i < 2"> <!-- Limit to 2 addresses -->
+                          <div class="card mb-3" *ngIf="i < 2">
                             <div class="card-body d-flex flex-column">
                               <label class="card-radio-label d-flex align-items-center mx-3">
                                 <input
@@ -443,7 +403,6 @@
                                 </div>
                             
                               <div class="edit-btn text-end mt-2 mt-md-0">
-                                <!-- Align buttons to the right, stacked on small screens, inline on larger screens -->
                                 <a class="d-inline-block">
                                   <i
                                     class="fa fa-pencil mx-2"
@@ -492,7 +451,7 @@
                   <td colspan="2">
                     <h5 class="font-size-14 m-0">Sub Total :</h5>
                   </td>
-                  <td>{{ calculateSubTotal() | currency:'PHP':'symbol':'1.2-2' }}</td>
+                  <td>{{ calculateSubTotal() | currency:' ':'symbol':'1.2-2' }}</td>
                 </tr>
 
                 <tr *ngIf="selectedServices.includes('Rush-Job')">
@@ -505,13 +464,13 @@
                   <td colspan="2">
                     <h5 class="font-size-14 m-0">Shipping Charge :</h5>
                   </td>
-                  <td>{{ shippingCharge | currency:'PHP':'symbol':'1.2-2' }}</td>
+                  <td>{{ shippingCharge | currency:' ':'symbol':'1.2-2' }}</td>
                 </tr>
                 <tr class="bg-light">
                   <td colspan="2">
                     <h5 class="font-size-14 m-0">Total:</h5>
                   </td>
-                  <td>{{ calculateTotal() | currency:'PHP':'symbol':'1.2-2' }}</td>
+                  <td>{{ calculateTotal() | currency:' ':'symbol':'1.2-2' }}</td>
                 </tr>
               </tbody>
             </table>
@@ -769,4 +728,3 @@
     </div>
   </div>
 </div>
-

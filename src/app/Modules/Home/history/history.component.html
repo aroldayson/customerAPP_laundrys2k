@@ -139,7 +139,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr class="white-background" *ngFor="let d of details; let i = index track d" >
+              <tr class="white-background" *ngFor="let d of details; let i = index; track i" >
                 <td class="white-background fw-bold" scope="row">{{ i + 1 }}</td>
                 <td class="white-background">
                   <h6 class="mb-0">
@@ -150,13 +150,13 @@
                 <td class="text-right white-background">{{ d.price | currency:' ':'symbol' }}</td>
                 <td class="text-end white-background"></td>
               </tr>
-              <ng-container *ngIf="details.length === 0">
+              <!-- <ng-container *ngIf="details.length === 0">
                 <tr class="white-background">
                   <td colspan="5" class="text-center text-muted white-background">
                     No service details available.
                   </td>
                 </tr>
-              </ng-container>
+              </ng-container> -->
               
               <tr class="table-light outline">
                 <td colspan="4" class="text-end fw-bold outline">Sub Total</td>
@@ -184,7 +184,7 @@
               </tr>
             </thead>
             <tbody class="white-background">
-              @for (servicearray of servicearray; track Transac_ID) {
+              @for (servicearray of servicearray; track $index ) {
                 <tr class="white-background">
                   <td scope="row" class="white-background fw-bold">{{ $index + 1 }}</td>
                   <td class="white-background">

@@ -124,7 +124,7 @@ export class CusCategoryComponent implements OnInit {
     Cust_ID: new FormControl(this.id.cuid),
     Transac_status: new FormControl('pending'),
     laundry: new FormControl(this.laundrylist),
-    service: new FormControl<string[]>([]) 
+    service: new FormControl<String[]>([]) 
   });
 
   editaddress = new FormGroup({
@@ -297,7 +297,7 @@ export class CusCategoryComponent implements OnInit {
       if (!existingEntry) {
         // Create a new entry if it doesn't exist
         const newEntry = {
-          AddService_name: latestService, // Add the selected service
+          AddService_name : latestService, // Add the selected service
           CustAdd_ID: selectedAddress.CustAdd_ID,
           address: `${selectedAddress.BuildingUnitStreet_No}, ${selectedAddress.Barangay}, ${selectedAddress.Town_City}, ${selectedAddress.Province}`,
           AddService_price: selectedAddress.ShipServ_price, // Use the price from the address
@@ -313,11 +313,10 @@ export class CusCategoryComponent implements OnInit {
     } else {
       // Remove the service from the table if unchecked
       if (existingEntry) {
-        // existingEntry.services = existingEntry.services.filter(
-        //   (service) => service !== value
-        // );
+        existingEntry.services = existingEntry.services.filter(
+          (service: any) => service !== value
+        );
   
-        // If no services remain, remove the entire entry
         if (existingEntry.services.length === 0) {
           this.selectedServices = this.selectedServices.filter(
             (item) => item.CustAdd_ID !== selectedAddress.CustAdd_ID
@@ -325,8 +324,6 @@ export class CusCategoryComponent implements OnInit {
         }
       }
     }
-  
-    // Log the updated table contents
     console.log('Updated table contents:', this.selectedServices);
   }
   
@@ -849,11 +846,11 @@ export class CusCategoryComponent implements OnInit {
   }
 
   insert() {
-    const townElem = (document.getElementById("ShipServ_price") as HTMLSelectElement)?.value;
-    console.log("Piniling Barangay sa Delivery", townElem);
+    // const townElem = (document.getElementById("ShipServ_price") as HTMLSelectElement)?.value;
+    // console.log("Piniling Barangay sa Delivery", townElem);
   
-    const townElems = (document.getElementById("ShipServ_prices") as HTMLSelectElement)?.value;
-    console.log("Piniling Barangay sa Pickup", townElems);
+    // const townElems = (document.getElementById("ShipServ_prices") as HTMLSelectElement)?.value;
+    // console.log("Piniling Barangay sa Pickup", townElems);
   
     // Suriin kung may mga item sa laundry list
     if (this.laundrylist.length === 0) {
@@ -866,10 +863,20 @@ export class CusCategoryComponent implements OnInit {
       });
       return;
     }
+
+    const uniqueAddresses = this.getUniqueAddress();
+    const firstUniqueCustAddID = uniqueAddresses.length > 0 ? String(uniqueAddresses[0].CustAdd_ID) : null;
+
+    const validServices = ['Rush-Job', 'PickUp-Service', 'Delivery-Service', 'none'];
+
+    const selectedServices = this.selectedServices.filter(service =>
+      validServices.includes(service.AddService_name)
+    );
   
     // I-prepare ang transaction data
     this.newtransac.patchValue({
-      CustAdd_ID: townElems && townElem ? townElem : null,
+      CustAdd_ID: firstUniqueCustAddID,
+      Cust_ID: this.id.cuid,
       AddService_price: this.total_estimated_price ? this.total_estimated_price : 0,
       Tracking_number: this.trackingNumber,
       laundry: this.laundrylist,

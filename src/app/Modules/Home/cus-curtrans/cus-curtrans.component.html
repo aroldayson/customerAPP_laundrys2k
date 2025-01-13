@@ -1,6 +1,6 @@
 <div class="header">
   <h1>S2K Laundry</h1>
-  <p><span style="color: #15304f;">Welcome </span><span style="color: #ffffff;text-shadow: 2px 2px 5px #15304f;">{{cust_name}}</span></p>
+  <p><span style="color: #15304f;">Hello, </span><span style="color: #ffffff;text-shadow: 2px 2px 5px #15304f;">{{cust_name}}!</span><span style="color: #15304f;"> Welcome to your dashboard.</span></p>
   <div class="row">
     <div class="col md">
       <button class="btn btn-new btn-transaction mb-2" (click)="gentrack()">
@@ -928,7 +928,7 @@
                 </tr>
               </thead>
               <tbody>
-                @for(p of categ; track p.categ) {
+                @for(p of categ; track p.Categ_ID) {
                   <tr>
                     <td>{{ p.Category }}</td>
                     <td>{{ p.Item_per_kg }}</td>

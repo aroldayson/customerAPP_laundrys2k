@@ -51,8 +51,13 @@
       <!-- Payment Amount -->
       <div class="form-group mb-3">
         <label for="paymentAmount">To Pay</label>
-        <input type="number" class="form-control" formControlName="Amount" value="{{payment}}" [hidden]="paymentexists || !price_exists" [disabled]="true">
-        <div *ngIf="uploadForm.get('Amount')?.invalid && uploadForm.get('Amount')?.touched" class="text-danger">
+          <input 
+            type="number" 
+            class="form-control" 
+            formControlName="Amount" 
+            [hidden]="paymentexists || !price_exists" 
+            [disabled]="true">
+          <div *ngIf="uploadForm.get('Amount')?.invalid && uploadForm.get('Amount')?.touched" class="text-danger">
           Amount is required and must be a valid number.
         </div>
       </div>
