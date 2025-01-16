@@ -210,7 +210,9 @@
                             class="form-check-input me-2" 
                             type="checkbox" 
                             value="Rush-Job" 
-                            (change)="handleServiceSelection($event, selectedAddress)" 
+                            (click)="rushjob(id.cuid)" 
+                    
+                            (change)="handleServiceSelection($event, selectedAddress)"  
                             id="rush-job-checkbox"
                           />
                           <label class="form-check-label" for="rush-job-checkbox">Rush Jobs</label>
@@ -239,6 +241,11 @@
                           />
                           <label class="form-check-label" for="delivery-service-checkbox">Delivery</label>
                         </div>
+
+                        <!-- <div class="modal-header">
+                          <h1 class="modal-title fs-5" id="exampleModalLabel">Add New Address</h1>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div> -->
                       </div>
                     </div>
                   </div>
@@ -304,7 +311,7 @@
                           data-bs-toggle="modal"
                           data-bs-target="#editADDRESS"
                           class="btn btn-add"
-                          [disabled]="address.length >= 2"
+                          [disabled]="address.length >= 3"
                         >
                           Add New Address
                         </button>
@@ -312,7 +319,7 @@
               
                       <div class="row">
                         <div class="col-12 " *ngFor="let c of address; let i = index">
-                          <div class="card mb-3" *ngIf="i < 2"> 
+                          <div class="card mb-3" *ngIf="i < 3"> 
                             <div class="card-body d-flex flex-column">
                               <label class="card-radio-label d-flex align-items-center mx-3">
                                 <input
@@ -373,7 +380,7 @@
                           data-bs-toggle="modal"
                           data-bs-target="#editADDRESS"
                           class="btn btn-add"
-                          [disabled]="address.length >= 2"
+                          [disabled]="address.length >= 3"
                         >
                           Add New Address
                         </button>
@@ -381,7 +388,7 @@
               
                       <div class="row">
                         <div class="col-12 " *ngFor="let c of address; let i = index">
-                          <div class="card mb-3" *ngIf="i < 2">
+                          <div class="card mb-3" *ngIf="i < 3">
                             <div class="card-body d-flex flex-column">
                               <label class="card-radio-label d-flex align-items-center mx-3">
                                 <input
@@ -427,6 +434,77 @@
                   </div>
                 </div>
               </div>
+
+              <div class="modal fade" id="rush_job" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title font-size-22 text-underline">
+                        <b>Delivery Address</b>
+                      </h5>
+                    </div>
+                    <div class="modal-body">
+                      <div class="d-flex align-items-center justify-content-between mb-3">
+                        <button
+                          data-bs-toggle="modal"
+                          data-bs-target="#editADDRESS"
+                          class="btn btn-add"
+                          [disabled]="address.length >= 3"
+                        >
+                          Add New Address
+                        </button>
+                      </div>
+              
+                      <div class="row">
+                        <div class="col-12 " *ngFor="let c of address; let i = index">
+                          <div class="card mb-3" *ngIf="i < 3">
+                            <div class="card-body d-flex flex-column">
+                              <label class="card-radio-label d-flex align-items-center mx-3">
+                                <input
+                                  type="radio"
+                                  name="ShipServ_price"
+                                  id="ShipServ_price"
+                                  class="form-check-input"
+                                  (check)="c.CustAdd_ID"
+                                  (change)="addToTable($event,c)"  
+                                />
+                              </label>
+                                <div class="card-radio text-truncate ">
+                                  <span class="fs-14 mb-2 d-block">
+                                    {{ c.Cust_fname }} {{ c.Cust_mname }} {{ c.Cust_lname }}
+                                  </span>
+                                  <span class="text-muted fw-normal text-wrap mb-1 d-block">
+                                    {{ c.BuildingUnitStreet_No }}, {{ c.Barangay }}, {{ c.Town_City }}, {{ c.Province }}
+                                  </span>
+                                  <span class="text-muted fw-normal d-block">{{ c.Phoneno }}</span>
+                                </div>
+                            
+                              <div class="edit-btn text-end mt-2 mt-md-0">
+                                <a class="d-inline-block">
+                                  <i
+                                    class="fa fa-pencil mx-2"
+                                    aria-hidden="true"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#updateADDRESS"
+                                    (click)="openEditModal(c.CustAdd_ID)"
+                                  ></i>
+                                  <i
+                                    class="fa fa-trash"
+                                    aria-hidden="true"
+                                    (click)="deleteaddress(c.CustAdd_ID)"
+                                  ></i>
+                                </a>
+                              </div>
+                            </div>                            
+                          </div>
+                        </div>
+                      </div>
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+
             </li>
             </form>
           </ol>
@@ -598,9 +676,7 @@
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Save Address</button>
               </div>
-            </form>
-            
-            
+            </form>   
           </div>
         </div>
       </div>

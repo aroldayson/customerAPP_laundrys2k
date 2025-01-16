@@ -40,7 +40,7 @@ export class CusSidenavComponent {
             icon: 'success',
             title: 'Logout Successful!',
             text: 'You have been logged out.',
-            timer: 2000,
+            timer: 1000,
             timerProgressBar: true,
             showConfirmButton: false
           });

@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 export class MyServiceService {
   url = "http://localhost/CustomerS2K/";
   Apiurl="http://localhost:8000/api/";
-  // Apiurl="http://192.168.1.14 :8000/api/";
+  // Apiurl="http://192.168.1.110:8000/api/";
   // Apiurl="http://192.168.1.4:8000/api/";
 
 
@@ -116,9 +116,18 @@ export class MyServiceService {
   addcateg(data: any){
     return this.http.post(`${this.Apiurl}addcateg`,data);
   }
+
+  adddetails(data: any){
+    return this.http.post(`${this.Apiurl}adddetails`,data);
+  }
+
   deleteCateg(TransacDet_ID: number) {
     return this.http.delete(`${this.Apiurl}deleteCateg/${TransacDet_ID}`);
   }  
+
+  deleteServices(TransacDet_ID: number) {
+    return this.http.delete(`${this.Apiurl}deleteServices/${TransacDet_ID}`);
+  } 
 
   displayTransac(data:any):Observable<any>{
     return this.http.get(`${this.Apiurl}getDetails/${data}`);

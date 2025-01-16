@@ -74,6 +74,7 @@ export class CusUpdatecategComponent implements OnInit {
   showShippingAddress: boolean = false;
   quantity_counts: boolean = false;
   addtolist: boolean = false;
+  list: boolean = false;
 
   editingItem: any = null;
 
@@ -177,6 +178,7 @@ export class CusUpdatecategComponent implements OnInit {
   townElem: any;
   getDet: any;
   updatedTransac: any;
+  selectedWeight: any;
 
 
   openEditModal(address: any) {
@@ -199,6 +201,7 @@ export class CusUpdatecategComponent implements OnInit {
 
   showlist(){
     this.addtolist = true;
+    this.list = true;
   }
   
   updateAddress() {
@@ -285,6 +288,7 @@ export class CusUpdatecategComponent implements OnInit {
           this.estimatedate = result[0].services[0].estimated_date   
           this.paymentss = result[0].payments      
           console.log(result,this.getDet,this.servicearray2,this.servicearray)
+          console.log(this.servicearray)
         },
         (error) => {
           console.error('Error fetching transaction details:', error);
@@ -414,13 +418,46 @@ export class CusUpdatecategComponent implements OnInit {
       if (!existingEntry) {
         // Create a new entry if it doesn't exist
         const newEntry = {
-          AddService_name : latestService, // Add the selected service
-          CustAdd_ID: selectedAddress.CustAdd_ID,
-          address: `${selectedAddress.BuildingUnitStreet_No}, ${selectedAddress.Barangay}, ${selectedAddress.Town_City}, ${selectedAddress.Province}`,
-          AddService_price: selectedAddress.ShipServ_price, // Use the price from the address
+          AddService_name: latestService || '', // Fallback to an empty string if latestService is undefined
+          Transac_ID: this.Transac_ID, // Ensure this.Transac_ID is set properly
+          CustAdd_ID: selectedAddress?.CustAdd_ID || null, // Safely handle missing values
+          FullAddress: selectedAddress
+            ? `${selectedAddress.BuildingUnitStreet_No}, ${selectedAddress.Barangay}, ${selectedAddress.Town_City}, ${selectedAddress.Province}`
+            : '', // Handle missing address gracefully
+          AddService_price: selectedAddress?.ShipServ_price || 0, // Default to 0 if price is missing
         };
+        
   
         this.selectedServices.push(newEntry);
+        this.servicearray.push(newEntry)
+
+        this.post.adddetails(newEntry).subscribe(
+          (result: any) => {
+            console.log("Transaction API Response:", result)
+            if (result) {
+              Swal.fire({
+                position: "center",
+                title: 'Deleted!',
+                text: 'The Category has been deleted.',
+                icon: 'success',
+                showConfirmButton: false, // Removes the "OK" button
+                timer: 1500,
+              }).then(() => {
+                // this.route.navigate(['/main/cusmainhome/homemain/updatetrans']);
+                this.fetchtransactions();
+              });
+            } else {
+              console.error("Unknown error:", result);
+              Swal.fire({
+                position: "center",
+                icon: "error",
+                title: "Error occurred while saving address data.",
+                text: result?.message || "Unknown error",
+                showConfirmButton: false,
+                timer: 1500, 
+              });
+            }
+          })
       } else {
         // Update existing entry with the new service
         if (!existingEntry.services.includes(value)) {
@@ -467,6 +504,7 @@ export class CusUpdatecategComponent implements OnInit {
             console.log('Default address selected:', selectedAddress);
             this.addToTable(modalElement,selectedAddress);
             this.selectedServices.push(selectedAddress);
+            this.servicearray.push(selectedAddress);
           }
   
           this.addaddress.patchValue({
@@ -477,6 +515,8 @@ export class CusUpdatecategComponent implements OnInit {
             Town_City: selectedAddress.Town_City,
             Barangay: selectedAddress.Barangay,
           });
+
+          this.servicearray.push(this.addaddress);
         } else {
           console.log('No address found for the provided id');
         }
@@ -824,6 +864,7 @@ export class CusUpdatecategComponent implements OnInit {
 
     this.selectedPriceCateg = selectedCategory.Item_per_kg; 
     this.selectedCateg = selectedCategory.Price;
+    this.selectedWeight = selectedCategory.Minimum_weight;
 
     const quantityValues = this.laundryForm.value.quantity ?? 1; 
 
@@ -850,6 +891,7 @@ export class CusUpdatecategComponent implements OnInit {
       Category: selectedCategory.Category,
       Qty: quantityValue,
       Price: finalPrices,
+      Weight: this.selectedWeight,
       Transac_ID: this.details[0].Transac_ID,
       State: 'Pending',
     };
@@ -864,6 +906,7 @@ export class CusUpdatecategComponent implements OnInit {
     // this.showservices = true;
     this.quantity_counts = false;
     this.addtolist = false;
+    this.list = false;
   
     if (this.laundrylist.length > 0 && this.laundryForm.get('service')?.value?.length) {
       this.isNextStepDisabled = false;
@@ -1014,7 +1057,44 @@ export class CusUpdatecategComponent implements OnInit {
           }
         })
     }
+  } 
+  removeFromLists(item: any): void {
+    console.log(item)
+    const index = this.servicearray.indexOf(item);
+    if (index !== 1) {
+      this.servicearray.splice(index, 1);
+      const id = this.servicearray[0].AddService_ID;
+      console.log(id)
+      this.post.deleteServices(id).subscribe(
+        (result: any) => {
+          console.log("Transaction API Response:", result)
+          if (result) {
+            Swal.fire({
+              position: "center",
+              title: 'Deleted!',
+              text: 'The Category has been deleted.',
+              icon: 'success',
+              showConfirmButton: false, // Removes the "OK" button
+              timer: 1500,
+            }).then(() => {
+              this.route.navigate(['/main/cusmainhome/homemain/updatetrans']);
+              this.fetchtransactions();
+            });
+          } else {
+            console.error("Unknown error:", result);
+            Swal.fire({
+              position: "center",
+              icon: "error",
+              title: "Error occurred while saving address data.",
+              text: result?.message || "Unknown error",
+              showConfirmButton: false,
+              timer: 1500, 
+            });
+          }
+        })
+    }
   }  
+ 
 
   fetchtransactions() {
     this.post.display(this.id.cuid).subscribe((data: any) => {

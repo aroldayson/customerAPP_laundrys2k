@@ -37,11 +37,11 @@
 }
 
 .activity-checkout .checkout-item:first-child {
-    border-color: #5998e2;
+    /* border-color: #5998e2; */
 }
 
 .activity-checkout .checkout-item:first-child:after {
-    background-color: #5998e2;
+    /* background-color: #5998e2; */
 }
 
 .activity-checkout .checkout-item:last-child {

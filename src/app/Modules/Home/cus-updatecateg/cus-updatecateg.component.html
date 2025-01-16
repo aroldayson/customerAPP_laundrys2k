@@ -38,6 +38,7 @@
                                 class="btn btn-add"
                                 id="add_to_list"
                                 (click)="showlist()"
+                                *ngIf="list !== true"
                             >
                                 <i class="fa fa-plus" aria-hidden="true"></i>
                                 Add Item
@@ -284,15 +285,15 @@
                           {{ a.AddService_price | currency: ' ' : 'symbol' : '1.2-2' }}  
                         </td>
                         <td class="text-center">
-                          <button
+                          <!-- <button
                             class="btn btn-sm btn-outline-primary mx-3"
                             (click)="shippingaddress(id.cuid)"
                           >
                             <i class="fa" [ngClass]="editingItem === a ? 'fa-check' : 'fa-pencil'"></i>
-                          </button>
+                          </button> -->
                           <button
                             class="btn btn-sm btn-outline-danger"
-                            (click)="removeFromList(a)"
+                            (click)="removeFromLists(a)"
                           >
                             <i class="fa fa-trash"></i>
                           </button>

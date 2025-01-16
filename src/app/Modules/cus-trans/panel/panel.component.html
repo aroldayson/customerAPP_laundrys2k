@@ -134,6 +134,7 @@
                 <th>No.</th>
                 <th>Service</th>
                 <th>Quantity</th>
+                <th>Weight</th>
                 <th>Price</th>
                 <th class="text-end"></th>
               </tr>
@@ -146,7 +147,8 @@
                     <i class="fas fa-tshirt me-2 icon-style"></i>{{ d.Category || 'N/A' }}
                   </h6>
                 </td>
-                <td class="white-background"><b>Qty:</b> {{ d.Qty }} | <b>Weight:</b> {{ d.Weight }} <b>kg</b></td>
+                <td class="white-background"><b>Qty:</b> {{ d.Qty }} </td>
+                <td class="white-background"><b>Qty:</b> {{ d.Weight }} <b>kg</b></td>
                 <td class="text-right white-background">{{ d.price | currency:' ':'symbol' }}</td>
                 <td class="text-end white-background"></td>
               </tr>

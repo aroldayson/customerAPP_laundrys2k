@@ -64,7 +64,7 @@ export class CusLoginComponent implements OnInit{
               icon: 'success',
               title: 'Login Successful!',
               text: 'You are now logged in.',
-              timer: 2000,
+              timer: 1000,
               timerProgressBar: true,
               showConfirmButton: false
             });

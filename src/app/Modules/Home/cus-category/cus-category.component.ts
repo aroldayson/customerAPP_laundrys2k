@@ -141,6 +141,7 @@ export class CusCategoryComponent implements OnInit {
   price: any;
   selectedCateg: any;
   townElem: any;
+  selectedWeight: any;
 
 
   openEditModal(address: any) {
@@ -252,10 +253,16 @@ export class CusCategoryComponent implements OnInit {
     const serviceControl = this.newtransac.get('service') as FormControl;
     if (serviceControl) {
       serviceControl.valueChanges.subscribe((selectedServices: any[]) => {
-        this.selectedServices = selectedServices;
+        if (Array.isArray(selectedServices)) {
+          // Allow duplicates by directly setting the array
+          this.selectedServices = [...selectedServices];
+        } else {
+          console.warn('Expected an array but received:', selectedServices);
+        }
       });
     }
   }
+  
 
   showShipping(): void {
     const modalElement = document.getElementById('shipping_address');
@@ -313,10 +320,12 @@ export class CusCategoryComponent implements OnInit {
     } else {
       // Remove the service from the table if unchecked
       if (existingEntry) {
-        existingEntry.services = existingEntry.services.filter(
-          (service: any) => service !== value
-        );
-  
+        // Remove only the first occurrence of the value
+        const index = existingEntry.services.indexOf(value);
+        if (index !== -1) {
+          existingEntry.services.splice(index, 1); // Remove the first matching service
+        }
+      
         // If no services remain, remove the entire entry
         if (existingEntry.services.length === 0) {
           this.selectedServices = this.selectedServices.filter(
@@ -324,6 +333,7 @@ export class CusCategoryComponent implements OnInit {
           );
         }
       }
+      
     }
     console.log('Updated table contents:', this.selectedServices);
   }
@@ -409,6 +419,49 @@ export class CusCategoryComponent implements OnInit {
     }, (error) => {
       console.error('Error fetching address:', error);
     });
+  }
+
+  rushjob(id: any) {
+    this.showmodaladdress = true;
+    this.post.showaddress(id).subscribe(
+      (res: any) => {
+        console.log(res);
+        console.log(id);
+  
+        if (res && res.length > 0) {
+          this.address = res.filter(
+            (addr: any) => addr.CustAdd_status === 'default'
+          );
+  
+          const modalElement = document.getElementById('rush_job');
+          if (modalElement) {
+            const modal = new bootstrap.Modal(modalElement);
+            modal.show();
+          }
+  
+          const selectedAddress = this.address[0];
+          if (selectedAddress) {
+            console.log('Default address selected:', selectedAddress);
+            this.addToTable(modalElement,selectedAddress);
+            this.selectedServices.push(selectedAddress);
+          }
+  
+          this.addaddress.patchValue({
+            CustAdd_ID: selectedAddress.CustAdd_ID,
+            Province: selectedAddress.Province,
+            Phoneno: selectedAddress.Phoneno,
+            BuildingUnitStreet_No: selectedAddress.BuildingUnitStreet_No,
+            Town_City: selectedAddress.Town_City,
+            Barangay: selectedAddress.Barangay,
+          });
+        } else {
+          console.log('No address found for the provided id');
+        }
+      },
+      (error) => {
+        console.error('Error fetching address:', error);
+      }
+    );
   }
   
   
@@ -698,6 +751,7 @@ export class CusCategoryComponent implements OnInit {
 
     this.selectedPriceCateg = selectedCategory.Item_per_kg; 
     this.selectedCateg = selectedCategory.Price;
+    this.selectedWeight = selectedCategory.Minimum_weight;
 
     const quantityValues = this.laundryForm.value.quantity ?? 1; 
 
@@ -724,6 +778,7 @@ export class CusCategoryComponent implements OnInit {
       Category: selectedCategory.Category,
       Qty: quantityValue,
       Price: finalPrices,
+      Weight: this.selectedWeight,
       Tracking_number: this.trackingNumber,
       State: 'Pending',
     };
